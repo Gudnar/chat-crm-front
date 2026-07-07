@@ -127,7 +127,12 @@ export default {
           this.$store.commit('setAuth', true);
           this.$store.commit('setUser', userInfo);
           this.$store.commit('setClienteId', userInfo.clienteId);
-          this.$router.push({ name: 'home' });
+          // Los agentes humanos van directo a su panel de trabajo
+          if (userInfo.rol === 'AGENTE_HUMANO') {
+            this.$router.push({ name: 'mis-conversaciones' });
+          } else {
+            this.$router.push({ name: 'home' });
+          }
         } else {
           this.error = 'Credenciales inválidas';
         }

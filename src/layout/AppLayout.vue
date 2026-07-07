@@ -136,22 +136,31 @@ const SVGS = {
   megaphone:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
   catalog:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
   ticket:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M15 5H9a2 2 0 00-2 2v2a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2z"/><path d="M15 13H9a2 2 0 00-2 2v2a2 2 0 002 2h6a2 2 0 002-2v-2a2 2 0 00-2-2z"/></svg>`,
+  headset:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>`,
+  user:     `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  target:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
 };
 
 const ALL_NAV = [
-  { id:'clientes',       label:'Clientes',      route:'clientes',       svg: SVGS.clients,   badge: null,  roles: ['SUPER_ADMIN'] },
-  { id:'conversaciones', label:'Bandeja',       route:'conversaciones', svg: SVGS.inbox,     badge: null,  roles: null },
-  { id:'redes-sociales', label:'Publicaciones', route:'redes-sociales', svg: SVGS.social,    badge: null,  roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
-  { id:'pipeline',       label:'Pipeline',      route:'pipeline',       svg: SVGS.pipeline,  badge: null,  roles: null },
-  { id:'contactos',      label:'Contactos',     route:'contactos',      svg: SVGS.clients,   badge: null,  roles: null },
-  { id:'calificacion',   label:'Calificar',     route:'calificacion',   svg: SVGS.star,      badge: null,  roles: null },
-  { id:'remarketing',    label:'Remarketing',   route:'remarketing',    svg: SVGS.megaphone, badge: null,  roles: null },
-  { id:'reportes',       label:'Reportes',      route:'reportes',       svg: SVGS.analytics, badge: null,  roles: null },
-  { id:'catalogo',       label:'Catálogo',      route:'catalogo',       svg: SVGS.catalog,   badge: null,  roles: null },
-  { id:'soporte',        label:'Soporte',       route:'soporte',        svg: SVGS.ticket,    badge: null,  roles: null },
-  { id:'agentes',        label:'Agente IA',     route:'agentes',        svg: SVGS.bot,       badge: 'NEW', roles: null },
-  { id:'configuracion',  label:'Configuración', route:'configuracion',  svg: SVGS.settings,  badge: null,  roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
+  { id:'clientes',           label:'Clientes',           route:'clientes',           svg: SVGS.clients,   badge: null,  roles: ['SUPER_ADMIN'] },
+  { id:'conversaciones',     label:'Bandeja',            route:'conversaciones',     svg: SVGS.inbox,     badge: null,  roles: null },
+  { id:'mis-conversaciones', label:'Mis Conversaciones', route:'mis-conversaciones', svg: SVGS.inbox,     badge: null,  roles: ['AGENTE_HUMANO'] },
+  { id:'redes-sociales',     label:'Publicaciones',      route:'redes-sociales',     svg: SVGS.social,    badge: null,  roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
+  { id:'pipeline',           label:'Pipeline',           route:'pipeline',           svg: SVGS.pipeline,  badge: null,  roles: null },
+  { id:'oportunidades',      label:'Oportunidades',      route:'oportunidades',      svg: SVGS.target,    badge: 'NEW', roles: null },
+  { id:'contactos',          label:'Contactos',          route:'contactos',          svg: SVGS.clients,   badge: null,  roles: null },
+  { id:'calificacion',       label:'Calificar',          route:'calificacion',       svg: SVGS.star,      badge: null,  roles: null },
+  { id:'remarketing',        label:'Remarketing',        route:'remarketing',        svg: SVGS.megaphone, badge: null,  roles: null },
+  { id:'reportes',           label:'Reportes',           route:'reportes',           svg: SVGS.analytics, badge: null,  roles: null },
+  { id:'catalogo',           label:'Catálogo',           route:'catalogo',           svg: SVGS.catalog,   badge: null,  roles: null },
+  { id:'soporte',            label:'Soporte',            route:'soporte',            svg: SVGS.ticket,    badge: null,  roles: null },
+  { id:'agentes',            label:'Agente IA',          route:'agentes',            svg: SVGS.bot,       badge: 'NEW', roles: null },
+  { id:'agentes-humanos',    label:'Equipo Humano',      route:'agentes-humanos',    svg: SVGS.headset,   badge: 'NEW', roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
+  { id:'configuracion',      label:'Configuración',      route:'configuracion',      svg: SVGS.settings,  badge: null,  roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
 ];
+
+// El agente humano solo ve su panel de trabajo y sus oportunidades asignadas
+const NAV_AGENTE_HUMANO = ['mis-conversaciones', 'oportunidades'];
 
 const TITLES = {
   home:             'Dashboard',
@@ -168,6 +177,10 @@ const TITLES = {
   configuracion:    'Configuración',
   'agente-detalle': 'Detalle del Agente',
   catalogo:         'Catálogo de Productos',
+  soporte:          'Soporte',
+  oportunidades:    'Oportunidades de Venta',
+  'agentes-humanos':    'Equipo de Agentes Humanos',
+  'mis-conversaciones': 'Mis Conversaciones',
   'mi-cuenta':      'Mi Cuenta',
 };
 
@@ -186,6 +199,9 @@ export default {
     userRol() { return this.currentUser?.rol || 'USER'; },
     nav() {
       const rol = this.userRol;
+      if (rol === 'AGENTE_HUMANO') {
+        return ALL_NAV.filter(item => NAV_AGENTE_HUMANO.includes(item.id));
+      }
       return ALL_NAV.filter(item => !item.roles || item.roles.includes(rol));
     },
     active() {
@@ -200,7 +216,7 @@ export default {
       return n.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
     },
     userRolLabel() {
-      const map = { SUPER_ADMIN: 'Super Admin', ADMIN_CLIENTE: 'Administrador', COLABORADOR: 'Colaborador' };
+      const map = { SUPER_ADMIN: 'Super Admin', ADMIN_CLIENTE: 'Administrador', COLABORADOR: 'Colaborador', AGENTE_HUMANO: 'Agente' };
       return map[this.userRol] || this.userRol;
     },
     clienteNombre() {
@@ -238,7 +254,11 @@ export default {
       }
     },
     handleLogout() {
-      this.$confirm('¿Deseas cerrar sesión?', () => {
+      this.$confirm('¿Deseas cerrar sesión?', async () => {
+        try {
+          // Notificar al backend (marca al agente humano como desconectado)
+          await this.$service.post('auth/logout', {});
+        } catch (e) { /* cerrar sesión localmente aunque falle */ }
         this.$storage.removeAll();
         this.$store.commit('logout');
         this.$router.push('/login');

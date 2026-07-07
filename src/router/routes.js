@@ -85,6 +85,23 @@ const routes = [
         component: () => import('@/views/Reportes.vue'),
       },
       {
+        path: 'agentes-humanos',
+        name: 'agentes-humanos',
+        component: () => import('@/views/AgentesHumanos.vue'),
+        meta: { roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
+      },
+      {
+        path: 'mis-conversaciones',
+        name: 'mis-conversaciones',
+        component: () => import('@/views/MisConversaciones.vue'),
+        meta: { roles: ['AGENTE_HUMANO'] },
+      },
+      {
+        path: 'oportunidades',
+        name: 'oportunidades',
+        component: () => import('@/views/Oportunidades.vue'),
+      },
+      {
         path: 'catalogo',
         name: 'catalogo',
         component: () => import('@/views/Catalogo.vue'),

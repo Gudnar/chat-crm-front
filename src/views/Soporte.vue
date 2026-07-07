@@ -67,43 +67,57 @@
       <div style="font-size:12px;">Crea un nuevo caso para darle seguimiento a tus clientes</div>
     </div>
 
-    <!-- Cases list -->
-    <div v-else style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px;">
-      <div
-        v-for="caso in casosFiltrados"
-        :key="caso.id"
-        class="ide-ia-card"
-        style="padding:16px; cursor:pointer; transition:all 0.15s;"
-        @click="seleccionarCaso(caso)"
-        @mouseenter="$event.target.style.background='#1e293b88'"
-        @mouseleave="$event.target.style.background=''"
-      >
-        <!-- Header -->
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-          <div style="flex:1;">
-            <div style="font-size:11px; font-weight:600; color:#64748b; margin-bottom:4px;">{{ caso.numeroCaso }}</div>
-            <div style="font-size:13px; font-weight:700; color:#f1f5f9;">{{ caso.titulo }}</div>
-          </div>
-          <span :style="{ background: prioridadColor(caso.prioridad)+'22', color: prioridadColor(caso.prioridad) }" style="font-size:10px; font-weight:600; padding:3px 8px; border-radius:4px; flex-shrink:0;">{{ caso.prioridad }}</span>
-        </div>
-
-        <!-- Status -->
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-          <span :style="{ color: estadoColor(caso.estadoCaso) }">●</span>
-          <span style="font-size:11px; color:#94a3b8;">{{ estadoLabel(caso.estadoCaso) }}</span>
-        </div>
-
-        <!-- Contact -->
-        <div style="font-size:11px; color:#64748b; margin-bottom:12px;">
-          👤 {{ caso.nombreContacto }}
-        </div>
-
-        <!-- Footer -->
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#475569;">
-          <span>{{ formatDate(caso.fechaCreacion) }}</span>
-          <span v-if="caso.historial" style="background:#6366f122; color:#818cf8; padding:2px 6px; border-radius:3px;">{{ caso.historial.length }} notas</span>
-        </div>
-      </div>
+    <!-- Cases table -->
+    <div v-else class="ide-ia-card" style="overflow-x:auto; padding:0;">
+      <table class="sop-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Contacto</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Última actividad</th>
+            <th>Seguim.</th>
+            <th>Creado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="caso in casosFiltrados" :key="caso.id" class="sop-row" @click="seleccionarCaso(caso)">
+            <td style="font-weight:600; color:#64748b; font-size:11px; white-space:nowrap;">
+              {{ caso.numeroCaso }}
+              <span v-if="caso.conversacionId" style="color:#818cf8;" title="Creado desde una conversación">💬</span>
+            </td>
+            <td>
+              <div style="font-weight:600; color:#e2e8f0;">{{ caso.nombreContacto }}</div>
+              <div v-if="caso.telefonoContacto || caso.emailContacto" style="font-size:11px; color:#64748b;">{{ caso.telefonoContacto || caso.emailContacto }}</div>
+            </td>
+            <td style="color:#94a3b8; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="caso.titulo">{{ caso.titulo }}</td>
+            <td>
+              <span v-if="caso.categoria" style="background:#6366f122; color:#818cf8; padding:2px 8px; border-radius:4px; font-size:11px;">{{ caso.categoria }}</span>
+              <span v-else style="color:#475569;">—</span>
+            </td>
+            <td>
+              <span class="sop-badge" :style="{ background: estadoColor(caso.estadoCaso)+'22', color: estadoColor(caso.estadoCaso) }">{{ estadoLabel(caso.estadoCaso) }}</span>
+            </td>
+            <td>
+              <span :style="{ color: prioridadColor(caso.prioridad) }" style="font-size:11px; font-weight:700; text-transform:uppercase;">{{ caso.prioridad }}</span>
+            </td>
+            <td style="font-size:11px; color:#94a3b8; white-space:nowrap;">
+              <template v-if="ultimaActividad(caso)">
+                <div>{{ ultimaActividad(caso).accion }}</div>
+                <div style="font-size:10px; color:#64748b;">{{ formatDateTime(ultimaActividad(caso).timestamp) }}</div>
+              </template>
+              <span v-else style="color:#475569;">—</span>
+            </td>
+            <td style="text-align:center;">
+              <span style="background:#6366f122; color:#818cf8; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700;">{{ (caso.historial || []).length }}</span>
+            </td>
+            <td style="font-size:11px; color:#64748b; white-space:nowrap;">{{ formatDate(caso.fechaCreacion) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Modal: Nuevo Caso -->
@@ -184,6 +198,7 @@
           <div>
             <div style="font-size:10px; font-weight:600; color:#64748b; margin-bottom:4px;">Contacto</div>
             <div style="font-size:12px; color:#f1f5f9;">{{ casoSeleccionado.nombreContacto }}</div>
+            <div v-if="casoSeleccionado.telefonoContacto" style="font-size:11px; color:#64748b;">📱 {{ casoSeleccionado.telefonoContacto }}</div>
           </div>
           <div>
             <div style="font-size:10px; font-weight:600; color:#64748b; margin-bottom:4px;">Creado</div>
@@ -383,11 +398,33 @@ export default {
       if (!d) return '';
       return new Date(d).toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
     },
+    formatDateTime(d) {
+      if (!d) return '';
+      return new Date(d).toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    },
+    ultimaActividad(caso) {
+      const h = caso.historial || [];
+      return h.length ? h[h.length - 1] : null;
+    },
   },
 };
 </script>
 
 <style scoped>
+.sop-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.sop-table th {
+  text-align: left; padding: 10px 12px; color: #64748b; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3a5f44;
+  white-space: nowrap;
+}
+.sop-table td { padding: 10px 12px; border-bottom: 1px solid #1e3a5f22; vertical-align: middle; }
+.sop-row { cursor: pointer; transition: background 0.12s; }
+.sop-row:hover { background: #1e293b66; }
+.sop-badge {
+  padding: 3px 9px; border-radius: 5px; font-size: 10px; font-weight: 700;
+  white-space: nowrap; display: inline-block;
+}
+
 .btn-nuevo-caso {
   display: flex;
   align-items: center;

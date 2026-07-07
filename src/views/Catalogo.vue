@@ -26,11 +26,11 @@
     <!-- Stats row -->
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; max-width:480px;">
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#f1f5f9; line-height:1;">{{ productos.length }}</div>
+        <div style="font-size:22px; font-weight:900; color:#f1f5f9; line-height:1;">{{ total }}</div>
         <div style="font-size:10px; color:#64748b; margin-top:3px;">Total</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#22c55e; line-height:1;">{{ productos.filter(p=>p.activo).length }}</div>
+        <div style="font-size:22px; font-weight:900; color:#22c55e; line-height:1;">{{ activos }}</div>
         <div style="font-size:10px; color:#64748b; margin-top:3px;">Activos</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
@@ -48,13 +48,13 @@
         style="width:260px; padding:8px 12px; font-size:12px;"
         @input="cargarDebounce"
       />
-      <select v-model="categoriaFiltro" class="ide-select" style="width:180px; padding:8px 12px; font-size:12px;">
+      <select v-model="categoriaFiltro" class="ide-select" style="width:180px; padding:8px 12px; font-size:12px;" @change="pagina = 1; cargar()">
         <option value="">Todas las categorías</option>
         <option v-for="c in categorias" :key="c" :value="c">{{ c }}</option>
       </select>
       <button
         v-if="busqueda || categoriaFiltro"
-        @click="busqueda = ''; categoriaFiltro = ''"
+        @click="busqueda = ''; categoriaFiltro = ''; pagina = 1; cargar()"
         style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit;"
       >
         Limpiar
@@ -67,7 +67,7 @@
     </div>
 
     <!-- Empty -->
-    <div v-else-if="!productosFiltrados.length" class="ide-ia-card" style="text-align:center; padding:56px; color:#475569;">
+    <div v-else-if="!productos.length" class="ide-ia-card" style="text-align:center; padding:56px; color:#475569;">
       <div style="font-size:36px; margin-bottom:12px;">📦</div>
       <div style="font-size:14px; font-weight:700; color:#94a3b8; margin-bottom:6px;">
         {{ busqueda || categoriaFiltro ? 'Sin resultados' : 'Sin productos' }}
@@ -99,7 +99,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="p in productosFiltrados" :key="p.id" :style="{ opacity: p.activo ? 1 : 0.55 }">
+          <tr v-for="p in productos" :key="p.id" :style="{ opacity: p.activo ? 1 : 0.55 }">
             <td style="font-weight:600; color:#e2e8f0;">{{ p.nombre }}</td>
             <td style="color:#94a3b8;">{{ p.marca || '—' }}</td>
             <td style="color:#94a3b8;">{{ p.modelo || '—' }}</td>
@@ -128,6 +128,27 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- Paginación -->
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-top:1px solid #1e3a5f44; flex-wrap:wrap;">
+        <div style="font-size:11px; color:#64748b;">
+          Mostrando {{ productos.length }} de {{ total }} productos
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button class="cat-page-btn" :disabled="pagina <= 1" @click="irPagina(1)" title="Primera">«</button>
+          <button class="cat-page-btn" :disabled="pagina <= 1" @click="irPagina(pagina - 1)">‹ Anterior</button>
+          <span style="font-size:11px; color:#94a3b8; padding:0 8px; font-weight:700;">
+            Página {{ pagina }} de {{ totalPaginas }}
+          </span>
+          <button class="cat-page-btn" :disabled="pagina >= totalPaginas" @click="irPagina(pagina + 1)">Siguiente ›</button>
+          <button class="cat-page-btn" :disabled="pagina >= totalPaginas" @click="irPagina(totalPaginas)" title="Última">»</button>
+          <select v-model.number="limite" class="ide-select" style="width:auto; padding:5px 8px; font-size:11px; margin-left:8px;" @change="pagina = 1; cargar()">
+            <option :value="25">25 / pág.</option>
+            <option :value="50">50 / pág.</option>
+            <option :value="100">100 / pág.</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <!-- Modal: Create / Edit -->
@@ -266,11 +287,12 @@
           <button @click="dialogImportar = false" style="background:none; border:none; font-size:20px; cursor:pointer;">×</button>
         </div>
         <div class="cat-dialog-content">
-          <p style="margin-bottom:16px; font-size:14px; color:#999;">Selecciona un archivo Excel para importar productos (Nombre y Precio son obligatorios)</p>
-          <input type="file" accept=".xlsx,.xls" id="fileInput" @change="handleFileImport" style="display:none;" />
-          <button @click="$refs.fileInput?.click() || document.getElementById('fileInput').click()" style="background:#f59e0b; color:#fff; border:none; border-radius:8px; padding:10px 16px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; width:100%; margin-bottom:12px;">
-            Seleccionar archivo
-          </button>
+          <p style="margin-bottom:16px; font-size:14px; color:#999;">Selecciona un archivo Excel: lista de precios (Marca, Modelo, Versión, en Mano…) o formato clásico (Nombre y Precio)</p>
+          <label style="display:flex; align-items:center; justify-content:center; gap:8px; background:#f59e0b; color:#fff; border-radius:8px; padding:10px 16px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; width:100%; margin-bottom:12px; box-sizing:border-box;">
+            <input ref="fileInput" type="file" accept=".xlsx,.xls" style="display:none;" @change="handleFileImport" />
+            <span v-if="importando" class="cat-spinner-sm"></span>
+            {{ importando ? 'Importando…' : 'Seleccionar archivo' }}
+          </label>
         </div>
         <div class="cat-dialog-actions">
           <button @click="dialogImportar = false" style="background:#666; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;">
@@ -296,6 +318,12 @@ export default {
       dragging: false,
       busqueda: '',
       categoriaFiltro: '',
+      pagina: 1,
+      totalPaginas: 1,
+      total: 0,
+      activos: 0,
+      limite: 25,
+      categorias: [],
       dialogForm: false,
       dialogEliminar: false,
       editandoProducto: null,
@@ -310,19 +338,6 @@ export default {
       importando: false,
     };
   },
-  computed: {
-    categorias() {
-      return [...new Set(this.productos.filter(p => p.categoria).map(p => p.categoria))].sort();
-    },
-    productosFiltrados() {
-      const q = this.busqueda.toLowerCase();
-      return this.productos.filter(p => {
-        const matchQ = !q || [p.nombre, p.marca, p.modelo, p.descripcion, p.categoria].some(v => v && v.toLowerCase().includes(q));
-        const matchC = !this.categoriaFiltro || p.categoria === this.categoriaFiltro;
-        return matchQ && matchC;
-      });
-    },
-  },
   async mounted() {
     await this.cargar();
   },
@@ -333,15 +348,36 @@ export default {
         const data = await this.$service.list('productos', {
           q: this.busqueda || undefined,
           categoria: this.categoriaFiltro || undefined,
+          pagina: this.pagina,
+          limite: this.limite,
         });
-        this.productos = data || [];
+        if (Array.isArray(data)) {
+          // Compatibilidad con respuesta antigua (backend sin reiniciar)
+          this.productos = data;
+          this.total = data.length;
+          this.activos = data.filter(p => p.activo).length;
+          this.totalPaginas = 1;
+          this.categorias = [...new Set(data.filter(p => p.categoria).map(p => p.categoria))].sort();
+        } else {
+          this.productos = data?.items || [];
+          this.total = data?.total || 0;
+          this.activos = data?.activos || 0;
+          this.pagina = data?.pagina || 1;
+          this.totalPaginas = data?.totalPaginas || 1;
+          this.categorias = data?.categorias || [];
+        }
       } finally {
         this.loading = false;
       }
     },
+    irPagina(p) {
+      if (p < 1 || p > this.totalPaginas || p === this.pagina) return;
+      this.pagina = p;
+      this.cargar();
+    },
     cargarDebounce() {
       clearTimeout(this.debounceTimer);
-      this.debounceTimer = setTimeout(() => this.cargar(), 400);
+      this.debounceTimer = setTimeout(() => { this.pagina = 1; this.cargar(); }, 400);
     },
     imgUrl(filename) {
       const base = (process.env.VUE_APP_BASE_SERVER || 'http://localhost:3001/api/').replace(/\/api\/?$/, '');
@@ -471,7 +507,7 @@ export default {
         const formData = new FormData();
         formData.append('archivo', file);
 
-        const response = await fetch(`${this.$service.baseURL}productos/importar/excel`, {
+        const response = await fetch(`${this.$baseServer}productos/importar/excel`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${this.$storage.get('token')}`,
@@ -482,10 +518,12 @@ export default {
         const json = await response.json();
         const resultado = json.datos || json;
 
-        if (resultado.creados > 0) {
-          this.$message.success(`${resultado.creados} productos importados`);
+        if (resultado.creados > 0 || resultado.actualizados > 0) {
+          this.$message.success(`${resultado.creados} creados, ${resultado.actualizados || 0} actualizados`);
           this.dialogImportar = false;
           this.cargar();
+        } else if (!resultado.errores?.length) {
+          this.$message.warning('No se encontraron productos en el archivo');
         }
 
         if (resultado.errores?.length > 0) {
@@ -501,7 +539,7 @@ export default {
     },
     async exportarExcel() {
       try {
-        const response = await fetch(`${this.$service.baseURL}productos/exportar/excel`, {
+        const response = await fetch(`${this.$baseServer}productos/exportar/excel`, {
           headers: {
             'Authorization': `Bearer ${this.$storage.get('token')}`,
           },
@@ -527,6 +565,22 @@ export default {
 </script>
 
 <style scoped>
+.cat-page-btn {
+  background: transparent; border: 1px solid #334155; color: #94a3b8;
+  border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all 0.15s;
+}
+.cat-page-btn:hover:not(:disabled) { border-color: #6366f1; color: #e2e8f0; }
+.cat-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.cat-spinner-sm {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid #fff; border-top-color: transparent;
+  animation: cat-spin 0.75s linear infinite;
+  display: inline-block; flex-shrink: 0;
+}
+@keyframes cat-spin { to { transform: rotate(360deg); } }
+
 .cat-overlay {
   position: fixed;
   top: 0; left: 0;

@@ -191,6 +191,24 @@
             </span>
             <button class="cv-detalle-btn">Detalle</button>
             <button
+              class="cv-detalle-btn"
+              style="color:#22c55e; border-color:#22c55e44;"
+              title="Crear oportunidad de venta con este contacto"
+              :disabled="creandoOportunidad"
+              @click="crearOportunidad"
+            >
+              🎯 {{ creandoOportunidad ? 'Creando…' : 'Oportunidad' }}
+            </button>
+            <button
+              class="cv-detalle-btn"
+              style="color:#f59e0b; border-color:#f59e0b44;"
+              title="Crear caso de soporte desde esta conversación"
+              :disabled="creandoCaso"
+              @click="crearCasoSoporte"
+            >
+              🎧 {{ creandoCaso ? 'Creando…' : 'Caso' }}
+            </button>
+            <button
               v-if="seleccionada.estadoConversacion !== 'resuelto'"
               class="cv-resolver-btn"
               @click="cambiarEstado('resuelto')"
@@ -565,6 +583,8 @@ export default {
     conversaciones: [],
     loading: true,
     cargandoMensajes: false,
+    creandoOportunidad: false,
+    creandoCaso: false,
     filtroActivo: 'todas',
     filtroEstado: 'todos',
     filtroDias: '',
@@ -678,6 +698,40 @@ export default {
     this.detenerPolling();
   },
   methods: {
+    async crearOportunidad() {
+      if (!this.seleccionada) return;
+      this.creandoOportunidad = true;
+      try {
+        const canal = this.seleccionada.canal || 'otro';
+        const data = await this.$service.post('oportunidades', {
+          contactoNombre: this.nombreRemitente(this.seleccionada),
+          contactoTelefono: canal === 'whatsapp' ? this.seleccionada.contacto : undefined,
+          origen: ['whatsapp', 'facebook', 'instagram'].includes(canal) ? canal : 'otro',
+          conversacionId: this.seleccionada.id,
+        });
+        this.$message.success(`Oportunidad ${data && data.numeroOportunidad ? data.numeroOportunidad : ''} creada — revisa el módulo Oportunidades`);
+      } catch (e) {
+        this.$message.error('No se pudo crear la oportunidad');
+      } finally {
+        this.creandoOportunidad = false;
+      }
+    },
+    async crearCasoSoporte() {
+      if (!this.seleccionada) return;
+      this.creandoCaso = true;
+      try {
+        const data = await this.$service.post('soporte', {
+          conversacionId: this.seleccionada.id,
+          nombreContacto: this.nombreRemitente(this.seleccionada),
+          prioridad: 'media',
+        });
+        this.$message.success(`Caso ${data && data.numeroCaso ? data.numeroCaso : ''} creado — revisa el módulo Soporte`);
+      } catch (e) {
+        this.$message.error('No se pudo crear el caso de soporte');
+      } finally {
+        this.creandoCaso = false;
+      }
+    },
     async cargar(mostrarSpinner = false) {
       try {
         if (mostrarSpinner) this.loading = true;
