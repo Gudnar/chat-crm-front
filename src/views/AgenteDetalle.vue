@@ -159,6 +159,15 @@
         <HerramientasLista :agente-id="agente.id" />
       </template>
 
+      <!-- Base de Conocimiento -->
+      <template v-else-if="seccion === 'base-conocimiento'">
+        <div class="ide-sec-hd">
+          <h2>Base de Conocimiento</h2>
+          <p>Preguntas frecuentes que el agente usará para responder automáticamente a los clientes</p>
+        </div>
+        <BaseConocimiento :agente-id="agente.id" />
+      </template>
+
       <!-- Calificación IA -->
       <template v-else-if="seccion === 'calificacion'">
         <div class="ide-sec-hd">
@@ -259,6 +268,7 @@
 import HerramientasLista from './Herramientas.vue';
 import ConversacionesLista from './Conversaciones.vue';
 import ProbarAgente from './ProbarAgente.vue';
+import BaseConocimiento from './BaseConocimiento.vue';
 
 const SVGS = {
   settings: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`,
@@ -268,11 +278,12 @@ const SVGS = {
   phone:    `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.22 1.22 2 2 0 012.22 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>`,
   send:     `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
   clock:    `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  book:     `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
 };
 
 export default {
   name: 'AgenteDetalle',
-  components: { HerramientasLista, ConversacionesLista, ProbarAgente },
+  components: { HerramientasLista, ConversacionesLista, ProbarAgente, BaseConocimiento },
   data() {
     return {
       agente: null,
@@ -285,8 +296,9 @@ export default {
       secciones: [
         { id: 'config',      label: 'Configuración',    svg: SVGS.settings },
         { id: 'rol',         label: 'Rol del Agente IA', svg: SVGS.user    },
-        { id: 'herramientas',label: 'Herramientas',      svg: SVGS.tool    },
-        { id: 'calificacion',label: 'Calificación IA',   svg: SVGS.qualify },
+        { id: 'herramientas',        label: 'Herramientas',        svg: SVGS.tool    },
+        { id: 'base-conocimiento',   label: 'Base de Conocimiento', svg: SVGS.book    },
+        { id: 'calificacion',        label: 'Calificación IA',      svg: SVGS.qualify },
         { id: 'escalado',    label: 'Escalado a humano', svg: SVGS.phone   },
         { id: 'probar',      label: 'Probar Agente',     svg: SVGS.send    },
         { id: 'historial',   label: 'Historial IA',      svg: SVGS.clock   },

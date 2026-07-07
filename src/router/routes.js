@@ -85,6 +85,16 @@ const routes = [
         component: () => import('@/views/Reportes.vue'),
       },
       {
+        path: 'catalogo',
+        name: 'catalogo',
+        component: () => import('@/views/Catalogo.vue'),
+      },
+      {
+        path: 'soporte',
+        name: 'soporte',
+        component: () => import('@/views/Soporte.vue'),
+      },
+      {
         path: 'mi-cuenta',
         name: 'mi-cuenta',
         component: () => import('@/views/MiCuenta.vue'),

@@ -60,6 +60,31 @@
         >{{ est.label }}</button>
       </div>
 
+      <!-- Date & Score filters -->
+      <div style="padding:10px 12px; border-bottom:1px solid #1e3a5f33; display:flex; flex-direction:column; gap:8px; flex-shrink:0;">
+        <!-- Filter by days -->
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; font-weight:700; color:#64748b; flex-shrink:0;">📅 DÍAS:</span>
+          <select v-model="filtroDias" class="cv-filter-select" style="flex:1;">
+            <option value="">Todos</option>
+            <option value="hoy">Hoy</option>
+            <option value="ayer">Ayer</option>
+            <option value="7">Últimos 7 días</option>
+            <option value="30">Últimos 30 días</option>
+          </select>
+        </div>
+        <!-- Filter by score -->
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; font-weight:700; color:#64748b; flex-shrink:0;">⭐ SCORE:</span>
+          <select v-model="filtroScore" class="cv-filter-select" style="flex:1;">
+            <option value="">Todos</option>
+            <option value="hot">Hot (70+)</option>
+            <option value="warm">Warm (40-69)</option>
+            <option value="cold">Cold (0-39)</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Conversation list -->
       <div class="cv-list-scroll">
         <div v-if="loading" class="cv-center-pad">
@@ -351,12 +376,18 @@
       <div class="cv-panel-section">
         <div class="cv-panel-label">CONTACTO</div>
         <div class="cv-panel-rows">
-          <div class="cv-panel-row">
+          <div class="cv-panel-row" style="flex-wrap:wrap;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
               <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
-            <span>{{ nombreRemitente(seleccionada) }}</span>
+            <div style="flex:1; display:flex; gap:8px; align-items:center;">
+              <span v-if="!editandoNombre" style="flex:1;">{{ nombreRemitente(seleccionada) }}</span>
+              <input v-else v-model="nuevoNombre" class="ide-input" style="flex:1; font-size:12px; padding:4px 8px;" @keydown.enter="guardarNombreYCerrar" @keydown.escape="cancelarEdicion" autofocus />
+              <button @click="editandoNombre ? guardarNombreYCerrar() : abrirEdicionNombre()" style="background:none; border:none; cursor:pointer; color:#64748b; padding:4px; font-size:11px;">
+                {{ editandoNombre ? '✓' : '✏️' }}
+              </button>
+            </div>
           </div>
           <div v-if="!seleccionada.contacto || (!seleccionada.contacto.startsWith('fb_cm_') && !seleccionada.contacto.startsWith('fb_comment_'))" class="cv-panel-row">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
@@ -411,12 +442,15 @@
         <div class="cv-panel-label">ETIQUETAS</div>
         <div class="cv-tags-row">
           <span
-            v-for="tag in etiquetasConv(seleccionada)"
-            :key="tag.label"
+            v-for="tag in (seleccionada.etiquetas || [])"
+            :key="tag"
             class="cv-tag"
-            :style="{ background: tag.color+'18', color: tag.color, border: '1px solid '+tag.color+'33' }"
-          >{{ tag.label }}</span>
-          <button class="cv-add-tag-btn">+ Añadir</button>
+            style="background:#6366f122; color:#818cf8; border:1px solid #6366f155; display:flex; align-items:center; gap:6px; padding:4px 8px;"
+          >
+            {{ tag }}
+            <button @click="eliminarEtiqueta(tag)" style="background:none; border:none; cursor:pointer; color:#818cf8; font-size:14px; padding:0; line-height:1;">×</button>
+          </span>
+          <button class="cv-add-tag-btn" @click="dialogNuevaEtiqueta = true">+ Añadir</button>
         </div>
       </div>
 
@@ -425,11 +459,14 @@
         <div class="cv-panel-label">AGENTE ASIGNADO</div>
         <div class="cv-agente-wrap">
           <div v-if="agenteAsignadoIA" class="cv-agente-avatar" :style="{ background: '#6366f133', color: '#818cf8' }">
-            {{ (agentesDisponibles.find(a => a.id === agenteAsignadoIA) || {}).nombre
-               ? (agentesDisponibles.find(a => a.id === agenteAsignadoIA).nombre.slice(0,2).toUpperCase())
-               : 'IA' }}
+            <span v-if="guarandoAgente" style="display:flex; align-items:center; justify-content:center; width:100%; height:100%;">
+              <v-progress-circular indeterminate size="20" width="2" color="#818cf8"></v-progress-circular>
+            </span>
+            <span v-else>{{ (agentesDisponibles.find(a => String(a.id) === String(agenteAsignadoIA)) || {}).nombre
+               ? (agentesDisponibles.find(a => String(a.id) === String(agenteAsignadoIA)).nombre.slice(0,2).toUpperCase())
+               : 'IA' }}</span>
           </div>
-          <select v-model="agenteAsignadoIA" class="cv-select">
+          <select v-model="agenteAsignadoIA" class="cv-select" @change="guardarAgenteAsignado(agenteAsignadoIA)" :disabled="guarandoAgente">
             <option value="">Sin asignar</option>
             <option v-for="ag in agentesDisponibles" :key="ag.id" :value="ag.id">{{ ag.nombre }}</option>
           </select>
@@ -458,6 +495,25 @@
       </div>
 
     </div><!-- /cv-col-right -->
+
+    <!-- Modal: Nueva Etiqueta -->
+    <div v-if="dialogNuevaEtiqueta" class="cv-overlay" @click.self="dialogNuevaEtiqueta = false">
+      <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; width:380px; max-width:95vw; padding:24px;">
+        <div style="font-size:15px; font-weight:700; color:#f1f5f9; margin-bottom:16px;">Agregar etiqueta</div>
+        <input
+          v-model="nuevaEtiqueta"
+          @keydown.enter="agregarEtiqueta"
+          class="ide-input"
+          placeholder="Ej: Cliente VIP, Pendiente, Urgente..."
+          style="width:100%; margin-bottom:16px;"
+          autofocus
+        />
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button @click="dialogNuevaEtiqueta = false" style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
+          <button @click="agregarEtiqueta" :disabled="!nuevaEtiqueta.trim()" style="background:#6366f1; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;">Agregar</button>
+        </div>
+      </div>
+    </div>
 
   </div><!-- /cv-root -->
 
@@ -511,6 +567,8 @@ export default {
     cargandoMensajes: false,
     filtroActivo: 'todas',
     filtroEstado: 'todos',
+    filtroDias: '',
+    filtroScore: '',
     busqueda: '',
     seleccionadaId: null,
     seleccionada: null,
@@ -526,6 +584,11 @@ export default {
     agentesDisponibles: [],
     posts: [],
     postRelacionado: null,
+    guarandoAgente: false,
+    dialogNuevaEtiqueta: false,
+    nuevaEtiqueta: '',
+    editandoNombre: false,
+    nuevoNombre: '',
     filtros: [
       { id: 'todas',     label: 'Todos'      },
       { id: 'whatsapp',  label: 'WhatsApp'   },
@@ -554,12 +617,50 @@ export default {
   computed: {
     conversacionesFiltradas() {
       let list = this.conversaciones;
+
+      // Canal filter
       if (this.filtroActivo === 'escaladas') list = list.filter(c => c.escalado);
       else if (this.filtroActivo !== 'todas') list = list.filter(c => c.canal === this.filtroActivo);
 
+      // Estado filter
       if (this.filtroEstado === 'nuevo') list = list.filter(c => !c.estadoConversacion || c.estadoConversacion === 'abierto');
       else if (this.filtroEstado !== 'todos') list = list.filter(c => c.estadoConversacion === this.filtroEstado);
 
+      // Days filter
+      if (this.filtroDias) {
+        const now = new Date();
+        list = list.filter(c => {
+          const convDate = new Date(c.fechaCreacion);
+          if (this.filtroDias === 'hoy') {
+            return convDate.toDateString() === now.toDateString();
+          } else if (this.filtroDias === 'ayer') {
+            const yesterday = new Date(now);
+            yesterday.setDate(now.getDate() - 1);
+            return convDate.toDateString() === yesterday.toDateString();
+          } else if (this.filtroDias === '7') {
+            const sevenDaysAgo = new Date(now);
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            return convDate >= sevenDaysAgo;
+          } else if (this.filtroDias === '30') {
+            const thirtyDaysAgo = new Date(now);
+            thirtyDaysAgo.setDate(now.getDate() - 30);
+            return convDate >= thirtyDaysAgo;
+          }
+          return true;
+        });
+      }
+
+      // Score filter
+      if (this.filtroScore) {
+        list = list.filter(c => {
+          if (this.filtroScore === 'hot') return c.score >= 70;
+          if (this.filtroScore === 'warm') return c.score >= 40 && c.score < 70;
+          if (this.filtroScore === 'cold') return c.score < 40;
+          return true;
+        });
+      }
+
+      // Search filter
       if (this.busqueda.trim()) {
         const q = this.busqueda.toLowerCase();
         list = list.filter(c => (c.contacto || '').toLowerCase().includes(q) || (c.resolucion || '').toLowerCase().includes(q));
@@ -637,6 +738,9 @@ export default {
       this.respuesta = '';
       this.errorEnvio = null;
       this.notaInterna = conv.notas || '';
+      this.agenteAsignadoIA = conv.agenteId || '';
+      this.editandoNombre = false;
+      this.nuevoNombre = this.nombreRemitente(conv);
       this.$nextTick(this.scrollAbajo);
       try {
         this.cargandoMensajes = true;
@@ -644,6 +748,8 @@ export default {
         if (fresca) {
           this.seleccionada = fresca;
           this.notaInterna = fresca.notas || '';
+          this.agenteAsignadoIA = fresca.agenteId || '';
+          this.nuevoNombre = this.nombreRemitente(fresca);
           this.$nextTick(this.scrollAbajo);
           const idx = this.conversaciones.findIndex(c => c.id === conv.id);
           if (idx !== -1) this.conversaciones.splice(idx, 1, fresca);
@@ -703,7 +809,129 @@ export default {
       try {
         await this.$service.patch(`conversaciones/${this.seleccionada.id}/notas`, { notas: this.notaInterna });
         this.$message && this.$message.success('Nota guardada');
-      } catch (_e) { /* ignore */ }
+      } catch (e) {
+        this.$message && this.$message.error('Error al guardar nota');
+      }
+    },
+
+    async guardarAgenteAsignado(agenteId) {
+      if (!this.seleccionada || !this.seleccionada.id) return;
+      try {
+        this.guarandoAgente = true;
+        const payload = { agenteId: agenteId ? String(agenteId) : null };
+        const datos = await this.$service.patch(`conversaciones/${this.seleccionada.id}`, payload);
+        if (datos) {
+          this.seleccionada = { ...this.seleccionada, ...datos };
+          const idx = this.conversaciones.findIndex(c => c.id === this.seleccionada.id);
+          if (idx !== -1) {
+            this.conversaciones[idx] = { ...this.conversaciones[idx], ...datos };
+          }
+        }
+        this.$message && this.$message.success('Agente asignado correctamente');
+      } catch (e) {
+        this.$message && this.$message.error('Error al asignar agente: ' + (e.message || 'Error desconocido'));
+        this.agenteAsignadoIA = this.seleccionada?.agenteId || '';
+      } finally {
+        this.guarandoAgente = false;
+      }
+    },
+
+    abrirEdicionNombre() {
+      this.editandoNombre = true;
+      this.nuevoNombre = this.nombreRemitente(this.seleccionada);
+    },
+
+    cancelarEdicion() {
+      this.editandoNombre = false;
+      this.nuevoNombre = this.nombreRemitente(this.seleccionada);
+    },
+
+    async guardarNombreYCerrar() {
+      if (!this.seleccionada || !this.nuevoNombre.trim()) {
+        console.log('[Guardar nombre] Cancelado: sin conversación o nombre vacío');
+        this.editandoNombre = false;
+        return;
+      }
+
+      const nombreAnterior = this.nombreRemitente(this.seleccionada);
+      console.log('[Guardar nombre] Anterior:', nombreAnterior, 'Nuevo:', this.nuevoNombre.trim());
+
+      if (this.nuevoNombre.trim() === nombreAnterior) {
+        console.log('[Guardar nombre] Sin cambios, cancelando');
+        this.editandoNombre = false;
+        return;
+      }
+
+      try {
+        const nombreGuardado = `Nombre: ${this.nuevoNombre.trim()}`;
+        console.log('[Guardar nombre] Enviando PATCH a /conversaciones/' + this.seleccionada.id, { notas: nombreGuardado });
+
+        const response = await this.$service.patch(`conversaciones/${this.seleccionada.id}`, { notas: nombreGuardado });
+        console.log('[Guardar nombre] Respuesta:', response);
+
+        if (response) {
+          this.seleccionada = { ...this.seleccionada, notas: nombreGuardado };
+          const idx = this.conversaciones.findIndex(c => c.id === this.seleccionada.id);
+          if (idx !== -1) {
+            this.conversaciones[idx] = { ...this.conversaciones[idx], notas: nombreGuardado };
+          }
+          console.log('[Guardar nombre] Actualización completada en UI');
+          this.$message && this.$message.success('Nombre del contacto actualizado');
+        } else {
+          console.log('[Guardar nombre] Respuesta vacía');
+        }
+      } catch (e) {
+        console.error('[Guardar nombre] Error:', e);
+        this.$message && this.$message.error('Error al guardar nombre: ' + (e.message || 'desconocido'));
+      } finally {
+        this.editandoNombre = false;
+      }
+    },
+
+    async agregarEtiqueta() {
+      const etiqueta = this.nuevaEtiqueta.trim();
+      if (!etiqueta || !this.seleccionada) return;
+
+      const etiquetas = [...(this.seleccionada.etiquetas || [])];
+      if (etiquetas.includes(etiqueta)) {
+        this.$message && this.$message.warning('Esta etiqueta ya existe');
+        return;
+      }
+
+      etiquetas.push(etiqueta);
+      try {
+        const datos = await this.$service.patch(`conversaciones/${this.seleccionada.id}`, { etiquetas });
+        if (datos) {
+          this.seleccionada = { ...this.seleccionada, ...datos };
+          const idx = this.conversaciones.findIndex(c => c.id === this.seleccionada.id);
+          if (idx !== -1) {
+            this.conversaciones[idx] = { ...this.conversaciones[idx], ...datos };
+          }
+          this.$message && this.$message.success('Etiqueta agregada');
+        }
+        this.nuevaEtiqueta = '';
+        this.dialogNuevaEtiqueta = false;
+      } catch (e) {
+        this.$message && this.$message.error('Error al agregar etiqueta');
+      }
+    },
+
+    async eliminarEtiqueta(etiqueta) {
+      if (!this.seleccionada) return;
+      const etiquetas = (this.seleccionada.etiquetas || []).filter(t => t !== etiqueta);
+      try {
+        const datos = await this.$service.patch(`conversaciones/${this.seleccionada.id}`, { etiquetas });
+        if (datos) {
+          this.seleccionada = { ...this.seleccionada, ...datos };
+          const idx = this.conversaciones.findIndex(c => c.id === this.seleccionada.id);
+          if (idx !== -1) {
+            this.conversaciones[idx] = { ...this.conversaciones[idx], ...datos };
+          }
+          this.$message && this.$message.success('Etiqueta eliminada');
+        }
+      } catch (e) {
+        this.$message && this.$message.error('Error al eliminar etiqueta');
+      }
     },
 
     scrollAbajo() {
@@ -996,6 +1224,34 @@ export default {
 }
 .cv-pill:hover { border-color: #6366f1; color: #a5b4fc; }
 .cv-pill--active { background: #6366f122; border-color: #6366f155; color: #818cf8; }
+
+/* Filter select boxes */
+.cv-filter-select {
+  padding: 5px 8px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #f1f5f9;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  outline: none;
+}
+.cv-filter-select:hover { border-color: #6366f1; }
+.cv-filter-select:focus { border-color: #6366f1; }
+
+/* Overlay modal */
+.cv-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* List scroll area */
 .cv-list-scroll {

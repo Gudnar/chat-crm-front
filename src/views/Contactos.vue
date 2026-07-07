@@ -101,7 +101,7 @@
                   {{ iniciales(c.nombre || c.contacto) }}
                 </div>
                 <div>
-                  <div class="ct-nombre">{{ c.nombre || formatNombre(c.contacto) }}</div>
+                  <div class="ct-nombre">{{ obtenerNombreContacto(c) }}</div>
                   <div class="ct-id">{{ c.contacto }}</div>
                 </div>
               </div>
@@ -173,7 +173,7 @@
             {{ iniciales(c.nombre || c.contacto) }}
           </div>
           <div style="flex:1; min-width:0;">
-            <div class="ct-nombre">{{ c.nombre || formatNombre(c.contacto) }}</div>
+            <div class="ct-nombre">{{ obtenerNombreContacto(c) }}</div>
             <div class="ct-id">{{ c.contacto }}</div>
           </div>
           <span style="font-size:16px; font-weight:900;" :style="{ color: scoreColor(c.score) }">{{ c.score || 0 }}</span>
@@ -210,7 +210,7 @@
               {{ iniciales(modal.nombre || modal.contacto) }}
             </div>
             <div>
-              <div style="font-size:15px; font-weight:700; color:#f1f5f9;">{{ modal.nombre || formatNombre(modal.contacto) }}</div>
+              <div style="font-size:15px; font-weight:700; color:#f1f5f9;">{{ obtenerNombreContacto(modal) }}</div>
               <div style="font-size:11px; color:#64748b;">{{ modal.contacto }}</div>
             </div>
           </div>
@@ -229,8 +229,8 @@
           </div>
           <!-- Nombre personalizado -->
           <div class="ct-field">
-            <label>Nombre</label>
-            <input v-model="modalForm.nombre" class="ct-input" placeholder="Nombre del contacto" />
+            <label>Nombre personalizado</label>
+            <input v-model="modalForm.nombre" class="ct-input" placeholder="Ej: Alvaroi" />
           </div>
           <!-- Info grid -->
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -261,11 +261,6 @@
               <span v-for="tag in etiquetas(modal)" :key="tag.label" class="ct-tag" :style="{ background: tag.color+'18', color: tag.color, border: '1px solid '+tag.color+'33' }">{{ tag.label }}</span>
             </div>
           </div>
-          <!-- Nota -->
-          <div class="ct-field" style="margin-top:14px;">
-            <label>Nota interna</label>
-            <textarea v-model="modalForm.nota" class="ct-input ct-textarea" placeholder="Agrega una nota..." rows="3"></textarea>
-          </div>
         </div>
         <div class="ct-modal-ft">
           <button class="ct-btn-sec" @click="irAChat(modal)">
@@ -273,7 +268,7 @@
             Ver conversación
           </button>
           <button class="ct-btn-pri" @click="guardarNota" :disabled="guardando">
-            {{ guardando ? 'Guardando...' : 'Guardar' }}
+            {{ guardando ? 'Guardando...' : 'Guardar nombre' }}
           </button>
         </div>
       </div>
@@ -443,7 +438,12 @@ export default {
 
     abrirDetalle(c) {
       this.modal = { ...c };
-      this.modalForm = { nombre: c.nombre || '', nota: c.notas || '' };
+      // Extraer nombre personalizado del campo notas si existe
+      let nombrePersonalizado = c.nombre || '';
+      if (c.canal === 'whatsapp' && c.notas && c.notas.startsWith('Nombre:')) {
+        nombrePersonalizado = c.notas.replace('Nombre:', '').trim();
+      }
+      this.modalForm = { nombre: nombrePersonalizado, nota: '' };
     },
     abrirEditar(c) { this.abrirDetalle(c); },
 
@@ -451,13 +451,18 @@ export default {
       if (!this.modal) return;
       this.guardando = true;
       try {
-        await this.$service.patch(`conversaciones/${this.modal.id}/notas`, { notas: this.modalForm.nota });
+        // Guardar el nombre personalizado
+        let notasGuardar = this.modalForm.nombre.trim()
+          ? `Nombre: ${this.modalForm.nombre.trim()}`
+          : '';
+
+        await this.$service.patch(`conversaciones/${this.modal.id}`, { notas: notasGuardar });
         const idx = this.conversaciones.findIndex(c => c.id === this.modal.id);
         if (idx !== -1) {
-          this.conversaciones[idx].notas = this.modalForm.nota;
+          this.conversaciones[idx].notas = notasGuardar;
           this.conversaciones[idx].nombre = this.modalForm.nombre;
         }
-        this.$message && this.$message.success('Guardado');
+        this.$message && this.$message.success('Nombre actualizado');
         this.modal = null;
       } catch (e) {
         this.$message && this.$message.error(e?.mensaje || 'Error al guardar');
@@ -558,6 +563,15 @@ export default {
         tags.push({ label: 'Info', color: '#475569' });
       }
       return tags.slice(0, 3);
+    },
+
+    obtenerNombreContacto(c) {
+      if (c.nombre) return c.nombre;
+      if (c.canal === 'whatsapp' && c.notas && c.notas.startsWith('Nombre:')) {
+        const nombre = c.notas.replace('Nombre:', '').trim();
+        return nombre.length > 25 ? nombre.slice(0, 25) + '…' : nombre;
+      }
+      return this.formatNombre(c.contacto);
     },
   },
 };

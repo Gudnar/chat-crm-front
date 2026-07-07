@@ -98,7 +98,7 @@
                   {{ iniciales(conv.contacto) }}
                 </div>
                 <div style="min-width:0;">
-                  <div class="pl-card-name">{{ formatNombre(conv.contacto) }}</div>
+                  <div class="pl-card-name">{{ obtenerNombreContacto(conv) }}</div>
                   <div class="pl-card-canal">
                     <span v-html="canalIcono(conv.canal)" style="display:flex; width:10px; height:10px; flex-shrink:0;"></span>
                     <span style="text-transform:capitalize;">{{ conv.canal }}</span>
@@ -124,6 +124,13 @@
                 <span class="pl-agent-name">{{ conv.agente || 'Sin' }}</span>
               </div>
               <span class="pl-card-date">{{ formatTime(conv.fechaCreacion) }}</span>
+            </div>
+
+            <!-- Acciones -->
+            <div style="display:flex; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid #1e3a5f;">
+              <button @click.stop="abrirSoporte(conv)" style="flex:1; background:#f59e0b33; color:#f59e0b; border:1px solid #f59e0b44; border-radius:6px; padding:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s;">
+                📋 Soporte
+              </button>
             </div>
           </div>
         </div>
@@ -450,6 +457,30 @@ export default {
     formatDate(d) {
       if (!d) return '';
       return new Date(d).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    },
+
+    obtenerNombreContacto(conv) {
+      if (conv.canal === 'whatsapp' && conv.notas && conv.notas.startsWith('Nombre:')) {
+        const nombre = conv.notas.replace('Nombre:', '').trim();
+        return nombre.length > 22 ? nombre.slice(0, 22) + '…' : nombre;
+      }
+      return this.formatNombre(conv.contacto);
+    },
+
+    abrirSoporte(conv) {
+      const nombre = this.obtenerNombreContacto(conv);
+      const contacto = conv.contacto;
+      const conversacionId = conv.id;
+
+      this.$router.push({
+        name: 'soporte',
+        query: {
+          nombre: nombre,
+          contacto: contacto,
+          conversacionId: conversacionId,
+          crear: '1'
+        }
+      }).catch(() => {});
     },
   },
 };
