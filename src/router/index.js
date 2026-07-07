@@ -17,6 +17,18 @@ const getUser = () => {
 router.beforeEach((to, from, next) => {
   const hasToken = localStorage.getItem('ide_ia_token') !== null;
 
+  // Sesiones guardadas antes de que el login almacenara el rol: sin este campo
+  // el menú se filtra mal (rol 'USER') y desaparecen módulos. Forzar re-login.
+  if (hasToken && to.name !== 'login') {
+    const user = getUser();
+    if (!user || !user.rol) {
+      Object.keys(localStorage)
+        .filter(k => k.startsWith('ide_ia_'))
+        .forEach(k => localStorage.removeItem(k));
+      return next({ name: 'login' });
+    }
+  }
+
   if (to.meta?.requiresAuth && !hasToken) {
     return next({ name: 'login' });
   }
