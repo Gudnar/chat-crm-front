@@ -319,7 +319,7 @@
           <!-- Registrar seguimiento -->
           <div style="padding:16px 0; border-bottom:1px solid #334155;">
             <label class="opp-label" style="font-size:12px; color:#e2e8f0;">📝 Registrar seguimiento</label>
-            <textarea v-model="segNota" class="ide-input opp-input" rows="2" style="resize:vertical; margin-top:6px;" placeholder="¿Qué se hizo? Ej: Se llamó al cliente, pidió la cotización por correo…"></textarea>
+            <textarea v-model="segNota" class="ide-input opp-input" rows="2" style="resize:vertical; margin-top:6px;" placeholder="¿Qué se hizo? (opcional si solo programas la próxima acción)"></textarea>
             <div style="display:grid; grid-template-columns:1fr 170px auto; gap:8px; margin-top:8px; align-items:end;">
               <div>
                 <label class="opp-label">Próxima acción</label>
@@ -329,7 +329,9 @@
                 <label class="opp-label">Fecha límite</label>
                 <input v-model="segFecha" type="datetime-local" class="ide-input opp-input" />
               </div>
-              <button class="opp-btn-pri" style="height:34px;" :disabled="!segNota || guardando" @click="registrarSeguimiento">Guardar</button>
+              <button class="opp-btn-pri" style="height:34px;" :disabled="(!segNota && !segAccion) || guardando" @click="registrarSeguimiento">
+                {{ guardando ? 'Guardando…' : 'Guardar' }}
+              </button>
             </div>
           </div>
 
@@ -337,14 +339,34 @@
           <div style="padding-top:16px;">
             <label class="opp-label" style="font-size:12px; color:#e2e8f0;">Historial de seguimiento</label>
             <div style="max-height:240px; overflow-y:auto; margin-top:8px; display:flex; flex-direction:column; gap:8px;">
-              <div v-for="(h, i) in historialOrdenado" :key="i" style="display:flex; gap:10px; background:#0f172a; border-radius:8px; padding:8px 12px;">
+              <div v-for="h in historialOrdenado" :key="h.idx" style="display:flex; gap:10px; background:#0f172a; border-radius:8px; padding:8px 12px;">
                 <span style="font-size:14px; flex-shrink:0;">{{ iconoAccion(h.accion) }}</span>
                 <div style="flex:1; min-width:0;">
-                  <div style="font-size:12px; color:#e2e8f0;">{{ h.detalles }}</div>
-                  <div style="font-size:10px; color:#64748b; margin-top:2px;">
-                    <b>{{ h.usuarioNombre }}</b> · {{ formatoFechaHora(h.timestamp) }}
-                  </div>
+                  <!-- Modo edición -->
+                  <template v-if="editandoHistorial === h.idx">
+                    <textarea v-model="editHistorialTexto" class="ide-input opp-input" rows="2" style="resize:vertical;"></textarea>
+                    <div style="display:flex; gap:6px; margin-top:6px;">
+                      <button class="opp-btn-pri" style="padding:4px 12px; font-size:11px;" :disabled="!editHistorialTexto || guardandoHistorial" @click="guardarHistorial">
+                        {{ guardandoHistorial ? 'Guardando…' : 'Guardar' }}
+                      </button>
+                      <button class="opp-btn-sec" style="padding:4px 12px; font-size:11px;" @click="editandoHistorial = null">Cancelar</button>
+                    </div>
+                  </template>
+                  <!-- Modo lectura -->
+                  <template v-else>
+                    <div style="font-size:12px; color:#e2e8f0;">{{ h.detalles }}</div>
+                    <div style="font-size:10px; color:#64748b; margin-top:2px;">
+                      <b>{{ h.usuarioNombre }}</b> · {{ formatoFechaHora(h.timestamp) }}
+                      <span v-if="h.editado" :title="'Corregido por ' + (h.editadoPor || '') + ' el ' + formatoFechaHora(h.editadoEn)" style="color:#f59e0b;"> · (editado)</span>
+                    </div>
+                  </template>
                 </div>
+                <button
+                  v-if="puedeEditarHistorial(h) && editandoHistorial !== h.idx"
+                  style="background:none; border:none; cursor:pointer; color:#64748b; font-size:12px; padding:2px; flex-shrink:0; align-self:flex-start;"
+                  title="Corregir este seguimiento"
+                  @click="iniciarEdicionHistorial(h)"
+                >✏️</button>
               </div>
               <div v-if="!historialOrdenado.length" style="font-size:12px; color:#475569; text-align:center; padding:12px;">Sin actividad registrada</div>
             </div>
@@ -414,6 +436,9 @@ export default {
       segNota: '',
       segAccion: '',
       segFecha: '',
+      editandoHistorial: null,
+      editHistorialTexto: '',
+      guardandoHistorial: false,
       dialogMotivo: false,
       estadoPendiente: '',
       motivoCierre: '',
@@ -428,7 +453,9 @@ export default {
       return rol !== 'AGENTE_HUMANO';
     },
     historialOrdenado() {
-      return [...((this.sel && this.sel.historial) || [])].reverse();
+      // idx = posición real en el array (necesaria para editar), mostrado en orden inverso
+      const h = (this.sel && this.sel.historial) || [];
+      return h.map((e, i) => ({ ...e, idx: i })).reverse();
     },
   },
   async mounted() {
@@ -529,8 +556,14 @@ export default {
       this.segFecha = '';
     },
     cerrarDetalle() {
+      // Actualiza solo la fila editada en la tabla, sin recargar toda la página
+      if (this.sel) {
+        const idx = this.oportunidades.findIndex(o => o.id === this.sel.id);
+        if (idx !== -1) this.$set(this.oportunidades, idx, { ...this.oportunidades[idx], ...this.sel });
+      }
       this.sel = null;
-      this.refrescar();
+      this.editandoHistorial = null;
+      this.cargarStats(); // métricas al día, sin tocar la tabla
     },
     async guardarCampos() {
       if (!this.sel) return;
@@ -581,11 +614,11 @@ export default {
       }
     },
     async registrarSeguimiento() {
-      if (!this.sel || !this.segNota) return;
+      if (!this.sel || (!this.segNota && !this.segAccion)) return;
       this.guardando = true;
       try {
         const data = await this.$service.post(`oportunidades/${this.sel.id}/seguimiento`, {
-          nota: this.segNota,
+          nota: this.segNota || undefined,
           proximaAccion: this.segAccion || undefined,
           proximaAccionFecha: this.segFecha ? new Date(this.segFecha).toISOString() : undefined,
         });
@@ -596,6 +629,30 @@ export default {
         this.$message.error('No se pudo registrar el seguimiento');
       } finally {
         this.guardando = false;
+      }
+    },
+    puedeEditarHistorial(h) {
+      return ['seguimiento', 'nota'].includes(h.accion);
+    },
+    iniciarEdicionHistorial(h) {
+      this.editandoHistorial = h.idx;
+      this.editHistorialTexto = h.detalles;
+    },
+    async guardarHistorial() {
+      if (!this.sel || this.editandoHistorial === null || !this.editHistorialTexto) return;
+      this.guardandoHistorial = true;
+      try {
+        const data = await this.$service.patch(`oportunidades/${this.sel.id}/historial`, {
+          indice: this.editandoHistorial,
+          detalles: this.editHistorialTexto,
+        });
+        this.sel = data || this.sel;
+        this.editandoHistorial = null;
+        this.$message.success('Seguimiento corregido');
+      } catch (e) {
+        this.$message.error('No se pudo corregir la entrada');
+      } finally {
+        this.guardandoHistorial = false;
       }
     },
     eliminarSel() {

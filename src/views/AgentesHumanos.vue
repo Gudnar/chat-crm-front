@@ -255,12 +255,32 @@ export default {
     await this.cargar();
   },
   methods: {
+    // Multi-tenant: el SUPER_ADMIN administra el equipo del cliente seleccionado
+    // en el modulo Clientes; sin esto el backend rechaza la peticion.
+    conCliente(url) {
+      const user = this.$storage.get('user') || {};
+      if (user.rol !== 'SUPER_ADMIN') return url;
+      const clienteId = this.$store.getters.clienteId;
+      if (!clienteId) return url;
+      return url + (url.includes('?') ? '&' : '?') + 'clienteId=' + clienteId;
+    },
+    sinClienteSeleccionado() {
+      const user = this.$storage.get('user') || {};
+      return user.rol === 'SUPER_ADMIN' && !this.$store.getters.clienteId;
+    },
     async cargar() {
+      if (this.sinClienteSeleccionado()) {
+        this.$message.warning('Selecciona un cliente en el modulo Clientes (boton Gestionar) para administrar su equipo humano');
+        this.agentes = [];
+        this.cola = [];
+        this.loading = false;
+        return;
+      }
       try {
         this.loading = true;
         const [agentes, cola] = await Promise.all([
-          this.$service.list('agentes-humanos'),
-          this.$service.list('agentes-humanos/cola'),
+          this.$service.list(this.conCliente('agentes-humanos')),
+          this.$service.list(this.conCliente('agentes-humanos/cola')),
         ]);
         this.agentes = agentes || [];
         this.cola = cola || [];
@@ -308,10 +328,10 @@ export default {
         if (!payload.correoElectronico) delete payload.correoElectronico;
         if (this.editando) {
           delete payload.usuario;
-          await this.$service.put(`agentes-humanos/${this.editando.id}`, payload);
+          await this.$service.put(this.conCliente(`agentes-humanos/${this.editando.id}`), payload);
           this.$message.success('Agente actualizado');
         } else {
-          await this.$service.post('agentes-humanos', payload);
+          await this.$service.post(this.conCliente('agentes-humanos'), payload);
           this.$message.success('Agente creado. Ya puede iniciar sesión con sus credenciales.');
         }
         this.dialog = false;
@@ -322,19 +342,19 @@ export default {
     },
     confirmarEliminar(ag) {
       this.$confirm(`¿Eliminar al agente "${ag.nombre}"? Sus credenciales quedarán desactivadas.`, async () => {
-        await this.$service.delete(`agentes-humanos/${ag.id}`);
+        await this.$service.delete(this.conCliente(`agentes-humanos/${ag.id}`));
         this.$message.success('Agente eliminado');
         await this.cargar();
       });
     },
     async verEstadisticas(ag) {
-      this.stats = await this.$service.get(`agentes-humanos/${ag.id}/estadisticas`) || {};
+      this.stats = await this.$service.get(this.conCliente(`agentes-humanos/${ag.id}/estadisticas`)) || {};
       this.statsDialog = true;
     },
     async asignar(conv) {
       const agenteHumanoId = this.seleccionAgente[conv.id];
       if (!agenteHumanoId) return;
-      await this.$service.post('agentes-humanos/asignar', {
+      await this.$service.post(this.conCliente('agentes-humanos/asignar'), {
         conversacionId: conv.id,
         agenteHumanoId,
         razon: 'Asignación manual desde panel de equipo',
@@ -346,7 +366,7 @@ export default {
     async asignacionAutomatica() {
       this.asignandoAuto = true;
       try {
-        const res = await this.$service.post('agentes-humanos/asignacion-automatica', {});
+        const res = await this.$service.post(this.conCliente('agentes-humanos/asignacion-automatica'), {});
         this.$message.success(res?.mensaje || `${res?.asignadas ?? 0} conversación(es) asignada(s)`);
         await this.cargar();
       } finally {
