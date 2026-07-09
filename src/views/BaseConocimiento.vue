@@ -3,8 +3,8 @@
     <!-- Toolbar -->
     <div class="bk-toolbar">
       <div class="bk-toolbar-left">
-        <input v-model="filtro" class="ide-input" placeholder="Buscar pregunta o respuesta…" class="bk-input-search" />
-        <select v-model="categoriaFiltro" class="ide-select" class="bk-select-category">
+        <input v-model="filtro" class="ide-input bk-input-search" placeholder="Buscar pregunta o respuesta…" />
+        <select v-model="categoriaFiltro" class="ide-select bk-select-category">
           <option value="">Todas las categorías</option>
           <option v-for="c in categorias" :key="c" :value="c">{{ c }}</option>
         </select>
