@@ -9,10 +9,21 @@
           <option v-for="c in categorias" :key="c" :value="c">{{ c }}</option>
         </select>
       </div>
-      <button class="bk-add-btn" @click="abrir(null)">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva pregunta
-      </button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="bk-add-btn" style="background:#22c55e;" :disabled="exportando" title="Descargar la base de conocimiento en Excel" @click="exportarExcel">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          {{ exportando ? 'Exportando…' : 'Exportar' }}
+        </button>
+        <label class="bk-add-btn" style="background:#f59e0b; margin:0;" title="Cargar o actualizar desde Excel (columnas: Pregunta, Respuesta, Categoría, Activo, Orden)">
+          <input type="file" accept=".xlsx,.xls" style="display:none;" @change="importarExcel" />
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          {{ importando ? 'Importando…' : 'Importar' }}
+        </label>
+        <button class="bk-add-btn" @click="abrir(null)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nueva pregunta
+        </button>
+      </div>
     </div>
 
     <!-- Loading -->
@@ -149,6 +160,8 @@ export default {
       editando: null,
       eliminandoItem: null,
       form: { pregunta: '', respuesta: '', categoria: '', orden: 0, activo: true },
+      exportando: false,
+      importando: false,
     };
   },
   computed: {
@@ -175,6 +188,61 @@ export default {
         this.items = data || [];
       } finally {
         this.loading = false;
+      }
+    },
+    async exportarExcel() {
+      this.exportando = true;
+      try {
+        const response = await fetch(`${this.$baseServer}agentes/${this.agenteId}/base-conocimiento/exportar/excel`, {
+          headers: { 'Authorization': `Bearer ${this.$storage.get('token')}` },
+        });
+        if (!response.ok) throw new Error('Error al exportar');
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `base-conocimiento-${new Date().toISOString().split('T')[0]}.xlsx`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        this.$message.success('Excel exportado');
+      } catch (e) {
+        this.$message.error('Error al exportar Excel');
+      } finally {
+        this.exportando = false;
+      }
+    },
+    async importarExcel(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      this.importando = true;
+      try {
+        const formData = new FormData();
+        formData.append('archivo', file);
+        const response = await fetch(`${this.$baseServer}agentes/${this.agenteId}/base-conocimiento/importar/excel`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${this.$storage.get('token')}` },
+          body: formData,
+        });
+        const json = await response.json();
+        const resultado = json.datos || json;
+
+        if (resultado.creadas > 0 || resultado.actualizadas > 0) {
+          this.$message.success(`${resultado.creadas} creadas, ${resultado.actualizadas} actualizadas`);
+          await this.cargar();
+        } else if (!resultado.errores || !resultado.errores.length) {
+          this.$message.warning('No se encontraron preguntas en el archivo');
+        }
+        if (resultado.errores && resultado.errores.length) {
+          const msg = resultado.errores.slice(0, 3).join(' | ');
+          this.$message.warning(`${resultado.errores.length} error(es): ${msg}${resultado.errores.length > 3 ? '…' : ''}`);
+        }
+      } catch (e) {
+        this.$message.error('Error al importar archivo');
+      } finally {
+        this.importando = false;
+        event.target.value = '';
       }
     },
     abrir(item) {
