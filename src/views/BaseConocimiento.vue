@@ -1,21 +1,21 @@
 <template>
   <div>
     <!-- Toolbar -->
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <input v-model="filtro" class="ide-input" placeholder="Buscar pregunta o respuesta…" style="width:220px; padding:7px 12px; font-size:12px;" />
-        <select v-model="categoriaFiltro" class="ide-select" style="width:170px; padding:7px 12px; font-size:12px;">
+    <div class="bk-toolbar">
+      <div class="bk-toolbar-left">
+        <input v-model="filtro" class="ide-input" placeholder="Buscar pregunta o respuesta…" class="bk-input-search" />
+        <select v-model="categoriaFiltro" class="ide-select" class="bk-select-category">
           <option value="">Todas las categorías</option>
           <option v-for="c in categorias" :key="c" :value="c">{{ c }}</option>
         </select>
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <button class="bk-add-btn" style="background:#22c55e;" :disabled="exportando" title="Descargar la base de conocimiento en Excel" @click="exportarExcel">
+      <div class="bk-toolbar-right">
+        <button class="bk-add-btn bk-add-btn--success" :disabled="exportando" title="Descargar la base de conocimiento en Excel" @click="exportarExcel">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           {{ exportando ? 'Exportando…' : 'Exportar' }}
         </button>
-        <label class="bk-add-btn" style="background:#f59e0b; margin:0;" title="Cargar o actualizar desde Excel (columnas: Pregunta, Respuesta, Categoría, Activo, Orden)">
-          <input type="file" accept=".xlsx,.xls" style="display:none;" @change="importarExcel" />
+        <label class="bk-add-btn bk-add-btn--warning" :class="{ 'bk-add-btn--loading': importando }" title="Cargar o actualizar desde Excel (columnas: Pregunta, Respuesta, Categoría, Activo, Orden)">
+          <input type="file" accept=".xlsx,.xls" style="display:none;" @change="importarExcel" :disabled="importando" />
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           {{ importando ? 'Importando…' : 'Importar' }}
         </label>
@@ -305,27 +305,36 @@ export default {
 
 
 <style scoped>
-.bk-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.65);
-  z-index: 9999;
+/* Toolbar */
+.bk-toolbar {
   display: flex;
   align-items: center;
-  justify-content: center;
-}
-.bk-modal {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  width: 600px;
-  max-width: 95vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 24px;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
+.bk-toolbar-left,
+.bk-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bk-input-search {
+  width: 220px !important;
+  padding: 7px 12px !important;
+  font-size: 12px !important;
+}
+
+.bk-select-category {
+  width: 170px !important;
+  padding: 7px 12px !important;
+  font-size: 12px !important;
+}
+
+/* Buttons */
 .bk-add-btn {
   display: flex;
   align-items: center;
@@ -338,9 +347,64 @@ export default {
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
   flex-shrink: 0;
-  transition: background 0.15s;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+  min-width: max-content;
 }
-.bk-add-btn:hover { background: #4f46e5; }
+
+.bk-add-btn:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.bk-add-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bk-add-btn--success {
+  background: #22c55e;
+}
+
+.bk-add-btn--success:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+.bk-add-btn--warning {
+  background: #f59e0b;
+}
+
+.bk-add-btn--warning:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.bk-add-btn--loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Modal */
+.bk-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bk-modal {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+}
 </style>
