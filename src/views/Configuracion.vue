@@ -199,7 +199,7 @@
           </div>
 
           <div style="display:flex; gap:8px; margin-bottom:20px;">
-            <v-btn depressed color="success" :loading="waTestando" :disabled="!waForm.accessToken || !waForm.phoneNumberId" @click="testConexionWa" style="font-size:12px; border-radius:8px; background:#25D36622 !important; color:#25D366 !important;">
+            <v-btn depressed color="success" :loading="waTestando" :disabled="!waForm.phoneNumberId || (!waForm.accessToken && !waForm._hasSavedToken)" @click="testConexionWa" style="font-size:12px; border-radius:8px; background:#25D36622 !important; color:#25D366 !important;">
               {{ waTestando ? 'Verificando…' : 'Probar conexión' }}
             </v-btn>
           </div>
@@ -399,6 +399,7 @@ export default {
         verifyToken: 'ide_ia_verify_token',
         agenteId: '',
         enabled: false,
+        _hasSavedToken: false, // Track if a token exists in backend
       },
       waTestResult: null,
       waTestando: false,
@@ -564,6 +565,11 @@ export default {
         this.waForm.verifyToken   = cfg.verifyToken   || 'ide_ia_verify_token';
         this.waForm.agenteId      = cfg.agenteId      || '';
         this.waForm.enabled       = cfg.enabled       || false;
+        this.waForm._hasSavedToken = cfg._hasAccessToken || false; // Track if token was saved
+        // Don't clear accessToken input if user hasn't touched it yet
+        if (!this.waForm.accessToken && cfg._hasAccessToken) {
+          this.waForm.accessToken = '••••••••••••••••'; // Show masked token
+        }
       } catch (_e) { /* silently ignore */ }
     },
     async actualizarEstadoWa() {
@@ -612,12 +618,24 @@ export default {
 
     // ── WhatsApp ──
     async testConexionWa() {
-      if (!this.waForm.accessToken || !this.waForm.phoneNumberId) return;
+      // If token field is masked (•••), use the saved token from backend
+      // Otherwise use what user typed
+      const token = this.waForm.accessToken?.includes('•') ? null : this.waForm.accessToken;
+
+      if (!this.waForm.phoneNumberId) {
+        this.$message.error('Ingresa el Phone Number ID');
+        return;
+      }
+      if (!token && !this.waForm._hasSavedToken) {
+        this.$message.error('Ingresa el Access Token o guarda la configuración primero');
+        return;
+      }
+
       this.waTestando = true;
       this.waTestResult = null;
       try {
         this.waTestResult = await this.$service.post('whatsapp/test-connection', {
-          accessToken: this.waForm.accessToken,
+          accessToken: token || undefined, // undefined will use saved token in backend
           phoneNumberId: this.waForm.phoneNumberId,
         });
       } catch (e) {
