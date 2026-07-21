@@ -107,6 +107,11 @@ const routes = [
         component: () => import('@/views/Catalogo.vue'),
       },
       {
+        path: 'recursos',
+        name: 'recursos',
+        component: () => import('@/views/Recursos.vue'),
+      },
+      {
         path: 'soporte',
         name: 'soporte',
         component: () => import('@/views/Soporte.vue'),

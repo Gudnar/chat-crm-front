@@ -37,6 +37,7 @@ export default {
         conversaciones: 'Conversaciones',
         reportes: 'Reportes',
         configuracion: 'Configuración',
+        recursos: 'Recursos',
       };
       return map[this.$route.name] || 'IDE-IA';
     },

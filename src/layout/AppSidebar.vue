@@ -28,18 +28,33 @@
 
     <!-- Nav -->
     <nav class="ide-sidebar__nav">
-      <router-link
-        v-for="item in navItems"
-        :key="item.route"
-        :to="{ name: item.route }"
-        class="ide-sidebar__item"
-        active-class="ide-sidebar__item--active"
-      >
-        <div class="ide-sidebar__item-icon" v-html="item.icon"></div>
-        <transition name="fade">
-          <span v-if="open" class="ide-sidebar__item-label">{{ item.label }}</span>
-        </transition>
-        <span v-if="open && item.badge" class="ide-sidebar__badge">{{ item.badge }}</span>
+      <router-link :to="{ name: 'home' }" class="ide-sidebar__item" active-class="ide-sidebar__item--active">
+        <div class="ide-sidebar__item-icon" v-html="gridIcon()"></div>
+        <transition name="fade"><span v-if="open" class="ide-sidebar__item-label">Dashboard</span></transition>
+      </router-link>
+      <router-link :to="{ name: 'agentes' }" class="ide-sidebar__item" active-class="ide-sidebar__item--active">
+        <div class="ide-sidebar__item-icon" v-html="botIcon()"></div>
+        <transition name="fade"><span v-if="open" class="ide-sidebar__item-label">Agentes IA</span></transition>
+      </router-link>
+      <router-link :to="{ name: 'herramientas' }" class="ide-sidebar__item" active-class="ide-sidebar__item--active">
+        <div class="ide-sidebar__item-icon" v-html="toolIcon()"></div>
+        <transition name="fade"><span v-if="open" class="ide-sidebar__item-label">Herramientas</span></transition>
+      </router-link>
+      <router-link :to="{ name: 'conversaciones' }" class="ide-sidebar__item" active-class="ide-sidebar__item--active">
+        <div class="ide-sidebar__item-icon" v-html="chatIcon()"></div>
+        <transition name="fade"><span v-if="open" class="ide-sidebar__item-label">Conversaciones</span></transition>
+      </router-link>
+      <router-link :to="{ name: 'catalogo' }" class="ide-sidebar__item" active-class="ide-sidebar__item--active">
+        <div class="ide-sidebar__item-icon" v-html="catalogIcon()"></div>
+        <transition name="fade"><span v-if="open" class="ide-sidebar__item-label">Catálogo</span></transition>
+      </router-link>
+      <router-link :to="{ name: 'recursos' }" class="ide-sidebar__item" active-class="ide-sidebar__item--active">
+        <div class="ide-sidebar__item-icon" v-html="recursosIcon()"></div>
+        <transition name="fade"><span v-if="open" class="ide-sidebar__item-label">Recursos</span></transition>
+      </router-link>
+      <router-link :to="{ name: 'reportes' }" class="ide-sidebar__item" active-class="ide-sidebar__item--active">
+        <div class="ide-sidebar__item-icon" v-html="analyticsIcon()"></div>
+        <transition name="fade"><span v-if="open" class="ide-sidebar__item-label">Reportes</span></transition>
       </router-link>
     </nav>
 
@@ -88,10 +103,13 @@ export default {
         { route: 'herramientas',  label: 'Herramientas',   icon: this.toolIcon },
         { route: 'conversaciones',label: 'Conversaciones', icon: this.chatIcon },
         { route: 'catalogo',      label: 'Catálogo',       icon: this.catalogIcon },
+        { route: 'recursos',      label: 'Recursos',       icon: this.recursosIcon },
         { route: 'reportes',      label: 'Reportes',       icon: this.analyticsIcon },
         { route: 'configuracion', label: 'Configuración',  icon: this.settingsIcon, roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
       ];
-      return all.filter(item => !item.roles || item.roles.includes(rol));
+      const filtered = all.filter(item => !item.roles || item.roles.includes(rol));
+      console.log('navItems debug:', { rol, totalItems: all.length, filteredItems: filtered.length, filtered });
+      return filtered;
     },
     clientesIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
     gridIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
@@ -99,6 +117,7 @@ export default {
     toolIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>`,
     chatIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
     catalogIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
+    recursosIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>`,
     analyticsIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>`,
     settingsIcon: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`,
   },
