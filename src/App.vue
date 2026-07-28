@@ -13,30 +13,30 @@ export default { name: 'App' };
    Oscuro es el default y conserva EXACTAMENTE los valores originales del sistema.
    Claro se activa poniendo data-theme="light" en <html> (ver AppLayout.vue). */
 :root {
-  --bg-page: var(--bg-page);
-  --bg-surface: var(--bg-surface);
-  --bg-panel: var(--bg-panel);
-  --border: var(--border);
-  --border-card: var(--border-card);
-  --text-heading: var(--text-heading);
-  --text-primary: var(--text-primary);
-  --text-body: var(--text-body);
-  --text-muted: var(--text-muted);
-  --text-faint: var(--text-faint);
-  --text-disabled: var(--text-disabled);
+  --bg-page: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-panel: #0d1526;
+  --border: #334155;
+  --border-card: #1e3a5f44;
+  --text-heading: #f1f5f9;
+  --text-primary: #e2e8f0;
+  --text-body: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+  --text-disabled: #475569;
 }
 :root[data-theme="light"] {
   --bg-page: #f8fafc;
   --bg-surface: #ffffff;
-  --bg-panel: var(--text-heading);
-  --border: var(--text-primary);
-  --border-card: var(--text-primary);
-  --text-heading: var(--bg-page);
-  --text-primary: var(--bg-surface);
-  --text-body: var(--border);
-  --text-muted: var(--text-disabled);
-  --text-faint: var(--text-faint);
-  --text-disabled: var(--text-muted);
+  --bg-panel: #f1f5f9;
+  --border: #e2e8f0;
+  --border-card: #e2e8f0;
+  --text-heading: #0f172a;
+  --text-primary: #1e293b;
+  --text-body: #334155;
+  --text-muted: #475569;
+  --text-faint: #64748b;
+  --text-disabled: #94a3b8;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
