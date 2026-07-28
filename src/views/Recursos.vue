@@ -4,8 +4,8 @@
     <!-- Header -->
     <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
       <div>
-        <h2 style="font-size:18px; font-weight:800; color:#f1f5f9; letter-spacing:-0.3px; margin-bottom:4px;">Recursos</h2>
-        <p style="font-size:12px; color:#64748b;">Archivos que el agente IA puede enviar por WhatsApp: catálogos, fichas, fotos, audios, videos</p>
+        <h2 style="font-size:18px; font-weight:800; color:var(--text-heading); letter-spacing:-0.3px; margin-bottom:4px;">Recursos</h2>
+        <p style="font-size:12px; color:var(--text-faint);">Archivos que el agente IA puede enviar por WhatsApp: catálogos, fichas, fotos, audios, videos</p>
       </div>
       <button v-if="puedeGestionar" class="btn-add" @click="abrirForm(null)">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -16,20 +16,20 @@
     <!-- Stats row -->
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; max-width:560px;">
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#f1f5f9; line-height:1;">{{ recursos.length }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Total</div>
+        <div style="font-size:22px; font-weight:900; color:var(--text-heading); line-height:1;">{{ recursos.length }}</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Total</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#818cf8; line-height:1;">{{ contarTipo('PDF') }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">PDF</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">PDF</div>
       </div>
       <div style="padding:12px 14px; text-align:center;" class="ide-ia-card">
         <div style="font-size:22px; font-weight:900; color:#22c55e; line-height:1;">{{ contarTipo('IMAGEN') }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Imágenes</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Imágenes</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#f59e0b; line-height:1;">{{ contarTipo('AUDIO') + contarTipo('VIDEO') }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Audio / Video</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Audio / Video</div>
       </div>
     </div>
 
@@ -52,7 +52,7 @@
       <button
         v-if="busqueda || tipoFiltro || categoriaFiltro"
         @click="busqueda = ''; tipoFiltro = ''; categoriaFiltro = ''"
-        style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit;"
+        style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit;"
       >
         Limpiar
       </button>
@@ -64,9 +64,9 @@
     </div>
 
     <!-- Empty -->
-    <div v-else-if="!recursosFiltrados.length" class="ide-ia-card" style="text-align:center; padding:56px; color:#475569;">
+    <div v-else-if="!recursosFiltrados.length" class="ide-ia-card" style="text-align:center; padding:56px; color:var(--text-disabled);">
       <div style="font-size:36px; margin-bottom:12px;">📎</div>
-      <div style="font-size:14px; font-weight:700; color:#94a3b8; margin-bottom:6px;">
+      <div style="font-size:14px; font-weight:700; color:var(--text-muted); margin-bottom:6px;">
         {{ busqueda || tipoFiltro || categoriaFiltro ? 'Sin resultados' : 'Sin recursos' }}
       </div>
       <div style="font-size:12px;">
@@ -83,11 +83,11 @@
       <div v-for="r in recursosFiltrados" :key="r.id" class="ide-ia-card rec-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;" :style="{ opacity: r.activo ? 1 : 0.55 }">
 
         <!-- Preview -->
-        <div style="height:120px; background:#0f172a; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
+        <div style="height:120px; background:var(--bg-page); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
           <img v-if="r.tipo === 'IMAGEN' && recursoUrl(r)" :src="recursoUrl(r)" style="width:100%; height:100%; object-fit:cover;" @error="e => e.target.style.display='none'" />
           <audio v-else-if="r.tipo === 'AUDIO' && recursoUrl(r)" :src="recursoUrl(r)" controls style="width:90%;" />
           <video v-else-if="r.tipo === 'VIDEO' && verVideo === r.id && recursoUrl(r)" :src="recursoUrl(r)" controls style="width:100%; height:100%; object-fit:contain;" />
-          <button v-else-if="r.tipo === 'VIDEO'" @click="verVideo = r.id" style="background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; color:#64748b;">
+          <button v-else-if="r.tipo === 'VIDEO'" @click="verVideo = r.id" style="background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--text-faint);">
             <span style="font-size:32px;">{{ ICONOS[r.tipo] }}</span>
             <span style="font-size:11px;">Ver video</span>
           </button>
@@ -96,19 +96,19 @@
 
         <!-- Info -->
         <div style="padding:12px 14px; flex:1; display:flex; flex-direction:column; gap:6px;">
-          <div style="font-size:13px; font-weight:700; color:#e2e8f0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="r.nombre">{{ r.nombre }}</div>
+          <div style="font-size:13px; font-weight:700; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="r.nombre">{{ r.nombre }}</div>
           <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
             <span v-if="r.categoria" style="background:#6366f122; color:#818cf8; padding:2px 8px; border-radius:4px; font-size:10px;">{{ r.categoria }}</span>
             <span v-if="r.activo" style="background:#22c55e33; color:#22c55e; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600;">Activo</span>
             <span v-else style="background:#ef444433; color:#ef4444; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600;">Inactivo</span>
           </div>
-          <div style="font-size:10px; color:#475569;">{{ r.tamanobytes ? formatearBytes(r.tamanobytes) : (r.urlExterna ? 'URL externa' : '—') }}</div>
+          <div style="font-size:10px; color:var(--text-disabled);">{{ r.tamanobytes ? formatearBytes(r.tamanobytes) : (r.urlExterna ? 'URL externa' : '—') }}</div>
         </div>
 
         <!-- Actions -->
-        <div style="display:flex; border-top:1px solid #334155; flex-shrink:0;">
-          <a :href="recursoUrl(r) || '#'" target="_blank" rel="noopener" style="flex:1; text-align:center; padding:8px 0; font-size:11px; color:#94a3b8; text-decoration:none; border-right:1px solid #334155;">Ver</a>
-          <button v-if="puedeGestionar" @click="abrirForm(r)" style="flex:1; background:none; border:none; border-right:1px solid #334155; cursor:pointer; padding:8px 0; font-size:11px; color:#818cf8; font-family:inherit;">Editar</button>
+        <div style="display:flex; border-top:1px solid var(--border); flex-shrink:0;">
+          <a :href="recursoUrl(r) || '#'" target="_blank" rel="noopener" style="flex:1; text-align:center; padding:8px 0; font-size:11px; color:var(--text-muted); text-decoration:none; border-right:1px solid var(--border);">Ver</a>
+          <button v-if="puedeGestionar" @click="abrirForm(r)" style="flex:1; background:none; border:none; border-right:1px solid var(--border); cursor:pointer; padding:8px 0; font-size:11px; color:#818cf8; font-family:inherit;">Editar</button>
           <button v-if="puedeGestionar" @click="confirmarEliminar(r)" style="flex:1; background:none; border:none; cursor:pointer; padding:8px 0; font-size:11px; color:#ef4444; font-family:inherit;">Eliminar</button>
         </div>
       </div>
@@ -118,14 +118,14 @@
     <div v-if="dialogForm" class="cat-overlay" @click.self="dialogForm = false">
       <div class="cat-modal">
         <!-- Header -->
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 22px 14px; border-bottom:1px solid #334155; flex-shrink:0;">
-          <span style="font-size:15px; font-weight:700; color:#f1f5f9;">{{ editando ? 'Editar recurso' : 'Nuevo recurso' }}</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 22px 14px; border-bottom:1px solid var(--border); flex-shrink:0;">
+          <span style="font-size:15px; font-weight:700; color:var(--text-heading);">{{ editando ? 'Editar recurso' : 'Nuevo recurso' }}</span>
           <div style="display:flex; align-items:center; gap:10px;">
             <button v-if="editando" @click="confirmarEliminar(editando)" style="background:none; border:none; cursor:pointer; color:#ef4444; font-size:12px; font-family:inherit; display:flex; align-items:center; gap:4px;">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
               Eliminar
             </button>
-            <button @click="dialogForm = false" style="background:none; border:none; cursor:pointer; color:#475569; padding:4px; border-radius:4px; line-height:0; display:flex;">
+            <button @click="dialogForm = false" style="background:none; border:none; cursor:pointer; color:var(--text-disabled); padding:4px; border-radius:4px; line-height:0; display:flex;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
@@ -137,28 +137,28 @@
           <!-- Toggle modo origen (solo al crear) -->
           <div v-if="!editando" style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
             <div class="ide-toggle" :class="{ 'ide-toggle--on': modoUrlExterna }" @click="modoUrlExterna = !modoUrlExterna"><div></div></div>
-            <span style="font-size:12px; color:#94a3b8;">{{ modoUrlExterna ? 'Usando URL externa' : 'Subiendo archivo' }}</span>
+            <span style="font-size:12px; color:var(--text-muted);">{{ modoUrlExterna ? 'Usando URL externa' : 'Subiendo archivo' }}</span>
           </div>
 
           <!-- Modo archivo -->
           <div v-if="!editando && !modoUrlExterna" style="margin-bottom:16px;">
-            <div v-if="!archivoSeleccionado" style="margin-bottom:10px; font-size:10px; color:#64748b; display:flex; gap:10px; flex-wrap:wrap;">
+            <div v-if="!archivoSeleccionado" style="margin-bottom:10px; font-size:10px; color:var(--text-faint); display:flex; gap:10px; flex-wrap:wrap;">
               <span v-for="t in TIPOS" :key="t">{{ ICONOS[t] }} {{ t }}: máx {{ formatearBytes(LIMITES[t]) }}</span>
             </div>
             <label class="img-upload-zone" :class="{ 'img-upload-zone--drag': dragging }" @dragover.prevent="dragging = true" @dragleave="dragging = false" @drop.prevent="onDrop">
               <input type="file" :accept="mimesAceptados" style="display:none;" @change="onFileChange" />
               <template v-if="!archivoSeleccionado">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5" style="margin-bottom:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <span style="font-size:12px; color:#64748b;">Arrastra o <span style="color:#818cf8;">selecciona un archivo</span></span>
-                <span style="font-size:10px; color:#475569; margin-top:2px;">PDF, imagen, audio o video</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="1.5" style="margin-bottom:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span style="font-size:12px; color:var(--text-faint);">Arrastra o <span style="color:#818cf8;">selecciona un archivo</span></span>
+                <span style="font-size:10px; color:var(--text-disabled); margin-top:2px;">PDF, imagen, audio o video</span>
               </template>
               <template v-else>
                 <img v-if="tipoDetectado === 'IMAGEN'" :src="previewUrl" style="max-width:100%; max-height:100px; border-radius:6px; margin-bottom:6px;" />
                 <video v-else-if="tipoDetectado === 'VIDEO'" :src="previewUrl" controls style="max-width:100%; max-height:100px; margin-bottom:6px;" />
                 <audio v-else-if="tipoDetectado === 'AUDIO'" :src="previewUrl" controls style="margin-bottom:6px;" />
                 <span v-else style="font-size:28px; margin-bottom:4px;">{{ ICONOS[tipoDetectado] || '📎' }}</span>
-                <span style="font-size:12px; color:#e2e8f0; font-weight:600;">{{ archivoSeleccionado.name }}</span>
-                <span style="font-size:10px; color:#64748b; margin-top:2px;">{{ formatearBytes(archivoSeleccionado.size) }} · cambiar archivo</span>
+                <span style="font-size:12px; color:var(--text-primary); font-weight:600;">{{ archivoSeleccionado.name }}</span>
+                <span style="font-size:10px; color:var(--text-faint); margin-top:2px;">{{ formatearBytes(archivoSeleccionado.size) }} · cambiar archivo</span>
               </template>
             </label>
             <div v-if="errorArchivo" style="margin-top:8px; font-size:11px; color:#ef4444;">{{ errorArchivo }}</div>
@@ -206,7 +206,7 @@
               </select>
             </div>
             <div class="ide-field" style="grid-column:span 2;">
-              <label>Keywords <span style="color:#475569; font-size:10px;">(separadas por coma, para búsqueda)</span></label>
+              <label>Keywords <span style="color:var(--text-disabled); font-size:10px;">(separadas por coma, para búsqueda)</span></label>
               <input v-model="form.keywords" class="ide-input" placeholder="catalogo, precios, 2026" />
             </div>
             <div class="ide-field" style="grid-column:span 2;">
@@ -215,14 +215,14 @@
             </div>
             <div v-if="editando" class="ide-field" style="grid-column:span 2; flex-direction:row; align-items:center; gap:10px;">
               <div class="ide-toggle" :class="{ 'ide-toggle--on': form.activo }" @click="form.activo = !form.activo"><div></div></div>
-              <span style="font-size:12px;" :style="{ color: form.activo ? '#22c55e' : '#64748b' }">{{ form.activo ? 'Recurso activo' : 'Recurso inactivo' }}</span>
+              <span style="font-size:12px;" :style="{ color: form.activo ? '#22c55e' : 'var(--text-faint)' }">{{ form.activo ? 'Recurso activo' : 'Recurso inactivo' }}</span>
             </div>
           </div>
         </div>
 
         <!-- Footer -->
-        <div style="display:flex; justify-content:flex-end; gap:8px; padding:12px 22px 18px; border-top:1px solid #334155; flex-shrink:0;">
-          <button @click="dialogForm = false" style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:8px 16px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
+        <div style="display:flex; justify-content:flex-end; gap:8px; padding:12px 22px 18px; border-top:1px solid var(--border); flex-shrink:0;">
+          <button @click="dialogForm = false" style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:8px 16px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
           <button @click="guardar" :disabled="saving" style="background:#6366f1; color:#fff; border:none; border-radius:8px; padding:8px 18px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px;">
             <v-progress-circular v-if="saving" indeterminate size="14" width="2" color="white" />
             {{ editando ? 'Guardar cambios' : 'Crear recurso' }}
@@ -233,15 +233,15 @@
 
     <!-- Modal: Delete confirm -->
     <div v-if="dialogEliminar" class="cat-overlay" @click.self="dialogEliminar = false">
-      <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; width:420px; max-width:95%; padding:24px;">
-        <div style="font-size:15px; font-weight:700; color:#f1f5f9; margin-bottom:8px;">Eliminar recurso</div>
-        <div style="font-size:12px; color:#94a3b8; line-height:1.6; margin-bottom:20px;">
+      <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:12px; width:420px; max-width:95%; padding:24px;">
+        <div style="font-size:15px; font-weight:700; color:var(--text-heading); margin-bottom:8px;">Eliminar recurso</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">
           ¿Estás seguro de que deseas eliminar
-          <strong style="color:#f1f5f9;">{{ eliminando ? eliminando.nombre : '' }}</strong>?
+          <strong style="color:var(--text-heading);">{{ eliminando ? eliminando.nombre : '' }}</strong>?
           El archivo se eliminará del servidor.
         </div>
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-          <button @click="dialogEliminar = false" style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
+          <button @click="dialogEliminar = false" style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
           <button @click="eliminar" :disabled="deleting" style="background:#ef4444; color:#fff; border:none; border-radius:8px; padding:8px 14px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px;">
             <v-progress-circular v-if="deleting" indeterminate size="14" width="2" color="white" />
             Eliminar
@@ -512,7 +512,7 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  border: 2px dashed #334155;
+  border: 2px dashed var(--border);
   border-radius: 8px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
@@ -534,8 +534,8 @@ export default {
   justify-content: center;
 }
 .cat-modal {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   width: 680px;
   max-width: 95vw;

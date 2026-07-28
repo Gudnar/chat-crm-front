@@ -22,7 +22,7 @@
     <!-- ── Toolbar ── -->
     <div class="ct-toolbar">
       <div style="position:relative; flex:1; max-width:340px;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="position:absolute; left:11px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2" style="position:absolute; left:11px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input v-model="busqueda" class="ct-search" placeholder="Buscar contacto..." />
       </div>
 
@@ -57,7 +57,7 @@
       </div>
 
       <!-- View toggle -->
-      <div style="margin-left:auto; display:flex; border:1px solid #334155; border-radius:8px; overflow:hidden; background:#1e293b;">
+      <div style="margin-left:auto; display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--bg-surface);">
         <button class="ct-view-btn" :class="{ 'ct-view-btn--active': vista === 'lista' }" @click="vista = 'lista'" title="Vista lista">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6" stroke-linecap="round" stroke-width="3"/><line x1="3" y1="12" x2="3.01" y2="12" stroke-linecap="round" stroke-width="3"/><line x1="3" y1="18" x2="3.01" y2="18" stroke-linecap="round" stroke-width="3"/></svg>
         </button>
@@ -89,7 +89,7 @@
         </thead>
         <tbody>
           <tr v-if="contactosFiltrados.length === 0">
-            <td colspan="8" style="text-align:center; padding:48px; color:#475569; font-size:13px;">
+            <td colspan="8" style="text-align:center; padding:48px; color:var(--text-disabled); font-size:13px;">
               Sin contactos registrados
             </td>
           </tr>
@@ -117,17 +117,17 @@
             <td>
               <div style="display:flex; align-items:center; gap:6px;">
                 <span class="ct-status-dot" :style="{ background: estadoColor(c.estadoConversacion) }"></span>
-                <span style="font-size:12px; color:#94a3b8; text-transform:capitalize;">{{ estadoLabel(c.estadoConversacion) }}</span>
+                <span style="font-size:12px; color:var(--text-muted); text-transform:capitalize;">{{ estadoLabel(c.estadoConversacion) }}</span>
               </div>
             </td>
             <!-- Pipeline -->
             <td>
-              <span style="font-size:12px; color:#94a3b8;">{{ pipelineLabel(c.estadoConversacion) }}</span>
+              <span style="font-size:12px; color:var(--text-muted);">{{ pipelineLabel(c.estadoConversacion) }}</span>
             </td>
             <!-- Puntuación -->
             <td>
               <div style="display:flex; align-items:center; gap:8px;">
-                <div style="flex:1; height:5px; border-radius:3px; background:#0f172a; overflow:hidden; min-width:60px;">
+                <div style="flex:1; height:5px; border-radius:3px; background:var(--bg-page); overflow:hidden; min-width:60px;">
                   <div :style="{ width: (c.score||0)+'%', height:'100%', background: scoreColor(c.score), borderRadius:'3px', transition:'width 0.4s' }"></div>
                 </div>
                 <span style="font-size:13px; font-weight:700; min-width:24px; text-align:right;" :style="{ color: scoreColor(c.score) }">{{ c.score || 0 }}</span>
@@ -142,10 +142,10 @@
             <!-- Agente -->
             <td>
               <div style="display:flex; align-items:center; gap:7px;">
-                <div class="ct-agent-avatar" :style="c.agente ? { background:'#6366f122', color:'#818cf8' } : { background:'#1e293b', color:'#475569' }">
+                <div class="ct-agent-avatar" :style="c.agente ? { background:'#6366f122', color:'#818cf8' } : { background:'var(--bg-surface)', color:'var(--text-disabled)' }">
                   {{ c.agente ? iniciales(c.agente) : '—' }}
                 </div>
-                <span style="font-size:12px; color:#94a3b8;">{{ c.agente || 'Sin' }}</span>
+                <span style="font-size:12px; color:var(--text-muted);">{{ c.agente || 'Sin' }}</span>
               </div>
             </td>
             <!-- Acciones -->
@@ -182,13 +182,13 @@
           <span v-html="canalIcono(c.canal)" style="display:flex;"></span>
           <span style="font-size:11px; font-weight:600;" :style="{ color: canalColor(c.canal) }">{{ canalLabel(c.canal) }}</span>
           <span class="ct-status-dot" :style="{ background: estadoColor(c.estadoConversacion), marginLeft:'auto' }"></span>
-          <span style="font-size:11px; color:#64748b;">{{ estadoLabel(c.estadoConversacion) }}</span>
+          <span style="font-size:11px; color:var(--text-faint);">{{ estadoLabel(c.estadoConversacion) }}</span>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px;">
           <span v-for="tag in etiquetas(c)" :key="tag.label" class="ct-tag" :style="{ background: tag.color+'18', color: tag.color, border: '1px solid '+tag.color+'33' }">{{ tag.label }}</span>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid #1e3a5f33;">
-          <span style="font-size:11px; color:#64748b;">{{ pipelineLabel(c.estadoConversacion) }}</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid var(--border-card);">
+          <span style="font-size:11px; color:var(--text-faint);">{{ pipelineLabel(c.estadoConversacion) }}</span>
           <div style="display:flex; gap:6px;">
             <button class="ct-action-btn" @click.stop="abrirEditar(c)" title="Editar">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -210,8 +210,8 @@
               {{ iniciales(modal.nombre || modal.contacto) }}
             </div>
             <div>
-              <div style="font-size:15px; font-weight:700; color:#f1f5f9;">{{ obtenerNombreContacto(modal) }}</div>
-              <div style="font-size:11px; color:#64748b;">{{ modal.contacto }}</div>
+              <div style="font-size:15px; font-weight:700; color:var(--text-heading);">{{ obtenerNombreContacto(modal) }}</div>
+              <div style="font-size:11px; color:var(--text-faint);">{{ modal.contacto }}</div>
             </div>
           </div>
           <button class="ct-modal-close" @click="modal = null">✕</button>
@@ -219,11 +219,11 @@
         <div class="ct-modal-body">
           <!-- Score -->
           <div style="margin-bottom:16px;">
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748b; margin-bottom:6px;">
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-faint); margin-bottom:6px;">
               <span>Lead Score</span>
               <span style="font-weight:700;" :style="{ color: scoreColor(modal.score) }">{{ modal.score || 0 }}/100</span>
             </div>
-            <div style="height:6px; border-radius:3px; background:#1e293b; overflow:hidden;">
+            <div style="height:6px; border-radius:3px; background:var(--bg-surface); overflow:hidden;">
               <div :style="{ width: (modal.score||0)+'%', height:'100%', background: scoreColor(modal.score), borderRadius:'3px', transition:'width 0.4s' }"></div>
             </div>
           </div>
@@ -325,7 +325,7 @@ const ETAPA_MAP = {
   abierto:    { pipeline: 'Nuevo Lead',  estadoLabel: 'Abierto',   color: '#f59e0b' },
   pendiente:  { pipeline: 'Contactado',  estadoLabel: 'Pendiente', color: '#f97316' },
   resuelto:   { pipeline: 'Ganado',      estadoLabel: 'Resuelto',  color: '#22c55e' },
-  cerrado:    { pipeline: 'Perdido',     estadoLabel: 'Cerrado',   color: '#475569' },
+  cerrado:    { pipeline: 'Perdido',     estadoLabel: 'Cerrado',   color: 'var(--text-disabled)' },
   nuevo_lead: { pipeline: 'Nuevo Lead',  estadoLabel: 'Nuevo',     color: '#818cf8' },
   contactado: { pipeline: 'Contactado',  estadoLabel: 'Contactado',color: '#60a5fa' },
   calificado: { pipeline: 'Calificado',  estadoLabel: 'Calificado',color: '#60a5fa' },
@@ -535,7 +535,7 @@ export default {
     },
     canalColor(c) {
       const m = { whatsapp: '#25D366', instagram: '#E1306C', facebook: '#1877F2', tiktok: '#69C9D0', chat: '#818cf8' };
-      return m[c] || '#64748b';
+      return m[c] || 'var(--text-faint)';
     },
     canalLabel(c) {
       const m = { whatsapp: 'WhatsApp', instagram: 'Instagram', facebook: 'Facebook', tiktok: 'TikTok', chat: 'Chat Web' };
@@ -560,7 +560,7 @@ export default {
       if (c.escalado)     tags.push({ label: 'Reclamo', color: '#ef4444' });
       if (!c.escalado && c.score < 40) tags.push({ label: 'Cold', color: '#3b82f6' });
       if (!tags.some(t => ['Hot','Warm','Cold'].includes(t.label)) && c.score < 70) {
-        tags.push({ label: 'Info', color: '#475569' });
+        tags.push({ label: 'Info', color: 'var(--text-disabled)' });
       }
       return tags.slice(0, 3);
     },
@@ -587,8 +587,8 @@ export default {
 
 /* ── Header ── */
 .ct-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-shrink: 0; }
-.ct-title { font-size: 22px; font-weight: 800; color: #f1f5f9; margin: 0 0 4px; }
-.ct-subtitle { font-size: 12px; color: #64748b; margin: 0; }
+.ct-title { font-size: 22px; font-weight: 800; color: var(--text-heading); margin: 0 0 4px; }
+.ct-subtitle { font-size: 12px; color: var(--text-faint); margin: 0; }
 .ct-header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 /* ── Buttons ── */
@@ -601,7 +601,7 @@ export default {
 .ct-btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
 .ct-btn-sec {
   display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px;
-  background: #1e293b; border: 1px solid #334155; color: #94a3b8; font-size: 12px;
+  background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px;
   font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
 .ct-btn-sec:hover { border-color: #6366f1; color: #818cf8; }
@@ -609,8 +609,8 @@ export default {
 /* ── Toolbar ── */
 .ct-toolbar { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .ct-search {
-  width: 100%; background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-  color: #e2e8f0; font-size: 13px; padding: 9px 12px 9px 34px; outline: none;
+  width: 100%; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-size: 13px; padding: 9px 12px 9px 34px; outline: none;
   font-family: inherit; transition: border-color 0.15s; box-sizing: border-box;
 }
 .ct-search:focus { border-color: #6366f1; }
@@ -619,42 +619,42 @@ export default {
 .ct-dropdown-wrap { position: relative; }
 .ct-dropdown-btn {
   display: flex; align-items: center; gap: 7px; padding: 8px 14px;
-  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-  color: #94a3b8; font-size: 13px; font-weight: 500;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-muted); font-size: 13px; font-weight: 500;
   cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap;
 }
-.ct-dropdown-btn:hover { border-color: #6366f1; color: #e2e8f0; }
+.ct-dropdown-btn:hover { border-color: #6366f1; color: var(--text-primary); }
 .ct-dropdown-menu {
   position: absolute; top: calc(100% + 6px); left: 0; z-index: 100;
-  background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
   min-width: 180px; padding: 4px;
   box-shadow: 0 8px 24px #0009;
 }
 .ct-dropdown-item {
   display: block; width: 100%; text-align: left; padding: 8px 12px;
   background: none; border: none; border-radius: 7px;
-  color: #94a3b8; font-size: 13px; cursor: pointer; font-family: inherit;
+  color: var(--text-muted); font-size: 13px; cursor: pointer; font-family: inherit;
   transition: all 0.15s;
 }
-.ct-dropdown-item:hover { background: #6366f115; color: #e2e8f0; }
+.ct-dropdown-item:hover { background: #6366f115; color: var(--text-primary); }
 .ct-dropdown-item--active { background: #6366f122; color: #818cf8; font-weight: 600; }
 
 /* ── View toggle ── */
 .ct-view-btn {
-  background: none; border: none; cursor: pointer; color: #64748b;
+  background: none; border: none; cursor: pointer; color: var(--text-faint);
   padding: 7px 10px; display: flex; align-items: center; transition: all 0.15s;
 }
 .ct-view-btn--active { background: #6366f122; color: #818cf8; }
 
 /* ── Table ── */
-.ct-table-wrap { flex: 1; overflow-y: auto; border-radius: 12px; border: 1px solid #1e3a5f44; }
-.ct-table { width: 100%; border-collapse: collapse; background: #111827; }
-.ct-table thead tr { border-bottom: 1px solid #1e3a5f44; background: #0d1526; }
+.ct-table-wrap { flex: 1; overflow-y: auto; border-radius: 12px; border: 1px solid var(--border-card); }
+.ct-table { width: 100%; border-collapse: collapse; background: var(--bg-panel); }
+.ct-table thead tr { border-bottom: 1px solid var(--border-card); background: var(--bg-panel); }
 .ct-table th {
-  padding: 11px 16px; font-size: 10px; font-weight: 700; color: #475569;
+  padding: 11px 16px; font-size: 10px; font-weight: 700; color: var(--text-disabled);
   text-transform: uppercase; letter-spacing: 0.8px; text-align: left; white-space: nowrap;
 }
-.ct-row { border-bottom: 1px solid #1e3a5f22; cursor: pointer; transition: background 0.12s; }
+.ct-row { border-bottom: 1px solid var(--border-card); cursor: pointer; transition: background 0.12s; }
 .ct-row:hover { background: #6366f108; }
 .ct-row:last-child { border-bottom: none; }
 .ct-row td { padding: 13px 16px; vertical-align: middle; }
@@ -666,8 +666,8 @@ export default {
   font-size: 12px; font-weight: 700; flex-shrink: 0;
 }
 .ct-avatar--lg { width: 42px; height: 42px; font-size: 14px; }
-.ct-nombre { font-size: 13px; font-weight: 700; color: #e2e8f0; }
-.ct-id { font-size: 11px; color: #475569; margin-top: 2px; }
+.ct-nombre { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.ct-id { font-size: 11px; color: var(--text-disabled); margin-top: 2px; }
 .ct-canal-label { font-size: 13px; font-weight: 600; }
 .ct-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
 .ct-agent-avatar {
@@ -679,8 +679,8 @@ export default {
 
 /* ── Action buttons ── */
 .ct-action-btn {
-  background: #1e293b; border: 1px solid #334155; border-radius: 7px;
-  color: #64748b; padding: 6px; cursor: pointer; display: flex;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 7px;
+  color: var(--text-faint); padding: 6px; cursor: pointer; display: flex;
   align-items: center; justify-content: center; transition: all 0.15s;
 }
 .ct-action-btn:hover { border-color: #6366f1; color: #818cf8; background: #6366f115; }
@@ -691,11 +691,11 @@ export default {
   gap: 12px; overflow-y: auto; flex: 1; align-content: start; padding-bottom: 16px;
 }
 .ct-card {
-  background: #1e293b; border: 1px solid #1e3a5f44; border-radius: 12px;
+  background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 12px;
   padding: 14px; cursor: pointer; transition: all 0.15s;
 }
 .ct-card:hover { border-color: #6366f155; }
-.ct-empty { text-align: center; padding: 60px; color: #475569; font-size: 13px; grid-column: 1/-1; }
+.ct-empty { text-align: center; padding: 60px; color: var(--text-disabled); font-size: 13px; grid-column: 1/-1; }
 
 /* ── Modal ── */
 .ct-overlay {
@@ -703,35 +703,35 @@ export default {
   display: flex; align-items: center; justify-content: center; padding: 20px;
 }
 .ct-modal {
-  background: #0d1526; border: 1px solid #1e3a5f55; border-radius: 14px;
+  background: var(--bg-panel); border: 1px solid var(--border-card); border-radius: 14px;
   width: 100%; max-width: 480px; max-height: 90vh; overflow: hidden;
   display: flex; flex-direction: column;
 }
 .ct-modal-hd {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px; border-bottom: 1px solid #1e3a5f44;
-  font-size: 14px; font-weight: 700; color: #e2e8f0; flex-shrink: 0;
+  padding: 16px 20px; border-bottom: 1px solid var(--border-card);
+  font-size: 14px; font-weight: 700; color: var(--text-primary); flex-shrink: 0;
 }
 .ct-modal-close {
-  background: none; border: none; cursor: pointer; color: #475569;
+  background: none; border: none; cursor: pointer; color: var(--text-disabled);
   font-size: 16px; padding: 4px 8px; border-radius: 6px; transition: color 0.15s;
 }
-.ct-modal-close:hover { color: #94a3b8; }
+.ct-modal-close:hover { color: var(--text-muted); }
 .ct-modal-body { padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; }
-.ct-modal-ft { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid #1e3a5f44; flex-shrink: 0; }
+.ct-modal-ft { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border-card); flex-shrink: 0; }
 
 .ct-field { display: flex; flex-direction: column; gap: 5px; }
-.ct-field label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.ct-field label { font-size: 11px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; }
 .ct-input {
-  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-  color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-size: 13px; padding: 9px 12px; outline: none;
   font-family: inherit; transition: border-color 0.15s; box-sizing: border-box; width: 100%;
 }
 .ct-input:focus { border-color: #6366f1; }
 .ct-select { appearance: none; cursor: pointer; }
 .ct-textarea { resize: vertical; }
-.ct-detail-label { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-.ct-detail-val { font-size: 13px; color: #94a3b8; display: flex; align-items: center; gap: 5px; }
+.ct-detail-label { font-size: 10px; font-weight: 700; color: var(--text-disabled); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.ct-detail-val { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
 
 /* ── Spinner ── */
 .ct-spinner {

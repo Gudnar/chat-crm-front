@@ -38,7 +38,7 @@
         <div class="ide-ia-card" style="padding:14px;">
           <div class="mc-list-title">Asignadas a mí ({{ conversaciones.length }})</div>
           <div v-if="loading" style="display:flex; justify-content:center; padding:20px;"><div class="mc-spinner"></div></div>
-          <div v-else-if="conversaciones.length === 0" style="text-align:center; padding:20px; color:#475569; font-size:12px;">
+          <div v-else-if="conversaciones.length === 0" style="text-align:center; padding:20px; color:var(--text-disabled); font-size:12px;">
             No tienes conversaciones asignadas
           </div>
           <div v-else class="mc-conv-list">
@@ -64,7 +64,7 @@
         <!-- Cola disponible -->
         <div class="ide-ia-card" style="padding:14px; margin-top:12px;">
           <div class="mc-list-title">Cola disponible ({{ cola.length }})</div>
-          <div v-if="cola.length === 0" style="text-align:center; padding:14px; color:#475569; font-size:12px;">
+          <div v-if="cola.length === 0" style="text-align:center; padding:14px; color:var(--text-disabled); font-size:12px;">
             Sin conversaciones en espera
           </div>
           <div v-else class="mc-conv-list">
@@ -83,15 +83,15 @@
       <div class="mc-right ide-ia-card">
         <div v-if="!seleccionada" class="mc-chat-empty">
           <div style="font-size:40px; margin-bottom:12px;">💬</div>
-          <div style="color:#64748b; font-size:13px;">Selecciona una conversación para atenderla</div>
+          <div style="color:var(--text-faint); font-size:13px;">Selecciona una conversación para atenderla</div>
         </div>
 
         <template v-else>
           <!-- Chat header -->
           <div class="mc-chat-hd">
             <div style="flex:1; min-width:0;">
-              <div style="font-size:13px; font-weight:700; color:#e2e8f0;">{{ seleccionada.contacto }}</div>
-              <div style="font-size:10px; color:#64748b;">{{ seleccionada.canal }} · score {{ seleccionada.score }}</div>
+              <div style="font-size:13px; font-weight:700; color:var(--text-primary);">{{ seleccionada.contacto }}</div>
+              <div style="font-size:10px; color:var(--text-faint);">{{ seleccionada.canal }} · score {{ seleccionada.score }}</div>
             </div>
             <button class="mc-accion-btn mc-accion-btn--ia" @click="devolverAIa" title="La IA retoma la conversación">🤖 Devolver a IA</button>
             <button class="mc-accion-btn mc-accion-btn--ok" @click="marcarResuelta">✓ Resuelta</button>
@@ -252,7 +252,7 @@ export default {
         abierto:   { background: '#6366f122', color: '#818cf8' },
         pendiente: { background: '#f59e0b22', color: '#f59e0b' },
         resuelto:  { background: '#22c55e22', color: '#22c55e' },
-        cerrado:   { background: '#47556922', color: '#64748b' },
+        cerrado:   { background: 'color-mix(in srgb, var(--text-disabled) 13%, transparent)', color: 'var(--text-faint)' },
       };
       return map[estado] || map.abierto;
     },
@@ -269,7 +269,7 @@ export default {
 <style scoped>
 .mc-estado-selector { display: flex; gap: 6px; }
 .mc-estado-btn {
-  background: transparent; border: 1px solid #334155; color: #64748b;
+  background: transparent; border: 1px solid var(--border); color: var(--text-faint);
   border-radius: 999px; padding: 6px 14px; font-size: 11px; font-weight: 700;
   cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
@@ -277,8 +277,8 @@ export default {
 
 .mc-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 16px; }
 .mc-metric { padding: 12px; text-align: center; }
-.mc-metric__v { font-size: 19px; font-weight: 800; color: #e2e8f0; }
-.mc-metric__l { font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.mc-metric__v { font-size: 19px; font-weight: 800; color: var(--text-primary); }
+.mc-metric__l { font-size: 9px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
 .mc-layout { display: grid; grid-template-columns: 320px 1fr; gap: 14px; align-items: start; }
 @media (max-width: 900px) { .mc-layout { grid-template-columns: 1fr; } }
@@ -288,13 +288,13 @@ export default {
 .mc-conv-list { display: flex; flex-direction: column; gap: 6px; max-height: 320px; overflow-y: auto; }
 .mc-conv-item {
   display: flex; align-items: center; gap: 8px;
-  background: #0f172a; border: 1px solid transparent; border-radius: 8px;
+  background: var(--bg-page); border: 1px solid transparent; border-radius: 8px;
   padding: 9px 10px; cursor: pointer; transition: border-color 0.15s;
 }
-.mc-conv-item:hover { border-color: #334155; }
+.mc-conv-item:hover { border-color: var(--border); }
 .mc-conv-item--activa { border-color: #6366f1; }
-.mc-conv-nombre { font-size: 12px; font-weight: 700; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mc-conv-meta { font-size: 10px; color: #64748b; }
+.mc-conv-nombre { font-size: 12px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mc-conv-meta { font-size: 10px; color: var(--text-faint); }
 .mc-conv-badge { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 999px; flex-shrink: 0; }
 
 .mc-tomar-btn {
@@ -309,10 +309,10 @@ export default {
 
 .mc-chat-hd {
   display: flex; align-items: center; gap: 8px;
-  padding: 12px 16px; border-bottom: 1px solid #1e3a5f44; flex-shrink: 0;
+  padding: 12px 16px; border-bottom: 1px solid var(--border-card); flex-shrink: 0;
 }
 .mc-accion-btn {
-  border: 1px solid #334155; background: transparent; border-radius: 7px;
+  border: 1px solid var(--border); background: transparent; border-radius: 7px;
   padding: 6px 10px; font-size: 10px; font-weight: 700; cursor: pointer;
   font-family: inherit; flex-shrink: 0; transition: all 0.15s;
 }
@@ -326,13 +326,13 @@ export default {
 .mc-msg--user { align-self: flex-start; }
 .mc-msg--agente { align-self: flex-end; align-items: flex-end; }
 .mc-msg-burbuja { padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; }
-.mc-msg-burbuja--user { background: #1e293b; color: #cbd5e1; border-bottom-left-radius: 4px; }
+.mc-msg-burbuja--user { background: var(--bg-surface); color: var(--text-body); border-bottom-left-radius: 4px; }
 .mc-msg-burbuja--agente { background: #6366f1; color: #fff; border-bottom-right-radius: 4px; }
-.mc-msg-hora { font-size: 9px; color: #475569; margin-top: 2px; padding: 0 4px; }
+.mc-msg-hora { font-size: 9px; color: var(--text-disabled); margin-top: 2px; padding: 0 4px; }
 
 .mc-chat-input {
   display: flex; gap: 8px; padding: 12px 16px;
-  border-top: 1px solid #1e3a5f44; flex-shrink: 0;
+  border-top: 1px solid var(--border-card); flex-shrink: 0;
 }
 .mc-enviar-btn {
   background: #6366f1; color: #fff; border: none; border-radius: 8px;

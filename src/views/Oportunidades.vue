@@ -4,8 +4,8 @@
     <!-- Header -->
     <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
       <div>
-        <h2 style="font-size:18px; font-weight:800; color:#f1f5f9; letter-spacing:-0.3px; margin-bottom:4px;">Oportunidades</h2>
-        <p style="font-size:12px; color:#64748b;">Pipeline de ventas: seguimiento de cada prospecto desde el primer contacto hasta la compra</p>
+        <h2 style="font-size:18px; font-weight:800; color:var(--text-heading); letter-spacing:-0.3px; margin-bottom:4px;">Oportunidades</h2>
+        <p style="font-size:12px; color:var(--text-faint);">Pipeline de ventas: seguimiento de cada prospecto desde el primer contacto hasta la compra</p>
       </div>
       <button class="btn-add" @click="abrirCrear">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -16,24 +16,24 @@
     <!-- Métricas -->
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:20px;">
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#f1f5f9; line-height:1;">{{ stats.abiertas || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Abiertas</div>
+        <div style="font-size:22px; font-weight:900; color:var(--text-heading); line-height:1;">{{ stats.abiertas || 0 }}</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Abiertas</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:18px; font-weight:900; color:#3b82f6; line-height:1.3;">{{ formatoMonto(stats.montoPipeline) }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">En pipeline</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">En pipeline</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#22c55e; line-height:1;">{{ stats.ganadas || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Ganadas · {{ formatoMonto(stats.montoGanado) }}</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Ganadas · {{ formatoMonto(stats.montoGanado) }}</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#818cf8; line-height:1;">{{ stats.tasaConversion || 0 }}%</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Conversión</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Conversión</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;" :style="stats.seguimientosVencidos > 0 ? 'border-color:#ef4444;' : ''">
-        <div style="font-size:22px; font-weight:900; line-height:1;" :style="{ color: stats.seguimientosVencidos > 0 ? '#ef4444' : '#f1f5f9' }">{{ stats.seguimientosVencidos || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">⚠️ Seguim. vencidos</div>
+        <div style="font-size:22px; font-weight:900; line-height:1;" :style="{ color: stats.seguimientosVencidos > 0 ? '#ef4444' : 'var(--text-heading)' }">{{ stats.seguimientosVencidos || 0 }}</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">⚠️ Seguim. vencidos</div>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
       <button
         v-if="busqueda || filtroEstado || filtroPrioridad || filtroAsignado"
         @click="limpiarFiltros"
-        style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit;"
+        style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit;"
       >
         Limpiar
       </button>
@@ -75,9 +75,9 @@
     </div>
 
     <!-- Empty -->
-    <div v-else-if="!oportunidades.length" class="ide-ia-card" style="text-align:center; padding:56px; color:#475569;">
+    <div v-else-if="!oportunidades.length" class="ide-ia-card" style="text-align:center; padding:56px; color:var(--text-disabled);">
       <div style="font-size:36px; margin-bottom:12px;">🎯</div>
-      <div style="font-size:14px; font-weight:700; color:#94a3b8; margin-bottom:6px;">
+      <div style="font-size:14px; font-weight:700; color:var(--text-muted); margin-bottom:6px;">
         {{ hayFiltros ? 'Sin resultados' : 'Sin oportunidades' }}
       </div>
       <div style="font-size:12px;">
@@ -104,29 +104,29 @@
         </thead>
         <tbody>
           <tr v-for="o in oportunidades" :key="o.id" class="opp-row" @click="abrirDetalle(o)">
-            <td style="font-weight:600; color:#64748b; font-size:11px; white-space:nowrap;">{{ o.numeroOportunidad }}</td>
+            <td style="font-weight:600; color:var(--text-faint); font-size:11px; white-space:nowrap;">{{ o.numeroOportunidad }}</td>
             <td>
-              <div style="font-weight:600; color:#e2e8f0;">{{ o.contactoNombre }}</div>
-              <div style="font-size:11px; color:#64748b;">{{ o.contactoTelefono || o.contactoEmail || '' }}</div>
+              <div style="font-weight:600; color:var(--text-primary);">{{ o.contactoNombre }}</div>
+              <div style="font-size:11px; color:var(--text-faint);">{{ o.contactoTelefono || o.contactoEmail || '' }}</div>
             </td>
-            <td style="color:#94a3b8; font-size:11px; white-space:nowrap;">
+            <td style="color:var(--text-muted); font-size:11px; white-space:nowrap;">
               {{ o.fechaPrimerContacto ? formatoFechaHora(o.fechaPrimerContacto) : '—' }}
             </td>
-            <td style="color:#94a3b8;">{{ o.empresa || '—' }}</td>
-            <td style="color:#94a3b8; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="o.productoInteres">{{ o.productoInteres || '—' }}</td>
+            <td style="color:var(--text-muted);">{{ o.empresa || '—' }}</td>
+            <td style="color:var(--text-muted); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="o.productoInteres">{{ o.productoInteres || '—' }}</td>
             <td>
               <span class="opp-badge" :style="badgeEstado(o.estadoOportunidad)">{{ labelEstado(o.estadoOportunidad) }}</span>
             </td>
-            <td style="color:#e2e8f0; font-weight:600; white-space:nowrap;">
+            <td style="color:var(--text-primary); font-weight:600; white-space:nowrap;">
               {{ o.montoEstimado != null ? `${o.moneda} ${formatoNumero(o.montoEstimado)}` : '—' }}
             </td>
-            <td style="color:#94a3b8;">{{ o.asignadoNombre || '—' }}</td>
+            <td style="color:var(--text-muted);">{{ o.asignadoNombre || '—' }}</td>
             <td>
-              <div v-if="o.proximaAccion" :style="{ color: accionVencida(o) ? '#ef4444' : '#94a3b8', fontWeight: accionVencida(o) ? '700' : '400' }" style="font-size:11px; max-width:180px;">
+              <div v-if="o.proximaAccion" :style="{ color: accionVencida(o) ? '#ef4444' : 'var(--text-muted)', fontWeight: accionVencida(o) ? '700' : '400' }" style="font-size:11px; max-width:180px;">
                 {{ accionVencida(o) ? '⚠️ ' : '' }}{{ o.proximaAccion }}
                 <div style="font-size:10px; opacity:0.8;">{{ formatoFecha(o.proximaAccionFecha) }}</div>
               </div>
-              <span v-else style="color:#475569;">—</span>
+              <span v-else style="color:var(--text-disabled);">—</span>
             </td>
             <td>
               <span :style="{ color: colorPrioridad(o.prioridad) }" style="font-size:11px; font-weight:700; text-transform:uppercase;">{{ o.prioridad }}</span>
@@ -136,11 +136,11 @@
       </table>
 
       <!-- Paginación -->
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-top:1px solid #1e3a5f44; flex-wrap:wrap;">
-        <div style="font-size:11px; color:#64748b;">Mostrando {{ oportunidades.length }} de {{ total }} oportunidades</div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-top:1px solid var(--border-card); flex-wrap:wrap;">
+        <div style="font-size:11px; color:var(--text-faint);">Mostrando {{ oportunidades.length }} de {{ total }} oportunidades</div>
         <div style="display:flex; align-items:center; gap:6px;">
           <button class="opp-page-btn" :disabled="pagina <= 1" @click="irPagina(pagina - 1)">‹ Anterior</button>
-          <span style="font-size:11px; color:#94a3b8; padding:0 8px; font-weight:700;">Página {{ pagina }} de {{ totalPaginas }}</span>
+          <span style="font-size:11px; color:var(--text-muted); padding:0 8px; font-weight:700;">Página {{ pagina }} de {{ totalPaginas }}</span>
           <button class="opp-page-btn" :disabled="pagina >= totalPaginas" @click="irPagina(pagina + 1)">Siguiente ›</button>
         </div>
       </div>
@@ -150,7 +150,7 @@
     <div v-if="dialogCrear" class="opp-overlay" @click.self="dialogCrear = false">
       <div class="opp-modal">
         <div class="opp-modal-header">
-          <span style="font-size:15px; font-weight:700; color:#f1f5f9;">Nueva oportunidad</span>
+          <span style="font-size:15px; font-weight:700; color:var(--text-heading);">Nueva oportunidad</span>
           <button class="opp-close" @click="dialogCrear = false">×</button>
         </div>
         <div class="opp-modal-body">
@@ -236,10 +236,10 @@
       <div class="opp-modal" style="max-width:760px;">
         <div class="opp-modal-header">
           <div>
-            <div style="font-size:11px; font-weight:600; color:#64748b;">{{ sel.numeroOportunidad }}</div>
-            <span style="font-size:15px; font-weight:700; color:#f1f5f9;">{{ sel.contactoNombre }}</span>
-            <span v-if="sel.empresa" style="font-size:12px; color:#64748b;"> · {{ sel.empresa }}</span>
-            <div v-if="sel.fechaPrimerContacto" style="font-size:11px; color:#64748b; margin-top:2px;">
+            <div style="font-size:11px; font-weight:600; color:var(--text-faint);">{{ sel.numeroOportunidad }}</div>
+            <span style="font-size:15px; font-weight:700; color:var(--text-heading);">{{ sel.contactoNombre }}</span>
+            <span v-if="sel.empresa" style="font-size:12px; color:var(--text-faint);"> · {{ sel.empresa }}</span>
+            <div v-if="sel.fechaPrimerContacto" style="font-size:11px; color:var(--text-faint); margin-top:2px;">
               💬 Primer mensaje: {{ formatoFechaHora(sel.fechaPrimerContacto) }}
             </div>
           </div>
@@ -264,14 +264,14 @@
                 {{ e.label }}
               </button>
             </div>
-            <div v-if="sel.motivoCierre" style="margin-top:8px; font-size:12px; color:#94a3b8; background:#0f172a; border-radius:8px; padding:8px 12px;">
+            <div v-if="sel.motivoCierre" style="margin-top:8px; font-size:12px; color:var(--text-muted); background:var(--bg-page); border-radius:8px; padding:8px 12px;">
               <b>Motivo de cierre:</b> {{ sel.motivoCierre }}
-              <span v-if="sel.fechaCierre" style="color:#64748b;"> · {{ formatoFecha(sel.fechaCierre) }}</span>
+              <span v-if="sel.fechaCierre" style="color:var(--text-faint);"> · {{ formatoFecha(sel.fechaCierre) }}</span>
             </div>
           </div>
 
           <!-- Datos -->
-          <div class="opp-grid2" style="padding-bottom:16px; border-bottom:1px solid #334155;">
+          <div class="opp-grid2" style="padding-bottom:16px; border-bottom:1px solid var(--border);">
             <div>
               <label class="opp-label">Teléfono</label>
               <input v-model="sel.contactoTelefono" class="ide-input opp-input" @change="guardarCampos" />
@@ -317,8 +317,8 @@
           </div>
 
           <!-- Registrar seguimiento -->
-          <div style="padding:16px 0; border-bottom:1px solid #334155;">
-            <label class="opp-label" style="font-size:12px; color:#e2e8f0;">📝 Registrar seguimiento</label>
+          <div style="padding:16px 0; border-bottom:1px solid var(--border);">
+            <label class="opp-label" style="font-size:12px; color:var(--text-primary);">📝 Registrar seguimiento</label>
             <textarea v-model="segNota" class="ide-input opp-input" rows="2" style="resize:vertical; margin-top:6px;" placeholder="¿Qué se hizo? (opcional si solo programas la próxima acción)"></textarea>
             <div style="display:grid; grid-template-columns:1fr 170px auto; gap:8px; margin-top:8px; align-items:end;">
               <div>
@@ -337,9 +337,9 @@
 
           <!-- Historial -->
           <div style="padding-top:16px;">
-            <label class="opp-label" style="font-size:12px; color:#e2e8f0;">Historial de seguimiento</label>
+            <label class="opp-label" style="font-size:12px; color:var(--text-primary);">Historial de seguimiento</label>
             <div style="max-height:240px; overflow-y:auto; margin-top:8px; display:flex; flex-direction:column; gap:8px;">
-              <div v-for="h in historialOrdenado" :key="h.idx" style="display:flex; gap:10px; background:#0f172a; border-radius:8px; padding:8px 12px;">
+              <div v-for="h in historialOrdenado" :key="h.idx" style="display:flex; gap:10px; background:var(--bg-page); border-radius:8px; padding:8px 12px;">
                 <span style="font-size:14px; flex-shrink:0;">{{ iconoAccion(h.accion) }}</span>
                 <div style="flex:1; min-width:0;">
                   <!-- Modo edición -->
@@ -354,8 +354,8 @@
                   </template>
                   <!-- Modo lectura -->
                   <template v-else>
-                    <div style="font-size:12px; color:#e2e8f0;">{{ h.detalles }}</div>
-                    <div style="font-size:10px; color:#64748b; margin-top:2px;">
+                    <div style="font-size:12px; color:var(--text-primary);">{{ h.detalles }}</div>
+                    <div style="font-size:10px; color:var(--text-faint); margin-top:2px;">
                       <b>{{ h.usuarioNombre }}</b> · {{ formatoFechaHora(h.timestamp) }}
                       <span v-if="h.editado" :title="'Corregido por ' + (h.editadoPor || '') + ' el ' + formatoFechaHora(h.editadoEn)" style="color:#f59e0b;"> · (editado)</span>
                     </div>
@@ -363,12 +363,12 @@
                 </div>
                 <button
                   v-if="puedeEditarHistorial(h) && editandoHistorial !== h.idx"
-                  style="background:none; border:none; cursor:pointer; color:#64748b; font-size:12px; padding:2px; flex-shrink:0; align-self:flex-start;"
+                  style="background:none; border:none; cursor:pointer; color:var(--text-faint); font-size:12px; padding:2px; flex-shrink:0; align-self:flex-start;"
                   title="Corregir este seguimiento"
                   @click="iniciarEdicionHistorial(h)"
                 >✏️</button>
               </div>
-              <div v-if="!historialOrdenado.length" style="font-size:12px; color:#475569; text-align:center; padding:12px;">Sin actividad registrada</div>
+              <div v-if="!historialOrdenado.length" style="font-size:12px; color:var(--text-disabled); text-align:center; padding:12px;">Sin actividad registrada</div>
             </div>
           </div>
         </div>
@@ -379,7 +379,7 @@
     <div v-if="dialogMotivo" class="opp-overlay" style="z-index:10001;" @click.self="dialogMotivo = false">
       <div class="opp-modal" style="max-width:420px;">
         <div class="opp-modal-header">
-          <span style="font-size:14px; font-weight:700; color:#f1f5f9;">
+          <span style="font-size:14px; font-weight:700; color:var(--text-heading);">
             {{ estadoPendiente === 'perdida' ? '¿Por qué se perdió?' : '¿Por qué canceló?' }}
           </span>
           <button class="opp-close" @click="dialogMotivo = false">×</button>
@@ -399,7 +399,7 @@
 
 <script>
 const ESTADOS = [
-  { valor: 'prospecto',           label: 'Prospecto',        color: '#64748b' },
+  { valor: 'prospecto',           label: 'Prospecto',        color: 'var(--text-faint)' },
   { valor: 'necesita-cotizacion', label: 'Necesita cotiz.',  color: '#f59e0b' },
   { valor: 'cotizacion-enviada',  label: 'Cotiz. enviada',   color: '#3b82f6' },
   { valor: 'reunion-pendiente',   label: 'Reunión pend.',    color: '#8b5cf6' },
@@ -675,11 +675,11 @@ export default {
       return e ? e.label : v;
     },
     badgeEstado(v) {
-      const e = ESTADOS.find(x => x.valor === v) || { color: '#64748b' };
+      const e = ESTADOS.find(x => x.valor === v) || { color: 'var(--text-faint)' };
       return { background: e.color + '22', color: e.color };
     },
     colorPrioridad(p) {
-      return { alta: '#ef4444', media: '#f59e0b', baja: '#64748b' }[p] || '#64748b';
+      return { alta: '#ef4444', media: '#f59e0b', baja: 'var(--text-faint)' }[p] || 'var(--text-faint)';
     },
     iconoAccion(a) {
       return {
@@ -713,13 +713,13 @@ export default {
 <style scoped>
 .opp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .opp-table th {
-  text-align: left; padding: 10px 12px; color: #64748b; font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3a5f44;
+  text-align: left; padding: 10px 12px; color: var(--text-faint); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-card);
   white-space: nowrap;
 }
-.opp-table td { padding: 10px 12px; border-bottom: 1px solid #1e3a5f22; vertical-align: middle; }
+.opp-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-card); vertical-align: middle; }
 .opp-row { cursor: pointer; transition: background 0.12s; }
-.opp-row:hover { background: #1e293b66; }
+.opp-row:hover { background: color-mix(in srgb, var(--bg-surface) 40%, transparent); }
 
 .opp-badge {
   padding: 3px 9px; border-radius: 5px; font-size: 10px; font-weight: 700;
@@ -727,11 +727,11 @@ export default {
 }
 
 .opp-page-btn {
-  background: transparent; border: 1px solid #334155; color: #94a3b8;
+  background: transparent; border: 1px solid var(--border); color: var(--text-muted);
   border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 600;
   cursor: pointer; font-family: inherit;
 }
-.opp-page-btn:hover:not(:disabled) { border-color: #6366f1; color: #e2e8f0; }
+.opp-page-btn:hover:not(:disabled) { border-color: #6366f1; color: var(--text-primary); }
 .opp-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .opp-overlay {
@@ -740,29 +740,29 @@ export default {
   display: flex; align-items: center; justify-content: center; padding: 20px;
 }
 .opp-modal {
-  background: #1e293b; border: 1px solid #334155; border-radius: 14px;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px;
   width: 100%; max-width: 640px; max-height: 90vh; display: flex; flex-direction: column;
 }
 .opp-modal-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px 12px; border-bottom: 1px solid #334155; flex-shrink: 0;
+  padding: 16px 20px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0;
 }
 .opp-modal-body { padding: 16px 20px; overflow-y: auto; }
 .opp-modal-actions {
   display: flex; justify-content: flex-end; gap: 8px;
-  padding: 12px 20px 16px; border-top: 1px solid #334155; flex-shrink: 0;
+  padding: 12px 20px 16px; border-top: 1px solid var(--border); flex-shrink: 0;
 }
 .opp-close {
   background: none; border: none; font-size: 20px; cursor: pointer;
-  color: #64748b; line-height: 1; padding: 2px 6px;
+  color: var(--text-faint); line-height: 1; padding: 2px 6px;
 }
 
 .opp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.opp-label { display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+.opp-label { display: block; font-size: 10px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
 .opp-input { width: 100%; padding: 8px 10px; font-size: 12px; box-sizing: border-box; }
 
 .opp-estado-btn {
-  background: transparent; border: 1px solid #334155; color: #94a3b8;
+  background: transparent; border: 1px solid var(--border); color: var(--text-muted);
   border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 600;
   cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
@@ -774,7 +774,7 @@ export default {
 }
 .opp-btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
 .opp-btn-sec {
-  background: none; border: 1px solid #334155; color: #94a3b8;
+  background: none; border: 1px solid var(--border); color: var(--text-muted);
   border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600;
   cursor: pointer; font-family: inherit;
 }

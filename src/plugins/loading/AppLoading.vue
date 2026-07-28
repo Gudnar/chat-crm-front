@@ -1,10 +1,10 @@
 <template>
-  <v-overlay v-if="visible" z-index="9998" color="#0f172a" opacity="0.85">
+  <v-overlay v-if="visible" z-index="9998" color="var(--bg-page)" opacity="0.85">
     <div class="d-flex flex-column align-center" style="gap: 16px;">
       <div class="ide-ia-spinner">
         <div></div><div></div><div></div>
       </div>
-      <span style="color: #94a3b8; font-size: 13px; font-weight: 500;">{{ message }}</span>
+      <span style="color: var(--text-muted); font-size: 13px; font-weight: 500;">{{ message }}</span>
     </div>
   </v-overlay>
 </template>

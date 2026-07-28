@@ -21,8 +21,8 @@
     <!-- Empty state -->
     <div v-else-if="agentes.length === 0" class="ide-ia-card" style="text-align:center; padding:48px;">
       <div style="font-size:48px; margin-bottom:16px;">🤖</div>
-      <div style="color:#e2e8f0; font-size:15px; font-weight:700; margin-bottom:8px;">No hay agentes creados</div>
-      <div style="color:#64748b; font-size:13px; margin-bottom:24px;">Crea tu primer agente IA con Claude</div>
+      <div style="color:var(--text-primary); font-size:15px; font-weight:700; margin-bottom:8px;">No hay agentes creados</div>
+      <div style="color:var(--text-faint); font-size:13px; margin-bottom:24px;">Crea tu primer agente IA con Claude</div>
       <button class="ag-new-btn" @click="abrirDialog()">Crear primer agente</button>
     </div>
 
@@ -55,7 +55,7 @@
             {{ ag.activo ? '● Activo' : '● Inactivo' }}
           </span>
           <span class="ag-badge" style="background:#6366f122; color:#818cf8;">{{ ag.modoOperacion }}</span>
-          <div style="margin-left:auto; font-size:11px; color:#64748b;">{{ ag.totalConversaciones }} conv.</div>
+          <div style="margin-left:auto; font-size:11px; color:var(--text-faint);">{{ ag.totalConversaciones }} conv.</div>
         </div>
       </div>
     </div>
@@ -196,17 +196,17 @@ export default {
 
 .ag-card__hd { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .ag-avatar { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.ag-name   { font-size: 14px; font-weight: 700; color: #e2e8f0; }
-.ag-model  { font-size: 11px; color: #64748b; margin-top: 1px; }
+.ag-name   { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.ag-model  { font-size: 11px; color: var(--text-faint); margin-top: 1px; }
 
 .ag-ico-btn {
-  background: none; border: none; cursor: pointer; color: #475569;
+  background: none; border: none; cursor: pointer; color: var(--text-disabled);
   padding: 4px; border-radius: 5px; display: flex; transition: color 0.15s;
 }
-.ag-ico-btn:hover { color: #94a3b8; }
+.ag-ico-btn:hover { color: var(--text-muted); }
 .ag-ico-btn--del:hover { color: #ef4444; }
 
-.ag-desc { font-size: 12px; color: #64748b; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0 0 12px; }
+.ag-desc { font-size: 12px; color: var(--text-faint); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0 0 12px; }
 .ag-footer { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .ag-badge  { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
 
@@ -228,31 +228,31 @@ export default {
   justify-content: center; z-index: 9999;
 }
 .ag-modal {
-  background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px;
   width: 100%; max-width: 560px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   display: flex; flex-direction: column; max-height: 90vh;
 }
 .ag-modal-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 24px 14px; font-size: 15px; font-weight: 700; color: #f1f5f9;
-  border-bottom: 1px solid #1e3a5f33; flex-shrink: 0;
+  padding: 20px 24px 14px; font-size: 15px; font-weight: 700; color: var(--text-heading);
+  border-bottom: 1px solid var(--border-card); flex-shrink: 0;
 }
 .ag-modal-close {
-  background: none; border: none; color: #475569; cursor: pointer;
+  background: none; border: none; color: var(--text-disabled); cursor: pointer;
   padding: 2px; border-radius: 4px; display: flex;
 }
-.ag-modal-close:hover { color: #94a3b8; }
+.ag-modal-close:hover { color: var(--text-muted); }
 .ag-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
 .ag-modal-footer {
   display: flex; justify-content: flex-end; gap: 8px;
-  padding: 14px 24px 20px; border-top: 1px solid #1e3a5f33; flex-shrink: 0;
+  padding: 14px 24px 20px; border-top: 1px solid var(--border-card); flex-shrink: 0;
 }
 .ag-btn-cancel {
-  background: transparent; border: 1px solid #334155; color: #64748b;
+  background: transparent; border: 1px solid var(--border); color: var(--text-faint);
   border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600;
   cursor: pointer; font-family: inherit; transition: border-color 0.15s;
 }
-.ag-btn-cancel:hover { border-color: #475569; color: #94a3b8; }
+.ag-btn-cancel:hover { border-color: var(--text-disabled); color: var(--text-muted); }
 .ag-btn-ok {
   background: #6366f1; color: #fff; border: none; border-radius: 8px;
   padding: 8px 20px; font-size: 12px; font-weight: 700; cursor: pointer;

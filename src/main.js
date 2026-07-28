@@ -1,5 +1,13 @@
 import Vue from 'vue';
 import App from './App.vue';
+
+// Aplicar el tema guardado ANTES de montar la app, para evitar un parpadeo del
+// tema por defecto (oscuro) al cargar con el tema claro ya elegido.
+try {
+  const temaGuardado = JSON.parse(localStorage.getItem('ide_ia_theme') || 'null');
+  if (temaGuardado === 'light') document.documentElement.setAttribute('data-theme', 'light');
+} catch { /* localStorage no disponible o valor corrupto: se queda en oscuro */ }
+
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';

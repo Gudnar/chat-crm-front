@@ -87,8 +87,8 @@
     <!-- ── Empty ── -->
     <div v-else-if="pubsFiltradas.length === 0" class="pub-empty">
       <div style="font-size:40px; margin-bottom:14px;">📱</div>
-      <div style="font-size:15px; font-weight:700; color:#64748b; margin-bottom:6px;">Sin publicaciones</div>
-      <div style="font-size:13px; color:#475569; margin-bottom:20px;">Registra publicaciones de tus redes sociales conectadas</div>
+      <div style="font-size:15px; font-weight:700; color:var(--text-faint); margin-bottom:6px;">Sin publicaciones</div>
+      <div style="font-size:13px; color:var(--text-disabled); margin-bottom:20px;">Registra publicaciones de tus redes sociales conectadas</div>
       <button class="pub-btn-sincronizar" @click="abrirFormPost">+ Agregar publicación</button>
     </div>
 
@@ -139,8 +139,8 @@
           </div>
           <!-- Date + reach -->
           <div class="pub-card-footer">
-            <span style="font-size:10px; color:#475569;">{{ pub.fecha ? formatFecha(pub.fecha) : '—' }}</span>
-            <span style="font-size:10px; color:#64748b; display:flex; align-items:center; gap:3px;">
+            <span style="font-size:10px; color:var(--text-disabled);">{{ pub.fecha ? formatFecha(pub.fecha) : '—' }}</span>
+            <span style="font-size:10px; color:var(--text-faint); display:flex; align-items:center; gap:3px;">
               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               {{ fmtNum(pub.alcance || 0) }}
             </span>
@@ -159,12 +159,12 @@
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
             <span class="pub-plataforma-chip" :style="{ background: plataformaColor(pub.plataforma)+'22', color: plataformaColor(pub.plataforma) }">{{ pub.plataforma }}</span>
             <span class="pub-tipo-chip" :style="{ background: tipoBg(pub.tipo)+'88', color: tipoColor(pub.tipo) }">{{ pub.tipo || 'post' }}</span>
-            <span v-if="pub.convCount > 0" style="font-size:10px; color:#64748b; display:flex; align-items:center; gap:3px;">
+            <span v-if="pub.convCount > 0" style="font-size:10px; color:var(--text-faint); display:flex; align-items:center; gap:3px;">
               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
               {{ pub.convCount }} conv.
             </span>
           </div>
-          <p style="margin:0 0 5px; font-size:13px; color:#cbd5e1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ pub.titulo }}</p>
+          <p style="margin:0 0 5px; font-size:13px; color:var(--text-body); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ pub.titulo }}</p>
           <div class="pub-metrics" style="gap:12px;">
             <span class="pub-metric"><span style="color:#ef4444;">❤</span> {{ fmtNum(pub.likes || 0) }}</span>
             <span class="pub-metric">💬 {{ fmtNum(pub.comentarios || 0) }}</span>
@@ -173,7 +173,7 @@
           </div>
         </div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px; flex-shrink:0; margin-left:12px;">
-          <span style="font-size:11px; color:#475569;">{{ pub.fecha ? formatFecha(pub.fecha) : '—' }}</span>
+          <span style="font-size:11px; color:var(--text-disabled);">{{ pub.fecha ? formatFecha(pub.fecha) : '—' }}</span>
           <div style="display:flex; gap:6px;">
             <button class="pub-icon-btn" @click.stop="abrirEditPost(pub)" title="Editar">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -297,8 +297,8 @@
               <span v-html="plataformaIcono(c.plataforma)"></span>
             </div>
             <div style="flex:1; min-width:0;">
-              <div style="font-size:13px; font-weight:700; color:#e2e8f0;">{{ c.nombre }}</div>
-              <div style="font-size:11px; color:#475569;">ID: {{ c.pageId }}</div>
+              <div style="font-size:13px; font-weight:700; color:var(--text-primary);">{{ c.nombre }}</div>
+              <div style="font-size:11px; color:var(--text-disabled);">ID: {{ c.pageId }}</div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
               <span :style="{ fontSize:'10px', fontWeight:700, color: c.enabled ? '#22c55e' : '#ef4444' }">{{ c.enabled ? 'Activo' : 'Inactivo' }}</span>
@@ -307,7 +307,7 @@
               </button>
             </div>
           </div>
-          <div v-if="cuentas.filter(x => x.plataforma === cfgTab).length === 0" style="text-align:center; padding:32px; color:#475569; font-size:13px;">
+          <div v-if="cuentas.filter(x => x.plataforma === cfgTab).length === 0" style="text-align:center; padding:32px; color:var(--text-disabled); font-size:13px;">
             Sin cuentas de {{ cfgTab }} conectadas
           </div>
         </div>
@@ -384,27 +384,27 @@
             <img v-if="detallePost.imageUrl" :src="detallePost.imageUrl" class="pub-detalle-img" :alt="detallePost.titulo" />
             <span v-else v-html="mediaIcono(detallePost.tipo)" style="display:flex;"></span>
           </div>
-          <p style="font-size:14px; color:#cbd5e1; line-height:1.6; margin:16px 0;">{{ detallePost.titulo }}</p>
+          <p style="font-size:14px; color:var(--text-body); line-height:1.6; margin:16px 0;">{{ detallePost.titulo }}</p>
           <!-- Metrics grid -->
           <div class="pub-detalle-metrics">
             <div class="pub-detalle-metric">
               <div style="font-size:22px; font-weight:900; color:#ef4444;">{{ fmtNum(detallePost.likes || 0) }}</div>
-              <div style="font-size:10px; color:#64748b;">❤ Likes</div>
+              <div style="font-size:10px; color:var(--text-faint);">❤ Likes</div>
             </div>
             <div class="pub-detalle-metric">
               <div style="font-size:22px; font-weight:900; color:#818cf8;">{{ fmtNum(detallePost.comentarios || 0) }}</div>
-              <div style="font-size:10px; color:#64748b;">💬 Comentarios</div>
+              <div style="font-size:10px; color:var(--text-faint);">💬 Comentarios</div>
             </div>
             <div class="pub-detalle-metric">
               <div style="font-size:22px; font-weight:900; color:#22c55e;">{{ fmtNum(detallePost.compartidos || 0) }}</div>
-              <div style="font-size:10px; color:#64748b;">↗ Compartidos</div>
+              <div style="font-size:10px; color:var(--text-faint);">↗ Compartidos</div>
             </div>
             <div class="pub-detalle-metric">
               <div style="font-size:22px; font-weight:900; color:#f59e0b;">{{ fmtNum(detallePost.alcance || 0) }}</div>
-              <div style="font-size:10px; color:#64748b;">👁 Alcance</div>
+              <div style="font-size:10px; color:var(--text-faint);">👁 Alcance</div>
             </div>
           </div>
-          <div style="display:flex; justify-content:space-between; margin-top:14px; font-size:12px; color:#64748b; padding-top:14px; border-top:1px solid #1e3a5f33;">
+          <div style="display:flex; justify-content:space-between; margin-top:14px; font-size:12px; color:var(--text-faint); padding-top:14px; border-top:1px solid var(--border-card);">
             <span>Fecha: {{ detallePost.fechaPost ? formatFecha(detallePost.fechaPost) : (detallePost.fecha ? formatFecha(detallePost.fecha) : '—') }}</span>
             <span>Conversaciones: <strong style="color:#818cf8;">{{ detallePost.convCount || 0 }}</strong></span>
           </div>
@@ -412,7 +412,7 @@
           <!-- Comentarios del post -->
           <div v-if="detallePost.comentariosData && detallePost.comentariosData.length" style="margin-top:4px;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">
+              <div style="font-size:11px; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.5px;">
                 Comentarios ({{ detallePost.comentariosData.length }})
               </div>
               <button class="pub-btn-secundario" style="font-size:11px; padding:5px 10px;" @click="importarComentarios(detallePost)" :disabled="importando">
@@ -424,14 +424,14 @@
               <div class="pub-comment-avatar">{{ (cm.fromName || '?')[0].toUpperCase() }}</div>
               <div style="flex:1; min-width:0;">
                 <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:3px;">
-                  <span style="font-size:12px; font-weight:700; color:#cbd5e1;">{{ cm.fromName }}</span>
-                  <span style="font-size:10px; color:#475569;">{{ formatFechaHora(cm.createdTime) }}</span>
+                  <span style="font-size:12px; font-weight:700; color:var(--text-body);">{{ cm.fromName }}</span>
+                  <span style="font-size:10px; color:var(--text-disabled);">{{ formatFechaHora(cm.createdTime) }}</span>
                 </div>
-                <p style="margin:0; font-size:13px; color:#94a3b8; line-height:1.5;">{{ cm.message }}</p>
+                <p style="margin:0; font-size:13px; color:var(--text-muted); line-height:1.5;">{{ cm.message }}</p>
               </div>
             </div>
           </div>
-          <div v-else-if="detallePost.comentarios > 0" style="font-size:12px; color:#475569; text-align:center; padding:12px 0;">
+          <div v-else-if="detallePost.comentarios > 0" style="font-size:12px; color:var(--text-disabled); text-align:center; padding:12px 0;">
             Sincroniza de nuevo para cargar los comentarios
           </div>
         </div>
@@ -681,7 +681,7 @@ export default {
     // ── Visual helpers ──
     plataformaColor(p) {
       const m = { instagram: '#E1306C', facebook: '#1877F2', tiktok: '#69C9D0' };
-      return m[p] || '#64748b';
+      return m[p] || 'var(--text-faint)';
     },
     plataformaIcono(p) {
       if (p === 'instagram') return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-width="3"/></svg>`;
@@ -690,7 +690,7 @@ export default {
       return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/></svg>`;
     },
     tipoBg(tipo) {
-      const m = { reel: '#E1306C', post: '#6366f1', video: '#8b5cf6', story: '#f97316', tiktok: '#1e293b' };
+      const m = { reel: '#E1306C', post: '#6366f1', video: '#8b5cf6', story: '#f97316', tiktok: 'var(--bg-surface)' };
       return m[tipo] || '#6366f1';
     },
     tipoColor(tipo) {
@@ -700,9 +700,9 @@ export default {
       const m = {
         instagram: 'linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)',
         facebook: 'linear-gradient(135deg, #1877F2 0%, #4267B2 100%)',
-        tiktok: 'linear-gradient(135deg, #010101 0%, #1a1a2e 100%)',
+        tiktok: 'linear-gradient(135deg, #010101 0%, var(--bg-panel) 100%)',
       };
-      return m[p] || 'linear-gradient(135deg, #1e293b, #0f172a)';
+      return m[p] || 'linear-gradient(135deg, var(--bg-surface), var(--bg-page))';
     },
     mediaIcono(tipo) {
       if (tipo === 'reel' || tipo === 'video') return `<svg width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.3)" stroke-width="1"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
@@ -748,8 +748,8 @@ export default {
   gap: 16px;
   flex-wrap: wrap;
 }
-.pub-title { font-size: 22px; font-weight: 800; color: #f1f5f9; margin: 0 0 4px; }
-.pub-subtitle { font-size: 12px; color: #64748b; margin: 0; }
+.pub-title { font-size: 22px; font-weight: 800; color: var(--text-heading); margin: 0 0 4px; }
+.pub-subtitle { font-size: 12px; color: var(--text-faint); margin: 0; }
 .pub-topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 /* ── Buttons ── */
@@ -763,7 +763,7 @@ export default {
 
 .pub-btn-secundario {
   display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px;
-  background: #1e293b; border: 1px solid #334155; color: #94a3b8; font-size: 12px;
+  background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px;
   font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
 .pub-btn-secundario:hover { border-color: #6366f1; color: #818cf8; }
@@ -779,10 +779,10 @@ export default {
 /* ── View toggle ── */
 .pub-view-toggle {
   display: flex; border-radius: 8px; overflow: hidden;
-  border: 1px solid #334155; background: #1e293b;
+  border: 1px solid var(--border); background: var(--bg-surface);
 }
 .pub-view-toggle button {
-  background: none; border: none; cursor: pointer; color: #64748b;
+  background: none; border: none; cursor: pointer; color: var(--text-faint);
   padding: 6px 10px; display: flex; align-items: center; transition: all 0.15s;
 }
 .pub-view-btn--active { background: #6366f122 !important; color: #818cf8 !important; }
@@ -790,22 +790,22 @@ export default {
 /* ── Stats ── */
 .pub-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .pub-stat-card {
-  background: #1e293b; border: 1px solid #1e3a5f44; border-radius: 12px;
+  background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 12px;
   padding: 16px 18px;
 }
-.pub-stat-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-.pub-stat-value { font-size: 28px; font-weight: 900; color: #f1f5f9; }
-.pub-stat-value--text { font-size: 13px; font-weight: 600; color: #94a3b8; line-height: 1.4; }
+.pub-stat-label { font-size: 11px; color: var(--text-faint); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.pub-stat-value { font-size: 28px; font-weight: 900; color: var(--text-heading); }
+.pub-stat-value--text { font-size: 13px; font-weight: 600; color: var(--text-muted); line-height: 1.4; }
 
 /* ── Filters ── */
 .pub-filters-row { display: flex; gap: 10px; }
 .pub-select-wrap {
   position: relative; display: flex; align-items: center;
 }
-.pub-select-wrap svg { position: absolute; right: 10px; pointer-events: none; color: #64748b; }
+.pub-select-wrap svg { position: absolute; right: 10px; pointer-events: none; color: var(--text-faint); }
 .pub-select {
-  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-  color: #94a3b8; font-size: 13px; font-weight: 500; padding: 8px 32px 8px 14px;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-muted); font-size: 13px; font-weight: 500; padding: 8px 32px 8px 14px;
   outline: none; font-family: inherit; cursor: pointer; appearance: none; min-width: 180px;
   transition: border-color 0.15s;
 }
@@ -821,7 +821,7 @@ export default {
 
 /* ── Card ── */
 .pub-card {
-  background: #1e293b; border: 1px solid #1e3a5f44; border-radius: 12px;
+  background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 12px;
   overflow: hidden; cursor: pointer; transition: all 0.2s;
 }
 .pub-card:hover { border-color: #6366f155; transform: translateY(-2px); box-shadow: 0 8px 24px #0009; }
@@ -856,7 +856,7 @@ export default {
 
 .pub-card-body { padding: 12px 14px; }
 .pub-card-caption {
-  margin: 0 0 10px; font-size: 12px; color: #cbd5e1; line-height: 1.4;
+  margin: 0 0 10px; font-size: 12px; color: var(--text-body); line-height: 1.4;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -864,18 +864,18 @@ export default {
   display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
 }
 .pub-metric {
-  display: flex; align-items: center; gap: 3px; font-size: 11px; color: #64748b; font-weight: 600;
+  display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--text-faint); font-weight: 600;
 }
 .pub-card-footer {
   display: flex; justify-content: space-between; align-items: center;
-  padding-top: 8px; border-top: 1px solid #1e3a5f33;
+  padding-top: 8px; border-top: 1px solid var(--border-card);
 }
 
 /* ── List view ── */
 .pub-list { display: flex; flex-direction: column; gap: 8px; }
 .pub-list-row {
   display: flex; align-items: center; gap: 14px; padding: 12px 14px;
-  background: #1e293b; border: 1px solid #1e3a5f33; border-radius: 10px;
+  background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 10px;
   cursor: pointer; transition: border-color 0.15s;
 }
 .pub-list-row:hover { border-color: #6366f144; }
@@ -894,44 +894,44 @@ export default {
   display: flex; align-items: center; justify-content: center; padding: 20px;
 }
 .pub-modal {
-  background: #0d1526; border: 1px solid #1e3a5f55; border-radius: 14px;
+  background: var(--bg-panel); border: 1px solid var(--border-card); border-radius: 14px;
   width: 100%; max-width: 480px; max-height: 90vh; overflow: hidden;
   display: flex; flex-direction: column;
 }
 .pub-modal--wide { max-width: 620px; }
 .pub-modal-hd {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px; border-bottom: 1px solid #1e3a5f44;
-  font-size: 14px; font-weight: 700; color: #e2e8f0; flex-shrink: 0;
+  padding: 16px 20px; border-bottom: 1px solid var(--border-card);
+  font-size: 14px; font-weight: 700; color: var(--text-primary); flex-shrink: 0;
 }
 .pub-modal-close {
-  background: none; border: none; cursor: pointer; color: #475569;
+  background: none; border: none; cursor: pointer; color: var(--text-disabled);
   font-size: 16px; padding: 4px 8px; border-radius: 6px; transition: color 0.15s;
 }
-.pub-modal-close:hover { color: #94a3b8; }
+.pub-modal-close:hover { color: var(--text-muted); }
 .pub-modal-body { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; flex: 1; }
 .pub-modal-ft {
   display: flex; justify-content: flex-end; gap: 8px;
-  padding: 14px 20px; border-top: 1px solid #1e3a5f44; flex-shrink: 0;
+  padding: 14px 20px; border-top: 1px solid var(--border-card); flex-shrink: 0;
 }
 
 /* ── Form elements ── */
 .pub-field { display: flex; flex-direction: column; gap: 5px; }
-.pub-field label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.pub-field label { font-size: 11px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; }
 .pub-field-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .pub-input, .pub-input-sel, .pub-input-txt {
-  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-  color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-size: 13px; padding: 9px 12px; outline: none;
   font-family: inherit; transition: border-color 0.15s; width: 100%; box-sizing: border-box;
 }
 .pub-input:focus, .pub-input-sel:focus, .pub-input-txt:focus { border-color: #6366f1; }
 .pub-input-sel { appearance: none; cursor: pointer; }
 .pub-input-txt { resize: vertical; }
-.pub-hint { font-size: 10px; color: #475569; }
+.pub-hint { font-size: 10px; color: var(--text-disabled); }
 .pub-toggle-row {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 12px; background: #0f172a; border-radius: 8px; border: 1px solid #1e3a5f33;
-  font-size: 13px; color: #cbd5e1;
+  padding: 10px 12px; background: var(--bg-page); border-radius: 8px; border: 1px solid var(--border-card);
+  font-size: 13px; color: var(--text-body);
 }
 .pub-eye-btn {
   position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
@@ -944,13 +944,13 @@ export default {
 /* ── Config tab ── */
 .pub-cfg-tab {
   background: none; border: none; border-bottom: 2px solid transparent;
-  color: #64748b; font-size: 12px; font-weight: 600; padding: 6px 12px;
+  color: var(--text-faint); font-size: 12px; font-weight: 600; padding: 6px 12px;
   cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
 .pub-cfg-tab--active { color: #818cf8; border-bottom-color: #6366f1; }
 .pub-cfg-row {
   display: flex; align-items: center; gap: 12px; padding: 12px;
-  background: #1e293b; border-radius: 10px; border: 1px solid #1e3a5f33; margin-bottom: 8px;
+  background: var(--bg-surface); border-radius: 10px; border: 1px solid var(--border-card); margin-bottom: 8px;
 }
 .pub-cfg-icon {
   width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center;
@@ -969,14 +969,14 @@ export default {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px;
 }
 .pub-detalle-metric {
-  text-align: center; padding: 12px 8px; background: #0f172a;
-  border-radius: 8px; border: 1px solid #1e3a5f33;
+  text-align: center; padding: 12px 8px; background: var(--bg-page);
+  border-radius: 8px; border: 1px solid var(--border-card);
 }
 
 /* ── Comments ── */
 .pub-comment-row {
   display: flex; gap: 10px; padding: 10px 12px;
-  background: #0f172a; border-radius: 8px; border: 1px solid #1e3a5f33;
+  background: var(--bg-page); border-radius: 8px; border: 1px solid var(--border-card);
   margin-bottom: 6px;
 }
 .pub-comment-avatar {
@@ -987,7 +987,7 @@ export default {
 
 /* ── Icons ── */
 .pub-icon-btn {
-  background: none; border: none; cursor: pointer; color: #475569;
+  background: none; border: none; cursor: pointer; color: var(--text-disabled);
   padding: 5px; border-radius: 6px; display: flex; align-items: center;
   transition: all 0.15s;
 }
@@ -995,7 +995,7 @@ export default {
 .pub-icon-btn--del:hover { background: #ef444422 !important; color: #ef4444 !important; }
 
 /* ── Empty ── */
-.pub-empty { text-align: center; padding: 60px 20px; color: #64748b; }
+.pub-empty { text-align: center; padding: 60px 20px; color: var(--text-faint); }
 
 /* ── Spinner ── */
 .pub-spinner {

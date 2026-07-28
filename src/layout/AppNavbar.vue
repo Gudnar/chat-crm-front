@@ -62,14 +62,14 @@ export default {
   justify-content: space-between;
   padding: 0 28px;
   height: 56px;
-  background: #0d1526;
-  border-bottom: 1px solid #1e3a5f33;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-card);
   flex-shrink: 0;
   position: sticky; top: 0; z-index: 50;
 }
 
 .ide-navbar__title {
-  font-size: 15px; font-weight: 700; color: #e2e8f0; letter-spacing: -0.2px;
+  font-size: 15px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.2px;
 }
 
 .ide-navbar__right {
@@ -77,7 +77,7 @@ export default {
 }
 
 .ide-navbar__time {
-  font-size: 12px; font-weight: 600; color: #475569;
+  font-size: 12px; font-weight: 600; color: var(--text-disabled);
   font-variant-numeric: tabular-nums;
 }
 
@@ -93,9 +93,9 @@ export default {
 }
 
 .ide-navbar__user-name {
-  font-size: 12px; font-weight: 600; color: #e2e8f0; display: block;
+  font-size: 12px; font-weight: 600; color: var(--text-primary); display: block;
 }
 .ide-navbar__user-role {
-  font-size: 10px; color: #475569; display: block;
+  font-size: 10px; color: var(--text-disabled); display: block;
 }
 </style>

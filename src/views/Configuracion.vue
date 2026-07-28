@@ -24,9 +24,9 @@
     <div class="ide-body">
 
       <!-- SUPER_ADMIN without a clienteId context -->
-      <div v-if="!clienteId" style="padding:40px 0; text-align:center; color:#475569;">
+      <div v-if="!clienteId" style="padding:40px 0; text-align:center; color:var(--text-disabled);">
         <div style="font-size:32px; margin-bottom:12px;">🔐</div>
-        <div style="font-size:15px; font-weight:700; color:#64748b; margin-bottom:6px;">Selecciona un cliente</div>
+        <div style="font-size:15px; font-weight:700; color:var(--text-faint); margin-bottom:6px;">Selecciona un cliente</div>
         <div style="font-size:12px;">La configuración se gestiona por cliente. Accede desde la sección <strong style="color:#818cf8;">Clientes</strong>.</div>
       </div>
 
@@ -40,7 +40,7 @@
             <div style="font-size:12px; font-weight:700; color:#e8956d; margin-bottom:8px;">🔑 ¿Cómo obtener tu API Key?</div>
             <div v-for="(step, i) in pasos" :key="i" style="display:flex; gap:10px; margin-bottom:6px;">
               <div class="cfg-step-num">{{ i+1 }}</div>
-              <span style="font-size:12px; color:#94a3b8;"><strong style="color:#e2e8f0;">{{ step.bold }}:</strong> {{ step.text }}</span>
+              <span style="font-size:12px; color:var(--text-muted);"><strong style="color:var(--text-primary);">{{ step.bold }}:</strong> {{ step.text }}</span>
             </div>
             <a href="https://console.anthropic.com" target="_blank" style="display:inline-flex; align-items:center; gap:5px; margin-top:8px; font-size:11px; color:#e8956d; font-weight:600; text-decoration:none;">
               Ir a console.anthropic.com ↗
@@ -84,9 +84,9 @@
         <div style="max-width:520px;">
           <div class="ide-ia-card" style="margin-bottom:16px;">
             <div style="display:flex; flex-direction:column; gap:12px;">
-              <div v-for="canal in canales" :key="canal.id" style="display:flex; align-items:center; gap:12px; padding:10px 12px; background:#0f172a; border-radius:8px; border:1px solid #1e3a5f33;">
+              <div v-for="canal in canales" :key="canal.id" style="display:flex; align-items:center; gap:12px; padding:10px 12px; background:var(--bg-page); border-radius:8px; border:1px solid var(--border-card);">
                 <div style="font-size:20px; flex-shrink:0;">{{ canal.emoji }}</div>
-                <span style="font-size:13px; color:#cbd5e1; flex:1;">{{ canal.label }}</span>
+                <span style="font-size:13px; color:var(--text-body); flex:1;">{{ canal.label }}</span>
                 <div style="display:flex; align-items:center; gap:8px;">
                   <span style="font-size:11px;" :style="{ color: canal.activo ? '#22c55e' : '#ef4444' }">{{ canal.activo ? 'Activo' : 'Inactivo' }}</span>
                   <div class="ide-toggle" :class="{ 'ide-toggle--on': canal.activo }" @click="canal.activo = !canal.activo"><div></div></div>
@@ -104,15 +104,15 @@
       <template v-else-if="seccion === 'modelos'">
         <div class="ide-sec-hd"><h2>Modelos disponibles</h2><p>Referencia de capacidades de cada modelo Claude</p></div>
         <div style="display:flex; flex-direction:column; gap:12px; max-width:620px;">
-          <div v-for="m in modelosInfo" :key="m.id" class="ide-ia-card" :style="{ border: modelo === m.id ? '1px solid #c9644244' : '1px solid #1e3a5f33' }">
+          <div v-for="m in modelosInfo" :key="m.id" class="ide-ia-card" :style="{ border: modelo === m.id ? '1px solid #c9644244' : '1px solid var(--border-card)' }">
             <div style="display:flex; align-items:flex-start; gap:14px;">
               <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#c96442,#e8956d); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">{{ m.emoji }}</div>
               <div style="flex:1;">
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                  <span style="font-size:13px; font-weight:700; color:#e2e8f0;">{{ m.nombre }}</span>
+                  <span style="font-size:13px; font-weight:700; color:var(--text-primary);">{{ m.nombre }}</span>
                   <span v-if="m.recomendado" style="font-size:10px; font-weight:700; background:#22c55e22; color:#22c55e; padding:2px 7px; border-radius:999px;">Recomendado</span>
                 </div>
-                <div style="font-size:11px; color:#64748b; line-height:1.6; margin-bottom:10px;">{{ m.desc }}</div>
+                <div style="font-size:11px; color:var(--text-faint); line-height:1.6; margin-bottom:10px;">{{ m.desc }}</div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
                   <span v-for="tag in m.tags" :key="tag" style="font-size:10px; font-weight:600; background:#6366f122; color:#818cf8; padding:2px 8px; border-radius:999px;">{{ tag }}</span>
                 </div>
@@ -141,17 +141,17 @@
           <!-- Setup guide -->
           <div class="cfg-info-card" style="margin-bottom:20px;">
             <div style="font-size:12px; font-weight:700; color:#25D366; margin-bottom:10px;">📱 Configuración en Meta for Developers</div>
-            <div v-for="(step, i) in pasosWa" :key="i" style="display:flex; gap:10px; margin-bottom:8px; font-size:12px; color:#94a3b8;">
+            <div v-for="(step, i) in pasosWa" :key="i" style="display:flex; gap:10px; margin-bottom:8px; font-size:12px; color:var(--text-muted);">
               <div class="cfg-step-num" style="background:#25D36633; color:#25D366;">{{ i+1 }}</div>
-              <span><strong style="color:#e2e8f0;">{{ step.bold }}:</strong> {{ step.text }}</span>
+              <span><strong style="color:var(--text-primary);">{{ step.bold }}:</strong> {{ step.text }}</span>
             </div>
-            <div style="margin-top:12px; padding:10px 12px; background:#0f172a; border-radius:8px; border:1px solid #25D36622;">
-              <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:6px;">URL del Webhook (copiar en Meta)</div>
+            <div style="margin-top:12px; padding:10px 12px; background:var(--bg-page); border-radius:8px; border:1px solid #25D36622;">
+              <div style="font-size:11px; font-weight:700; color:var(--text-faint); margin-bottom:6px;">URL del Webhook (copiar en Meta)</div>
               <div style="display:flex; align-items:center; gap:8px;">
                 <code style="font-size:11px; color:#25D366; flex:1; word-break:break-all;">{{ webhookUrl }}</code>
                 <button class="cfg-copy-btn" @click="copiar(webhookUrl)">Copiar</button>
               </div>
-              <div style="margin-top:8px; font-size:11px; font-weight:700; color:#64748b; margin-bottom:4px;">Token de verificación</div>
+              <div style="margin-top:8px; font-size:11px; font-weight:700; color:var(--text-faint); margin-bottom:4px;">Token de verificación</div>
               <div style="display:flex; align-items:center; gap:8px;">
                 <code style="font-size:11px; color:#818cf8;">{{ waForm.verifyToken || 'ide_ia_verify_token' }}</code>
                 <button class="cfg-copy-btn" @click="copiar(waForm.verifyToken || 'ide_ia_verify_token')">Copiar</button>
@@ -161,7 +161,7 @@
 
           <!-- Credentials form -->
           <div class="ide-ia-card" style="margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:14px;">Credenciales de la API</div>
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:14px;">Credenciales de la API</div>
             <div style="display:flex; flex-direction:column; gap:12px;">
               <div class="ide-field">
                 <label>Access Token (token permanente o de sistema) *</label>
@@ -174,18 +174,18 @@
                 <div class="ide-field">
                   <label>Phone Number ID *</label>
                   <input v-model="waForm.phoneNumberId" class="ide-input" placeholder="123456789012345" />
-                  <div style="font-size:10px; color:#475569; margin-top:3px;">API → WhatsApp → Getting Started</div>
+                  <div style="font-size:10px; color:var(--text-disabled); margin-top:3px;">API → WhatsApp → Getting Started</div>
                 </div>
                 <div class="ide-field">
                   <label>WhatsApp Business Account ID</label>
                   <input v-model="waForm.wabaId" class="ide-input" placeholder="987654321098765" />
-                  <div style="font-size:10px; color:#475569; margin-top:3px;">Business Manager → Configuración</div>
+                  <div style="font-size:10px; color:var(--text-disabled); margin-top:3px;">Business Manager → Configuración</div>
                 </div>
               </div>
               <div class="ide-field">
                 <label>Token de verificación del webhook</label>
                 <input v-model="waForm.verifyToken" class="ide-input" placeholder="ide_ia_verify_token" />
-                <div style="font-size:10px; color:#475569; margin-top:3px;">Puedes usar cualquier cadena — debe coincidir con lo que ingresas en Meta</div>
+                <div style="font-size:10px; color:var(--text-disabled); margin-top:3px;">Puedes usar cualquier cadena — debe coincidir con lo que ingresas en Meta</div>
               </div>
             </div>
           </div>
@@ -206,7 +206,7 @@
 
           <!-- Agent assignment + enable -->
           <div class="ide-ia-card" style="margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:14px;">Configuración del canal</div>
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:14px;">Configuración del canal</div>
             <div style="display:flex; flex-direction:column; gap:14px;">
               <div class="ide-field">
                 <label>Agente IA asignado a WhatsApp</label>
@@ -214,12 +214,12 @@
                   <option value="">— Sin agente asignado —</option>
                   <option v-for="ag in agentes" :key="ag.id" :value="ag.id">{{ ag.nombre }} ({{ ag.modelo }})</option>
                 </select>
-                <div style="font-size:10px; color:#475569; margin-top:3px;">Este agente responderá automáticamente los mensajes de WhatsApp</div>
+                <div style="font-size:10px; color:var(--text-disabled); margin-top:3px;">Este agente responderá automáticamente los mensajes de WhatsApp</div>
               </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#0f172a; border-radius:8px; border:1px solid #1e3a5f33;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--bg-page); border-radius:8px; border:1px solid var(--border-card);">
                 <div>
-                  <div style="font-size:13px; font-weight:700; color:#e2e8f0;">Canal WhatsApp activo</div>
-                  <div style="font-size:11px; color:#64748b; margin-top:2px;">El agente responderá mensajes entrantes automáticamente</div>
+                  <div style="font-size:13px; font-weight:700; color:var(--text-primary);">Canal WhatsApp activo</div>
+                  <div style="font-size:11px; color:var(--text-faint); margin-top:2px;">El agente responderá mensajes entrantes automáticamente</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px;">
                   <span style="font-size:12px; font-weight:600;" :style="{ color: waForm.enabled ? '#22c55e' : '#ef4444' }">{{ waForm.enabled ? 'Activo' : 'Inactivo' }}</span>
@@ -252,8 +252,8 @@
               <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">
                 <div class="rs-cuenta-ico" :style="{ background: plataformasMeta[seccion].color + '22', color: plataformasMeta[seccion].color }" v-html="plataformasMeta[seccion].icon"></div>
                 <div style="flex:1; min-width:0;">
-                  <div style="font-size:13px; font-weight:700; color:#e2e8f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ cuenta.nombre }}</div>
-                  <div style="font-size:11px; color:#475569; font-family:monospace;">{{ cuenta.pageId }}</div>
+                  <div style="font-size:13px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ cuenta.nombre }}</div>
+                  <div style="font-size:11px; color:var(--text-disabled); font-family:monospace;">{{ cuenta.pageId }}</div>
                 </div>
                 <span class="ide-cl-status" :class="cuenta.enabled ? 'ide-cl-status--on' : 'ide-cl-status--off'" style="flex-shrink:0;">{{ cuenta.enabled ? 'Activo' : 'Inactivo' }}</span>
               </div>
@@ -269,7 +269,7 @@
           </div>
           <div v-else-if="!rsState.cargando" class="ide-ia-card" style="text-align:center; padding:28px 20px; margin-bottom:20px;">
             <div style="font-size:24px; margin-bottom:8px;" v-html="plataformasMeta[seccion].icon"></div>
-            <div style="font-size:13px; color:#64748b;">No hay cuentas de {{ plataformasMeta[seccion].title }} conectadas</div>
+            <div style="font-size:13px; color:var(--text-faint);">No hay cuentas de {{ plataformasMeta[seccion].title }} conectadas</div>
           </div>
 
           <!-- Botón conectar -->
@@ -282,7 +282,7 @@
 
           <!-- Formulario -->
           <div v-else class="ide-ia-card" style="margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:16px;">
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:16px;">
               {{ rsForm.editandoId ? 'Editar cuenta' : 'Conectar nueva cuenta' }}
             </div>
             <div style="display:flex; flex-direction:column; gap:12px;">
@@ -320,8 +320,8 @@
                   <option v-for="ag in agentes" :key="ag.id" :value="ag.id">{{ ag.nombre }} ({{ ag.modelo }})</option>
                 </select>
               </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:#0f172a; border-radius:8px; border:1px solid #1e3a5f33;">
-                <span style="font-size:12px; color:#cbd5e1;">Canal activo (responde automáticamente)</span>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:var(--bg-page); border-radius:8px; border:1px solid var(--border-card);">
+                <span style="font-size:12px; color:var(--text-body);">Canal activo (responde automáticamente)</span>
                 <div style="display:flex; align-items:center; gap:8px;">
                   <span style="font-size:11px; font-weight:600;" :style="{ color: rsForm.enabled ? '#22c55e' : '#ef4444' }">{{ rsForm.enabled ? 'Activo' : 'Inactivo' }}</span>
                   <div class="ide-toggle" :class="{ 'ide-toggle--on': rsForm.enabled }" @click="rsForm.enabled = !rsForm.enabled"><div></div></div>
@@ -355,7 +355,7 @@
               <code style="font-size:11px; color:#818cf8; flex:1; word-break:break-all;">{{ webhookUrlRS }}</code>
               <button class="cfg-copy-btn" @click="copiar(webhookUrlRS)">Copiar</button>
             </div>
-            <div style="font-size:11px; color:#64748b;">Configura esta URL en Meta for Developers → Tu App → Webhooks</div>
+            <div style="font-size:11px; color:var(--text-faint);">Configura esta URL en Meta for Developers → Tu App → Webhooks</div>
           </div>
 
         </div>
@@ -773,20 +773,20 @@ export default {
 /* Shared button/badge classes (used in social network section) */
 .ide-cl-btn {
   width: 28px; height: 28px; border-radius: 6px;
-  background: #0f172a; border: 1px solid #1e3a5f44;
-  color: #64748b; cursor: pointer;
+  background: var(--bg-page); border: 1px solid var(--border-card);
+  color: var(--text-faint); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.15s;
 }
-.ide-cl-btn:hover { background: #1e293b; color: #94a3b8; }
+.ide-cl-btn:hover { background: var(--bg-surface); color: var(--text-muted); }
 .ide-cl-btn--danger:hover { background: #ef444411; border-color: #ef444433; color: #ef4444; }
 .ide-cl-btn-sec {
   padding: 7px 16px; border-radius: 8px;
-  background: none; border: 1px solid #334155;
-  color: #64748b; font-size: 12px; font-weight: 600;
+  background: none; border: 1px solid var(--border);
+  color: var(--text-faint); font-size: 12px; font-weight: 600;
   cursor: pointer; font-family: inherit;
 }
-.ide-cl-btn-sec:hover { border-color: #475569; color: #94a3b8; }
+.ide-cl-btn-sec:hover { border-color: var(--text-disabled); color: var(--text-muted); }
 .ide-cl-status {
   font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
 }
@@ -796,7 +796,7 @@ export default {
 /* Social network cuentas */
 .rs-cuenta-card {
   display: flex; align-items: center; gap: 12px;
-  background: #1e293b; border: 1px solid #1e3a5f33; border-radius: 10px; padding: 12px 14px;
+  background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 10px; padding: 12px 14px;
   transition: border-color 0.15s;
 }
 .rs-cuenta-card:hover { border-color: #6366f133; }

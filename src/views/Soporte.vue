@@ -3,8 +3,8 @@
     <!-- Header -->
     <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
       <div>
-        <h2 style="font-size:18px; font-weight:800; color:#f1f5f9; letter-spacing:-0.3px; margin-bottom:4px;">Centro de Soporte</h2>
-        <p style="font-size:12px; color:#64748b;">Gestiona y da seguimiento a los casos de soporte de tus clientes</p>
+        <h2 style="font-size:18px; font-weight:800; color:var(--text-heading); letter-spacing:-0.3px; margin-bottom:4px;">Centro de Soporte</h2>
+        <p style="font-size:12px; color:var(--text-faint);">Gestiona y da seguimiento a los casos de soporte de tus clientes</p>
       </div>
       <button class="btn-nuevo-caso" @click="dialogNuevoCaso = true">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -15,24 +15,24 @@
     <!-- Stats -->
     <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:20px;">
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#f1f5f9; line-height:1;">{{ estadisticas.total || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Total</div>
+        <div style="font-size:22px; font-weight:900; color:var(--text-heading); line-height:1;">{{ estadisticas.total || 0 }}</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Total</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#ef4444; line-height:1;">{{ estadisticas.abiertos || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Abiertos</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Abiertos</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#f59e0b; line-height:1;">{{ estadisticas.enProgreso || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">En progreso</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">En progreso</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#22c55e; line-height:1;">{{ estadisticas.resueltos || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Resueltos</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Resueltos</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#818cf8; line-height:1;">{{ estadisticas.cerrados || 0 }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Cerrados</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Cerrados</div>
       </div>
     </div>
 
@@ -61,9 +61,9 @@
     </div>
 
     <!-- Empty state -->
-    <div v-else-if="casosFiltrados.length === 0" class="ide-ia-card" style="text-align:center; padding:56px; color:#475569;">
+    <div v-else-if="casosFiltrados.length === 0" class="ide-ia-card" style="text-align:center; padding:56px; color:var(--text-disabled);">
       <div style="font-size:36px; margin-bottom:12px;">🎫</div>
-      <div style="font-size:14px; font-weight:700; color:#94a3b8; margin-bottom:6px;">Sin casos</div>
+      <div style="font-size:14px; font-weight:700; color:var(--text-muted); margin-bottom:6px;">Sin casos</div>
       <div style="font-size:12px;">Crea un nuevo caso para darle seguimiento a tus clientes</div>
     </div>
 
@@ -85,18 +85,18 @@
         </thead>
         <tbody>
           <tr v-for="caso in casosFiltrados" :key="caso.id" class="sop-row" @click="seleccionarCaso(caso)">
-            <td style="font-weight:600; color:#64748b; font-size:11px; white-space:nowrap;">
+            <td style="font-weight:600; color:var(--text-faint); font-size:11px; white-space:nowrap;">
               {{ caso.numeroCaso }}
               <span v-if="caso.conversacionId" style="color:#818cf8;" title="Creado desde una conversación">💬</span>
             </td>
             <td>
-              <div style="font-weight:600; color:#e2e8f0;">{{ caso.nombreContacto }}</div>
-              <div v-if="caso.telefonoContacto || caso.emailContacto" style="font-size:11px; color:#64748b;">{{ caso.telefonoContacto || caso.emailContacto }}</div>
+              <div style="font-weight:600; color:var(--text-primary);">{{ caso.nombreContacto }}</div>
+              <div v-if="caso.telefonoContacto || caso.emailContacto" style="font-size:11px; color:var(--text-faint);">{{ caso.telefonoContacto || caso.emailContacto }}</div>
             </td>
-            <td style="color:#94a3b8; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="caso.titulo">{{ caso.titulo }}</td>
+            <td style="color:var(--text-muted); max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="caso.titulo">{{ caso.titulo }}</td>
             <td>
               <span v-if="caso.categoria" style="background:#6366f122; color:#818cf8; padding:2px 8px; border-radius:4px; font-size:11px;">{{ caso.categoria }}</span>
-              <span v-else style="color:#475569;">—</span>
+              <span v-else style="color:var(--text-disabled);">—</span>
             </td>
             <td>
               <span class="sop-badge" :style="{ background: estadoColor(caso.estadoCaso)+'22', color: estadoColor(caso.estadoCaso) }">{{ estadoLabel(caso.estadoCaso) }}</span>
@@ -104,17 +104,17 @@
             <td>
               <span :style="{ color: prioridadColor(caso.prioridad) }" style="font-size:11px; font-weight:700; text-transform:uppercase;">{{ caso.prioridad }}</span>
             </td>
-            <td style="font-size:11px; color:#94a3b8; white-space:nowrap;">
+            <td style="font-size:11px; color:var(--text-muted); white-space:nowrap;">
               <template v-if="ultimaActividad(caso)">
                 <div>{{ ultimaActividad(caso).accion }}</div>
-                <div style="font-size:10px; color:#64748b;">{{ formatDateTime(ultimaActividad(caso).timestamp) }}</div>
+                <div style="font-size:10px; color:var(--text-faint);">{{ formatDateTime(ultimaActividad(caso).timestamp) }}</div>
               </template>
-              <span v-else style="color:#475569;">—</span>
+              <span v-else style="color:var(--text-disabled);">—</span>
             </td>
             <td style="text-align:center;">
               <span style="background:#6366f122; color:#818cf8; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700;">{{ (caso.historial || []).length }}</span>
             </td>
-            <td style="font-size:11px; color:#64748b; white-space:nowrap;">{{ formatDate(caso.fechaCreacion) }}</td>
+            <td style="font-size:11px; color:var(--text-faint); white-space:nowrap;">{{ formatDate(caso.fechaCreacion) }}</td>
           </tr>
         </tbody>
       </table>
@@ -122,8 +122,8 @@
 
     <!-- Modal: Nuevo Caso -->
     <div v-if="dialogNuevoCaso" class="sop-overlay" @click.self="dialogNuevoCaso = false">
-      <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; width:480px; max-width:95vw; padding:24px;">
-        <div style="font-size:15px; font-weight:700; color:#f1f5f9; margin-bottom:16px;">Crear nuevo caso de soporte</div>
+      <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:12px; width:480px; max-width:95vw; padding:24px;">
+        <div style="font-size:15px; font-weight:700; color:var(--text-heading); margin-bottom:16px;">Crear nuevo caso de soporte</div>
         <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
           <div class="ide-field">
             <label>Título *</label>
@@ -154,7 +154,7 @@
           </div>
         </div>
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-          <button @click="dialogNuevoCaso = false" style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
+          <button @click="dialogNuevoCaso = false" style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
           <button @click="crearCaso" :disabled="creandoCaso" style="background:#6366f1; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px;">
             <v-progress-circular v-if="creandoCaso" indeterminate size="14" width="2" color="white"></v-progress-circular>
             Crear caso
@@ -165,20 +165,20 @@
 
     <!-- Modal: Detalle Caso -->
     <div v-if="casoSeleccionado" class="sop-overlay" @click.self="casoSeleccionado = null">
-      <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; width:600px; max-width:95vw; max-height:90vh; overflow-y:auto; padding:24px;">
+      <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:12px; width:600px; max-width:95vw; max-height:90vh; overflow-y:auto; padding:24px;">
         <!-- Header -->
         <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:20px;">
           <div>
-            <div style="font-size:12px; font-weight:600; color:#64748b; margin-bottom:4px;">{{ casoSeleccionado.numeroCaso }}</div>
-            <div style="font-size:16px; font-weight:700; color:#f1f5f9;">{{ casoSeleccionado.titulo }}</div>
+            <div style="font-size:12px; font-weight:600; color:var(--text-faint); margin-bottom:4px;">{{ casoSeleccionado.numeroCaso }}</div>
+            <div style="font-size:16px; font-weight:700; color:var(--text-heading);">{{ casoSeleccionado.titulo }}</div>
           </div>
-          <button @click="casoSeleccionado = null" style="background:none; border:none; cursor:pointer; color:#475569; font-size:20px; padding:0;">×</button>
+          <button @click="casoSeleccionado = null" style="background:none; border:none; cursor:pointer; color:var(--text-disabled); font-size:20px; padding:0;">×</button>
         </div>
 
         <!-- Info grid -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #334155;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--border);">
           <div>
-            <div style="font-size:10px; font-weight:600; color:#64748b; margin-bottom:4px;">Estado</div>
+            <div style="font-size:10px; font-weight:600; color:var(--text-faint); margin-bottom:4px;">Estado</div>
             <select v-model="casoSeleccionado.estadoCaso" @change="actualizarCaso" class="ide-select" style="width:100%;">
               <option value="abierto">Abierto</option>
               <option value="en_progreso">En progreso</option>
@@ -187,7 +187,7 @@
             </select>
           </div>
           <div>
-            <div style="font-size:10px; font-weight:600; color:#64748b; margin-bottom:4px;">Prioridad</div>
+            <div style="font-size:10px; font-weight:600; color:var(--text-faint); margin-bottom:4px;">Prioridad</div>
             <select v-model="casoSeleccionado.prioridad" @change="actualizarCaso" class="ide-select" style="width:100%;">
               <option value="baja">Baja</option>
               <option value="media">Media</option>
@@ -196,44 +196,44 @@
             </select>
           </div>
           <div>
-            <div style="font-size:10px; font-weight:600; color:#64748b; margin-bottom:4px;">Contacto</div>
-            <div style="font-size:12px; color:#f1f5f9;">{{ casoSeleccionado.nombreContacto }}</div>
-            <div v-if="casoSeleccionado.telefonoContacto" style="font-size:11px; color:#64748b;">📱 {{ casoSeleccionado.telefonoContacto }}</div>
+            <div style="font-size:10px; font-weight:600; color:var(--text-faint); margin-bottom:4px;">Contacto</div>
+            <div style="font-size:12px; color:var(--text-heading);">{{ casoSeleccionado.nombreContacto }}</div>
+            <div v-if="casoSeleccionado.telefonoContacto" style="font-size:11px; color:var(--text-faint);">📱 {{ casoSeleccionado.telefonoContacto }}</div>
           </div>
           <div>
-            <div style="font-size:10px; font-weight:600; color:#64748b; margin-bottom:4px;">Creado</div>
-            <div style="font-size:12px; color:#f1f5f9;">{{ formatDate(casoSeleccionado.fechaCreacion) }}</div>
+            <div style="font-size:10px; font-weight:600; color:var(--text-faint); margin-bottom:4px;">Creado</div>
+            <div style="font-size:12px; color:var(--text-heading);">{{ formatDate(casoSeleccionado.fechaCreacion) }}</div>
           </div>
         </div>
 
         <!-- Description -->
         <div style="margin-bottom:20px;">
-          <div style="font-size:12px; font-weight:600; color:#e2e8f0; margin-bottom:8px;">Descripción</div>
-          <div style="font-size:11px; color:#94a3b8; line-height:1.6; white-space:pre-wrap;">{{ casoSeleccionado.descripcion }}</div>
+          <div style="font-size:12px; font-weight:600; color:var(--text-primary); margin-bottom:8px;">Descripción</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.6; white-space:pre-wrap;">{{ casoSeleccionado.descripcion }}</div>
         </div>
 
         <!-- Historial -->
         <div style="margin-bottom:20px;">
-          <div style="font-size:12px; font-weight:600; color:#e2e8f0; margin-bottom:10px;">Historial de seguimiento</div>
+          <div style="font-size:12px; font-weight:600; color:var(--text-primary); margin-bottom:10px;">Historial de seguimiento</div>
           <div style="display:flex; flex-direction:column; gap:8px; max-height:200px; overflow-y:auto;">
-            <div v-for="(entrada, i) in casoSeleccionado.historial" :key="i" style="font-size:11px; padding:8px; background:#0f172a; border-radius:6px;">
+            <div v-for="(entrada, i) in casoSeleccionado.historial" :key="i" style="font-size:11px; padding:8px; background:var(--bg-page); border-radius:6px;">
               <div style="color:#818cf8; margin-bottom:2px;">{{ entrada.accion }}</div>
-              <div style="color:#64748b;">{{ entrada.detalles }}</div>
-              <div style="color:#475569; font-size:9px;">{{ formatTime(entrada.timestamp) }}</div>
+              <div style="color:var(--text-faint);">{{ entrada.detalles }}</div>
+              <div style="color:var(--text-disabled); font-size:9px;">{{ formatTime(entrada.timestamp) }}</div>
             </div>
           </div>
         </div>
 
         <!-- Nueva nota -->
         <div style="margin-bottom:16px;">
-          <div style="font-size:12px; font-weight:600; color:#e2e8f0; margin-bottom:8px;">Agregar nota</div>
+          <div style="font-size:12px; font-weight:600; color:var(--text-primary); margin-bottom:8px;">Agregar nota</div>
           <textarea v-model="nuevaNota" class="ide-textarea" rows="2" placeholder="Escribe tu nota..." style="margin-bottom:8px;"></textarea>
           <button @click="agregarNota" :disabled="!nuevaNota.trim()" style="background:#6366f1; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;">Agregar nota</button>
         </div>
 
         <!-- Close button -->
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-          <button @click="casoSeleccionado = null" style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cerrar</button>
+          <button @click="casoSeleccionado = null" style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cerrar</button>
         </div>
       </div>
     </div>
@@ -380,11 +380,11 @@ export default {
     },
     prioridadColor(p) {
       const map = { urgente: '#ef4444', alta: '#f59e0b', media: '#818cf8', baja: '#3b82f6' };
-      return map[p] || '#64748b';
+      return map[p] || 'var(--text-faint)';
     },
     estadoColor(e) {
-      const map = { abierto: '#ef4444', en_progreso: '#f59e0b', resuelto: '#22c55e', cerrado: '#64748b' };
-      return map[e] || '#64748b';
+      const map = { abierto: '#ef4444', en_progreso: '#f59e0b', resuelto: '#22c55e', cerrado: 'var(--text-faint)' };
+      return map[e] || 'var(--text-faint)';
     },
     estadoLabel(e) {
       const map = { abierto: 'Abierto', en_progreso: 'En progreso', resuelto: 'Resuelto', cerrado: 'Cerrado' };
@@ -413,13 +413,13 @@ export default {
 <style scoped>
 .sop-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .sop-table th {
-  text-align: left; padding: 10px 12px; color: #64748b; font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e3a5f44;
+  text-align: left; padding: 10px 12px; color: var(--text-faint); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-card);
   white-space: nowrap;
 }
-.sop-table td { padding: 10px 12px; border-bottom: 1px solid #1e3a5f22; vertical-align: middle; }
+.sop-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-card); vertical-align: middle; }
 .sop-row { cursor: pointer; transition: background 0.12s; }
-.sop-row:hover { background: #1e293b66; }
+.sop-row:hover { background: color-mix(in srgb, var(--bg-surface) 40%, transparent); }
 .sop-badge {
   padding: 3px 9px; border-radius: 5px; font-size: 10px; font-weight: 700;
   white-space: nowrap; display: inline-block;

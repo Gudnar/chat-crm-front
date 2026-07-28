@@ -52,7 +52,7 @@
               <option value="facebook">Facebook</option>
               <option value="tiktok">TikTok</option>
             </select>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" class="rep-sel-arrow"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2" class="rep-sel-arrow"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <button class="rep-export-btn" @click="exportarCSV">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -138,8 +138,8 @@
               <div class="rep-card-title" style="margin-bottom:14px;">Distribución por canal</div>
               <div style="display:flex;flex-direction:column;gap:10px;">
                 <div v-for="c in canalStats" :key="c.label" style="display:flex;align-items:center;gap:12px;">
-                  <span style="font-size:12px;color:#cbd5e1;width:90px;flex-shrink:0;">{{ c.label }}</span>
-                  <div style="flex:1;height:8px;border-radius:4px;background:#1e293b;overflow:hidden;">
+                  <span style="font-size:12px;color:var(--text-body);width:90px;flex-shrink:0;">{{ c.label }}</span>
+                  <div style="flex:1;height:8px;border-radius:4px;background:var(--bg-surface);overflow:hidden;">
                     <div :style="{ width:c.pct+'%', height:'100%', background:c.color, borderRadius:'4px' }"></div>
                   </div>
                   <span style="font-size:11px;font-weight:700;min-width:32px;text-align:right;" :style="{ color:c.color }">{{ c.pct }}%</span>
@@ -153,14 +153,14 @@
                   <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
                     <div style="display:flex;align-items:center;gap:6px;">
                       <div :style="{ width:'8px',height:'8px',borderRadius:'50%',background:stage.color }"></div>
-                      <span style="font-size:12px;color:#cbd5e1;font-weight:600;">{{ stage.label }}</span>
+                      <span style="font-size:12px;color:var(--text-body);font-weight:600;">{{ stage.label }}</span>
                     </div>
                     <div style="display:flex;gap:12px;font-size:11px;">
-                      <span style="color:#f1f5f9;font-weight:700;">{{ stage.value }}</span>
+                      <span style="color:var(--text-heading);font-weight:700;">{{ stage.value }}</span>
                       <span v-if="i > 0" :style="{ color: stage.conv >= 60 ? '#22c55e' : stage.conv >= 30 ? '#f59e0b' : '#ef4444' }">{{ stage.conv }}%</span>
                     </div>
                   </div>
-                  <div style="height:16px;border-radius:4px;background:#1e293b;overflow:hidden;">
+                  <div style="height:16px;border-radius:4px;background:var(--bg-surface);overflow:hidden;">
                     <div :style="{ width: funnelConv[0].value > 0 ? Math.round((stage.value/funnelConv[0].value)*100)+'%' : '0%', height:'100%', background:stage.color, opacity:0.8 }"></div>
                   </div>
                 </div>
@@ -179,8 +179,8 @@
             <div v-for="tier in leadTiers" :key="tier.label" class="rep-card" :style="{ border:'1px solid '+tier.color+'44', textAlign:'center', padding:'24px 20px' }">
               <div style="font-size:28px;margin-bottom:10px;">{{ tier.emoji }}</div>
               <div style="font-size:32px;font-weight:900;margin-bottom:4px;" :style="{ color:tier.color }">{{ tier.value }}</div>
-              <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:4px;">{{ tier.label }}</div>
-              <div style="font-size:11px;color:#64748b;">Score {{ tier.range }}</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">{{ tier.label }}</div>
+              <div style="font-size:11px;color:var(--text-faint);">Score {{ tier.range }}</div>
             </div>
           </div>
           <div class="rep-card" style="margin-top:16px;">
@@ -190,14 +190,14 @@
                 <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
                   <div style="display:flex;align-items:center;gap:6px;">
                     <div :style="{ width:'8px',height:'8px',borderRadius:'50%',background:stage.color }"></div>
-                    <span style="font-size:12px;color:#cbd5e1;font-weight:600;">{{ stage.label }}</span>
+                    <span style="font-size:12px;color:var(--text-body);font-weight:600;">{{ stage.label }}</span>
                   </div>
                   <div style="display:flex;gap:12px;font-size:11px;">
-                    <span style="color:#f1f5f9;font-weight:700;">{{ stage.value }}</span>
+                    <span style="color:var(--text-heading);font-weight:700;">{{ stage.value }}</span>
                     <span v-if="i > 0" :style="{ color: stage.conv >= 60 ? '#22c55e' : stage.conv >= 30 ? '#f59e0b' : '#ef4444' }">conv. {{ stage.conv }}%</span>
                   </div>
                 </div>
-                <div style="height:20px;border-radius:4px;background:#1e293b;overflow:hidden;">
+                <div style="height:20px;border-radius:4px;background:var(--bg-surface);overflow:hidden;">
                   <div :style="{ width: funnelLeads[0].value > 0 ? Math.round((stage.value/funnelLeads[0].value)*100)+'%' : '0%', height:'100%', background:stage.color, opacity:0.8 }"></div>
                 </div>
               </div>
@@ -230,7 +230,7 @@
               <div v-for="etapa in pipelineVentas" :key="etapa.label" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
                 <div style="font-size:11px;font-weight:700;" :style="{ color:etapa.color }">{{ etapa.value }}</div>
                 <div :style="{ width:'100%', height:etapa.h+'px', background:etapa.color, borderRadius:'4px 4px 0 0', opacity:0.8 }"></div>
-                <span style="font-size:9px;color:#64748b;text-align:center;line-height:1.2;">{{ etapa.label }}</span>
+                <span style="font-size:9px;color:var(--text-faint);text-align:center;line-height:1.2;">{{ etapa.label }}</span>
               </div>
             </div>
           </div>
@@ -260,18 +260,18 @@
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
                   <div class="rep-ag-av" :style="{ background:ag.color+'22', color:ag.color }">{{ ag.avatar }}</div>
                   <div style="flex:1;">
-                    <div style="font-size:14px;font-weight:800;color:#f1f5f9;">{{ ag.nombre }}</div>
+                    <div style="font-size:14px;font-weight:800;color:var(--text-heading);">{{ ag.nombre }}</div>
                     <div :style="{ fontSize:'10px', fontWeight:600, color: ag.activo ? '#22c55e' : '#ef4444' }">{{ ag.activo ? '● Activo' : '● Inactivo' }}</div>
                   </div>
                   <div style="text-align:right;">
-                    <div style="font-size:10px;color:#64748b;">{{ ag.modelo }}</div>
-                    <div style="font-size:10px;color:#475569;">{{ ag.modoOperacion || 'hybrid' }}</div>
+                    <div style="font-size:10px;color:var(--text-faint);">{{ ag.modelo }}</div>
+                    <div style="font-size:10px;color:var(--text-disabled);">{{ ag.modoOperacion || 'hybrid' }}</div>
                   </div>
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-                  <div class="rep-ag-metric"><div style="font-size:14px;font-weight:800;color:#818cf8;">{{ ag.totalConversaciones || 0 }}</div><div style="font-size:9px;color:#64748b;">Conv.</div></div>
-                  <div class="rep-ag-metric"><div style="font-size:14px;font-weight:800;color:#22c55e;">{{ ag.totalMensajes || 0 }}</div><div style="font-size:9px;color:#64748b;">Msg</div></div>
-                  <div class="rep-ag-metric"><div style="font-size:11px;font-weight:700;color:#f59e0b;text-transform:capitalize;">{{ ag.tono || '—' }}</div><div style="font-size:9px;color:#64748b;">Tono</div></div>
+                  <div class="rep-ag-metric"><div style="font-size:14px;font-weight:800;color:#818cf8;">{{ ag.totalConversaciones || 0 }}</div><div style="font-size:9px;color:var(--text-faint);">Conv.</div></div>
+                  <div class="rep-ag-metric"><div style="font-size:14px;font-weight:800;color:#22c55e;">{{ ag.totalMensajes || 0 }}</div><div style="font-size:9px;color:var(--text-faint);">Msg</div></div>
+                  <div class="rep-ag-metric"><div style="font-size:11px;font-weight:700;color:#f59e0b;text-transform:capitalize;">{{ ag.tono || '—' }}</div><div style="font-size:9px;color:var(--text-faint);">Tono</div></div>
                 </div>
               </div>
             </div>
@@ -279,21 +279,21 @@
               <div class="rep-card-title" style="margin-bottom:14px;">Tabla comparativa</div>
               <table style="width:100%;border-collapse:collapse;">
                 <thead>
-                  <tr style="background:#161d2f;">
-                    <th v-for="h in ['Agente','Conversaciones','Mensajes','Modelo','Estado']" :key="h" style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #334155;">{{ h }}</th>
+                  <tr style="background:var(--bg-panel);">
+                    <th v-for="h in ['Agente','Conversaciones','Mensajes','Modelo','Estado']" :key="h" style="padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);">{{ h }}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="ag in agentes" :key="ag.id" style="border-bottom:1px solid #1e3a5f22;">
+                  <tr v-for="ag in agentes" :key="ag.id" style="border-bottom:1px solid var(--border-card);">
                     <td style="padding:10px 12px;">
                       <div style="display:flex;align-items:center;gap:8px;">
                         <div class="rep-ag-av" :style="{ background:ag.color+'22', color:ag.color }">{{ ag.avatar }}</div>
-                        <span style="font-size:12px;font-weight:700;color:#e2e8f0;">{{ ag.nombre }}</span>
+                        <span style="font-size:12px;font-weight:700;color:var(--text-primary);">{{ ag.nombre }}</span>
                       </div>
                     </td>
-                    <td style="padding:10px 12px;font-size:13px;font-weight:700;color:#f1f5f9;">{{ ag.totalConversaciones || 0 }}</td>
-                    <td style="padding:10px 12px;font-size:12px;color:#94a3b8;">{{ ag.totalMensajes || 0 }}</td>
-                    <td style="padding:10px 12px;font-size:11px;color:#64748b;">{{ ag.modelo }}</td>
+                    <td style="padding:10px 12px;font-size:13px;font-weight:700;color:var(--text-heading);">{{ ag.totalConversaciones || 0 }}</td>
+                    <td style="padding:10px 12px;font-size:12px;color:var(--text-muted);">{{ ag.totalMensajes || 0 }}</td>
+                    <td style="padding:10px 12px;font-size:11px;color:var(--text-faint);">{{ ag.modelo }}</td>
                     <td style="padding:10px 12px;">
                       <span :style="{ fontSize:'11px', fontWeight:700, color: ag.activo ? '#22c55e' : '#ef4444' }">{{ ag.activo ? '● Activo' : '● Inactivo' }}</span>
                     </td>
@@ -330,8 +330,8 @@
               </div>
               <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
                 <div v-for="c in canalStats" :key="c.label" style="display:flex;align-items:center;gap:12px;">
-                  <span style="font-size:12px;color:#cbd5e1;width:90px;flex-shrink:0;">{{ c.label }}</span>
-                  <div style="flex:1;height:10px;border-radius:4px;background:#1e293b;overflow:hidden;">
+                  <span style="font-size:12px;color:var(--text-body);width:90px;flex-shrink:0;">{{ c.label }}</span>
+                  <div style="flex:1;height:10px;border-radius:4px;background:var(--bg-surface);overflow:hidden;">
                     <div :style="{ width:c.pct+'%', height:'100%', background:c.color, borderRadius:'4px' }"></div>
                   </div>
                   <span style="font-size:11px;font-weight:700;min-width:32px;text-align:right;" :style="{ color:c.color }">{{ c.pct }}%</span>
@@ -396,7 +396,7 @@ const RepBarChart = {
         <div :style="{ flex:1, height:Math.round((d.entrantes/maxVal)*96)+'px', background:'#818cf8', borderRadius:'3px 3px 0 0', opacity:0.85 }"></div>
         <div :style="{ flex:1, height:Math.round((d.resueltas/maxVal)*96)+'px', background:'#22c55e', borderRadius:'3px 3px 0 0', opacity:0.85 }"></div>
       </div>
-      <div style="font-size:9px;color:#64748b;margin-top:6px;">{{ d.label }}</div>
+      <div style="font-size:9px;color:var(--text-faint);margin-top:6px;">{{ d.label }}</div>
     </div>
   </div>`,
 };
@@ -422,7 +422,7 @@ const RepDonut = {
   },
   template: `<div style="display:flex;align-items:center;gap:20px;">
     <svg width="120" height="120" viewBox="0 0 120 120" style="flex-shrink:0;">
-      <circle cx="60" cy="60" r="40" fill="none" stroke="#1e293b" stroke-width="18"/>
+      <circle cx="60" cy="60" r="40" fill="none" stroke="var(--bg-surface)" stroke-width="18"/>
       <circle v-for="seg in segments" :key="seg.label"
         cx="60" cy="60" r="40" fill="none"
         :stroke="seg.color" stroke-width="18"
@@ -430,14 +430,14 @@ const RepDonut = {
         :stroke-dashoffset="seg.dashOffset"
         transform="rotate(-90 60 60)"
       />
-      <text x="60" y="55" text-anchor="middle" font-size="17" font-weight="900" fill="#f1f5f9">{{ total }}</text>
-      <text x="60" y="70" text-anchor="middle" font-size="8" fill="#64748b">total</text>
+      <text x="60" y="55" text-anchor="middle" font-size="17" font-weight="900" fill="var(--text-heading)">{{ total }}</text>
+      <text x="60" y="70" text-anchor="middle" font-size="8" fill="var(--text-faint)">total</text>
     </svg>
     <div style="display:flex;flex-direction:column;gap:10px;">
       <div v-for="d in data" :key="d.label" style="display:flex;align-items:center;gap:8px;">
         <div :style="{ width:'8px',height:'8px',borderRadius:'50%',background:d.color,flexShrink:0 }"></div>
-        <span style="font-size:11px;color:#94a3b8;flex:1;">{{ d.label }}</span>
-        <span style="font-size:12px;font-weight:700;color:#f1f5f9;">{{ d.value }}</span>
+        <span style="font-size:11px;color:var(--text-muted);flex:1;">{{ d.label }}</span>
+        <span style="font-size:12px;font-weight:700;color:var(--text-heading);">{{ d.value }}</span>
       </div>
     </div>
   </div>`,
@@ -455,7 +455,7 @@ const RepHeatmap = {
   },
   methods: {
     cellBg(val) {
-      if (!val || val < 0.05) return '#1e293b';
+      if (!val || val < 0.05) return 'var(--bg-surface)';
       if (val < 0.25) return '#6366f118';
       if (val < 0.45) return '#6366f133';
       if (val < 0.65) return '#6366f155';
@@ -465,10 +465,10 @@ const RepHeatmap = {
   },
   template: `<div>
     <div style="display:flex;gap:3px;margin-bottom:3px;padding-left:34px;">
-      <div v-for="d in days" :key="d" style="flex:1;text-align:center;font-size:9px;color:#475569;font-weight:600;">{{ d }}</div>
+      <div v-for="d in days" :key="d" style="flex:1;text-align:center;font-size:9px;color:var(--text-disabled);font-weight:600;">{{ d }}</div>
     </div>
     <div v-for="(row, hi) in data" :key="hi" style="display:flex;gap:3px;margin-bottom:3px;">
-      <div style="width:30px;flex-shrink:0;font-size:9px;color:#475569;text-align:right;padding-right:4px;line-height:14px;">{{ hours[hi] }}</div>
+      <div style="width:30px;flex-shrink:0;font-size:9px;color:var(--text-disabled);text-align:right;padding-right:4px;line-height:14px;">{{ hours[hi] }}</div>
       <div v-for="(val, di) in row" :key="di" :style="{ flex:1, height:'14px', borderRadius:'2px', background:cellBg(val) }"></div>
     </div>
   </div>`,
@@ -610,7 +610,7 @@ export default {
         return Object.entries(porCanal)
           .sort((a, b) => b[1] - a[1])
           .map(([canal, count]) => {
-            const meta = CANAL_META[canal] || { label: canal, color: '#64748b' };
+            const meta = CANAL_META[canal] || { label: canal, color: 'var(--text-faint)' };
             return { label: meta.label, value: count, color: meta.color };
           });
       }
@@ -635,7 +635,7 @@ export default {
         return Object.entries(porCanal)
           .sort((a, b) => b[1] - a[1])
           .map(([canal, count]) => {
-            const meta = CANAL_META[canal] || { label: canal, color: '#64748b' };
+            const meta = CANAL_META[canal] || { label: canal, color: 'var(--text-faint)' };
             return { label: meta.label, color: meta.color, pct: Math.round((count / total) * 100) };
           });
       }
@@ -702,15 +702,15 @@ export default {
   display: flex;
   height: 100%;
   overflow: hidden;
-  background: #0a0f1e;
+  background: var(--bg-panel);
 }
 
 /* ── Sub-nav ── */
 .rep-subnav {
   width: 200px;
   flex-shrink: 0;
-  background: #0d1526;
-  border-right: 1px solid #1e3a5f44;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-card);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -719,7 +719,7 @@ export default {
   padding: 16px 16px 8px;
   font-size: 10px;
   font-weight: 700;
-  color: #475569;
+  color: var(--text-disabled);
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -730,7 +730,7 @@ export default {
   padding: 9px 14px;
   border: none;
   background: transparent;
-  color: #64748b;
+  color: var(--text-faint);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -740,12 +740,12 @@ export default {
   font-family: inherit;
   width: 100%;
 }
-.rep-sn-btn:hover { background: #1e293b44; color: #94a3b8; }
+.rep-sn-btn:hover { background: color-mix(in srgb, var(--bg-surface) 27%, transparent); color: var(--text-muted); }
 .rep-sn-btn--active { background: #6366f118; color: #818cf8; font-weight: 700; border-left: 3px solid #6366f1; }
 .rep-sn-footer {
   margin-top: auto;
   padding: 10px 8px;
-  border-top: 1px solid #1e3a5f33;
+  border-top: 1px solid var(--border-card);
 }
 .rep-pdf-btn {
   display: flex;
@@ -755,15 +755,15 @@ export default {
   padding: 8px 12px;
   border-radius: 8px;
   background: none;
-  border: 1px solid #334155;
-  color: #64748b;
+  border: 1px solid var(--border);
+  color: var(--text-faint);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s;
 }
-.rep-pdf-btn:hover { color: #94a3b8; border-color: #475569; }
+.rep-pdf-btn:hover { color: var(--text-muted); border-color: var(--text-disabled); }
 
 /* ── Content area ── */
 .rep-content {
@@ -779,27 +779,27 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  border-bottom: 1px solid #1e3a5f44;
+  border-bottom: 1px solid var(--border-card);
   flex-shrink: 0;
   gap: 12px;
   flex-wrap: wrap;
 }
 .rep-filters__left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .rep-filters__right { display: flex; align-items: center; gap: 10px; }
-.rep-period-lbl { font-size: 12px; color: #64748b; font-weight: 600; flex-shrink: 0; }
+.rep-period-lbl { font-size: 12px; color: var(--text-faint); font-weight: 600; flex-shrink: 0; }
 .rep-period-btn {
   padding: 4px 13px;
   border-radius: 999px;
-  border: 1px solid #334155;
+  border: 1px solid var(--border);
   background: transparent;
-  color: #64748b;
+  color: var(--text-faint);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
   font-family: inherit;
 }
-.rep-period-btn:hover { border-color: #475569; color: #94a3b8; }
+.rep-period-btn:hover { border-color: var(--text-disabled); color: var(--text-muted); }
 .rep-period-btn--active { border-color: #6366f155; background: #6366f122; color: #818cf8; }
 
 .rep-select-wrap {
@@ -809,10 +809,10 @@ export default {
 }
 .rep-select {
   appearance: none;
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 600;
   padding: 6px 28px 6px 12px;
@@ -829,16 +829,16 @@ export default {
   gap: 6px;
   padding: 6px 14px;
   border-radius: 8px;
-  border: 1px solid #334155;
-  background: #1e293b;
-  color: #94a3b8;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s;
 }
-.rep-export-btn:hover { background: #263348; border-color: #475569; color: #f1f5f9; }
+.rep-export-btn:hover { background: var(--bg-panel); border-color: var(--text-disabled); color: var(--text-heading); }
 
 /* ── Scroll area ── */
 .rep-scroll {
@@ -849,8 +849,8 @@ export default {
 
 /* ── Section header ── */
 .rep-sec-hd { margin-bottom: 20px; }
-.rep-sec-title { font-size: 22px; font-weight: 900; color: #f1f5f9; letter-spacing: -0.5px; margin: 0 0 4px; }
-.rep-sec-sub { font-size: 12px; color: #64748b; margin: 0; }
+.rep-sec-title { font-size: 22px; font-weight: 900; color: var(--text-heading); letter-spacing: -0.5px; margin: 0 0 4px; }
+.rep-sec-sub { font-size: 12px; color: var(--text-faint); margin: 0; }
 
 /* ── KPI grid ── */
 .rep-kpi-grid {
@@ -860,8 +860,8 @@ export default {
   margin-bottom: 20px;
 }
 .rep-kpi-card {
-  background: #111827;
-  border: 1px solid #1e3a5f44;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-card);
   border-radius: 12px;
   padding: 14px 16px;
 }
@@ -871,10 +871,10 @@ export default {
   justify-content: space-between;
   margin-bottom: 8px;
 }
-.rep-kpi-lbl { font-size: 11px; color: #64748b; font-weight: 600; line-height: 1.3; flex: 1; padding-right: 6px; }
-.rep-kpi-val { font-size: 26px; font-weight: 900; color: #f1f5f9; letter-spacing: -1px; margin-bottom: 4px; }
+.rep-kpi-lbl { font-size: 11px; color: var(--text-faint); font-weight: 600; line-height: 1.3; flex: 1; padding-right: 6px; }
+.rep-kpi-val { font-size: 26px; font-weight: 900; color: var(--text-heading); letter-spacing: -1px; margin-bottom: 4px; }
 .rep-kpi-bot { display: flex; align-items: center; gap: 8px; }
-.rep-kpi-sub { font-size: 10px; color: #475569; }
+.rep-kpi-sub { font-size: 10px; color: var(--text-disabled); }
 .rep-trend { font-size: 11px; font-weight: 700; flex-shrink: 0; }
 .rep-trend--up { color: #22c55e; }
 .rep-trend--dn { color: #ef4444; }
@@ -890,8 +890,8 @@ export default {
 
 /* ── Generic card ── */
 .rep-card {
-  background: #111827;
-  border: 1px solid #1e3a5f44;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-card);
   border-radius: 12px;
   padding: 16px 18px;
 }
@@ -901,10 +901,10 @@ export default {
   justify-content: space-between;
   margin-bottom: 12px;
 }
-.rep-card-title { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+.rep-card-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .rep-legend { display: flex; align-items: center; gap: 8px; }
 .rep-leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.rep-leg-lbl { font-size: 11px; color: #64748b; }
+.rep-leg-lbl { font-size: 11px; color: var(--text-faint); }
 
 /* ── Lead grid ── */
 .rep-lead-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 0; }
@@ -920,7 +920,7 @@ export default {
 .rep-ag-metric {
   text-align: center;
   padding: 8px;
-  background: #0f172a;
+  background: var(--bg-page);
   border-radius: 8px;
 }
 </style>

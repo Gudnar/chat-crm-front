@@ -4,8 +4,8 @@
     <!-- Header -->
     <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
       <div>
-        <h2 style="font-size:18px; font-weight:800; color:#f1f5f9; letter-spacing:-0.3px; margin-bottom:4px;">Catálogo de Productos</h2>
-        <p style="font-size:12px; color:#64748b;">Gestiona los productos que el agente IA usa para cotizar y responder consultas de clientes</p>
+        <h2 style="font-size:18px; font-weight:800; color:var(--text-heading); letter-spacing:-0.3px; margin-bottom:4px;">Catálogo de Productos</h2>
+        <p style="font-size:12px; color:var(--text-faint);">Gestiona los productos que el agente IA usa para cotizar y responder consultas de clientes</p>
       </div>
       <div style="display:flex; gap:8px;">
         <button class="btn-add" @click="abrirForm(null)">
@@ -26,16 +26,16 @@
     <!-- Stats row -->
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; max-width:480px;">
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#f1f5f9; line-height:1;">{{ total }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Total</div>
+        <div style="font-size:22px; font-weight:900; color:var(--text-heading); line-height:1;">{{ total }}</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Total</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#22c55e; line-height:1;">{{ activos }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Activos</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Activos</div>
       </div>
       <div class="ide-ia-card" style="padding:12px 14px; text-align:center;">
         <div style="font-size:22px; font-weight:900; color:#818cf8; line-height:1;">{{ categorias.length }}</div>
-        <div style="font-size:10px; color:#64748b; margin-top:3px;">Categorías</div>
+        <div style="font-size:10px; color:var(--text-faint); margin-top:3px;">Categorías</div>
       </div>
     </div>
 
@@ -55,7 +55,7 @@
       <button
         v-if="busqueda || categoriaFiltro"
         @click="busqueda = ''; categoriaFiltro = ''; pagina = 1; cargar()"
-        style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit;"
+        style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:7px 12px; font-size:12px; cursor:pointer; font-family:inherit;"
       >
         Limpiar
       </button>
@@ -67,9 +67,9 @@
     </div>
 
     <!-- Empty -->
-    <div v-else-if="!productos.length" class="ide-ia-card" style="text-align:center; padding:56px; color:#475569;">
+    <div v-else-if="!productos.length" class="ide-ia-card" style="text-align:center; padding:56px; color:var(--text-disabled);">
       <div style="font-size:36px; margin-bottom:12px;">📦</div>
-      <div style="font-size:14px; font-weight:700; color:#94a3b8; margin-bottom:6px;">
+      <div style="font-size:14px; font-weight:700; color:var(--text-muted); margin-bottom:6px;">
         {{ busqueda || categoriaFiltro ? 'Sin resultados' : 'Sin productos' }}
       </div>
       <div style="font-size:12px;">
@@ -100,18 +100,18 @@
         </thead>
         <tbody>
           <tr v-for="p in productos" :key="p.id" :style="{ opacity: p.activo ? 1 : 0.55 }">
-            <td style="font-weight:600; color:#e2e8f0;">{{ p.nombre }}</td>
-            <td style="color:#94a3b8;">{{ p.marca || '—' }}</td>
-            <td style="color:#94a3b8;">{{ p.modelo || '—' }}</td>
+            <td style="font-weight:600; color:var(--text-primary);">{{ p.nombre }}</td>
+            <td style="color:var(--text-muted);">{{ p.marca || '—' }}</td>
+            <td style="color:var(--text-muted);">{{ p.modelo || '—' }}</td>
             <td>
               <span v-if="p.categoria" style="background:#6366f122; color:#818cf8; padding:2px 8px; border-radius:4px; font-size:11px;">{{ p.categoria }}</span>
-              <span v-else style="color:#475569;">—</span>
+              <span v-else style="color:var(--text-disabled);">—</span>
             </td>
-            <td style="color:#94a3b8; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="p.descripcion">{{ p.descripcion || '—' }}</td>
-            <td style="color:#e2e8f0; font-weight:600;">{{ p.moneda }} {{ Number(p.precio).toFixed(2) }}</td>
+            <td style="color:var(--text-muted); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" :title="p.descripcion">{{ p.descripcion || '—' }}</td>
+            <td style="color:var(--text-primary); font-weight:600;">{{ p.moneda }} {{ Number(p.precio).toFixed(2) }}</td>
             <td>
               <span v-if="p.precioOferta" style="color:#22c55e; font-weight:600;">{{ p.moneda }} {{ Number(p.precioOferta).toFixed(2) }}</span>
-              <span v-else style="color:#475569;">—</span>
+              <span v-else style="color:var(--text-disabled);">—</span>
             </td>
             <td :style="{ color: p.stock > 0 ? '#22c55e' : '#ef4444', fontWeight: '600' }">
               {{ p.stock != null ? (p.stock > 0 ? p.stock + ' uds.' : 'Agotado') : '—' }}
@@ -130,14 +130,14 @@
       </table>
 
       <!-- Paginación -->
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-top:1px solid #1e3a5f44; flex-wrap:wrap;">
-        <div style="font-size:11px; color:#64748b;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-top:1px solid var(--border-card); flex-wrap:wrap;">
+        <div style="font-size:11px; color:var(--text-faint);">
           Mostrando {{ productos.length }} de {{ total }} productos
         </div>
         <div style="display:flex; align-items:center; gap:6px;">
           <button class="cat-page-btn" :disabled="pagina <= 1" @click="irPagina(1)" title="Primera">«</button>
           <button class="cat-page-btn" :disabled="pagina <= 1" @click="irPagina(pagina - 1)">‹ Anterior</button>
-          <span style="font-size:11px; color:#94a3b8; padding:0 8px; font-weight:700;">
+          <span style="font-size:11px; color:var(--text-muted); padding:0 8px; font-weight:700;">
             Página {{ pagina }} de {{ totalPaginas }}
           </span>
           <button class="cat-page-btn" :disabled="pagina >= totalPaginas" @click="irPagina(pagina + 1)">Siguiente ›</button>
@@ -155,14 +155,14 @@
     <div v-if="dialogForm" class="cat-overlay" @click.self="dialogForm = false">
       <div class="cat-modal">
         <!-- Header -->
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 22px 14px; border-bottom:1px solid #334155; flex-shrink:0;">
-          <span style="font-size:15px; font-weight:700; color:#f1f5f9;">{{ editandoProducto ? 'Editar producto' : 'Nuevo producto' }}</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 22px 14px; border-bottom:1px solid var(--border); flex-shrink:0;">
+          <span style="font-size:15px; font-weight:700; color:var(--text-heading);">{{ editandoProducto ? 'Editar producto' : 'Nuevo producto' }}</span>
           <div style="display:flex; align-items:center; gap:10px;">
             <button v-if="editandoProducto" @click="confirmarEliminar(editandoProducto)" style="background:none; border:none; cursor:pointer; color:#ef4444; font-size:12px; font-family:inherit; display:flex; align-items:center; gap:4px;">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
               Eliminar
             </button>
-            <button @click="dialogForm = false" style="background:none; border:none; cursor:pointer; color:#475569; padding:4px; border-radius:4px; line-height:0; display:flex;">
+            <button @click="dialogForm = false" style="background:none; border:none; cursor:pointer; color:var(--text-disabled); padding:4px; border-radius:4px; line-height:0; display:flex;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
@@ -203,11 +203,11 @@
               <input v-model.number="form.precio" type="number" min="0" step="0.01" class="ide-input" placeholder="0.00" />
             </div>
             <div class="ide-field">
-              <label>Precio oferta <span style="color:#475569; font-size:10px;">(opcional)</span></label>
+              <label>Precio oferta <span style="color:var(--text-disabled); font-size:10px;">(opcional)</span></label>
               <input v-model.number="form.precioOferta" type="number" min="0" step="0.01" class="ide-input" placeholder="Vacío si no hay oferta" />
             </div>
             <div class="ide-field">
-              <label>Stock <span style="color:#475569; font-size:10px;">(opcional)</span></label>
+              <label>Stock <span style="color:var(--text-disabled); font-size:10px;">(opcional)</span></label>
               <input v-model.number="form.stock" type="number" min="0" class="ide-input" placeholder="Vacío = sin seguimiento" />
             </div>
             <div class="ide-field" style="grid-column:span 2;">
@@ -216,18 +216,18 @@
             </div>
             <div class="ide-field" style="grid-column:span 2; flex-direction:row; align-items:center; gap:10px;">
               <div class="ide-toggle" :class="{ 'ide-toggle--on': form.activo }" @click="form.activo = !form.activo"><div></div></div>
-              <span style="font-size:12px;" :style="{ color: form.activo ? '#22c55e' : '#64748b' }">{{ form.activo ? 'Producto activo' : 'Producto inactivo' }}</span>
+              <span style="font-size:12px;" :style="{ color: form.activo ? '#22c55e' : 'var(--text-faint)' }">{{ form.activo ? 'Producto activo' : 'Producto inactivo' }}</span>
             </div>
           </div>
 
           <!-- Images (only once product exists) -->
-          <div v-if="editandoProducto" style="border-top:1px solid #334155; padding-top:14px; margin-top:4px;">
-            <div style="font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+          <div v-if="editandoProducto" style="border-top:1px solid var(--border); padding-top:14px; margin-top:4px;">
+            <div style="font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
               Imágenes ({{ (editandoProducto.imagenes || []).length }})
             </div>
             <div v-if="editandoProducto.imagenes && editandoProducto.imagenes.length" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-              <div v-for="img in editandoProducto.imagenes" :key="img" style="position:relative; width:72px; height:72px; border-radius:8px; overflow:hidden; border:1px solid #334155; flex-shrink:0;">
+              <div v-for="img in editandoProducto.imagenes" :key="img" style="position:relative; width:72px; height:72px; border-radius:8px; overflow:hidden; border:1px solid var(--border); flex-shrink:0;">
                 <img :src="imgUrl(img)" style="width:100%; height:100%; object-fit:cover;" @error="e => e.target.style.display='none'" />
                 <button @click.stop="eliminarImagen(img)" style="position:absolute; top:3px; right:3px; background:#00000099; border:none; cursor:pointer; border-radius:4px; padding:3px; color:#fff; line-height:0; display:flex; align-items:center; justify-content:center;">
                   <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -236,22 +236,22 @@
             </div>
             <label class="img-upload-zone" :class="{ 'img-upload-zone--drag': dragging }" @dragover.prevent="dragging = true" @dragleave="dragging = false" @drop.prevent="onDrop">
               <input type="file" multiple accept="image/*" style="display:none;" @change="onFileChange" />
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.5" style="margin-bottom:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <span style="font-size:12px; color:#64748b;">Arrastra o <span style="color:#818cf8;">selecciona imágenes</span></span>
-              <span style="font-size:10px; color:#475569; margin-top:2px;">JPG, PNG, WebP · Máx 5 MB</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="1.5" style="margin-bottom:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span style="font-size:12px; color:var(--text-faint);">Arrastra o <span style="color:#818cf8;">selecciona imágenes</span></span>
+              <span style="font-size:10px; color:var(--text-disabled); margin-top:2px;">JPG, PNG, WebP · Máx 5 MB</span>
             </label>
-            <div v-if="uploadingImages" style="display:flex; align-items:center; gap:8px; margin-top:8px; font-size:11px; color:#64748b;">
+            <div v-if="uploadingImages" style="display:flex; align-items:center; gap:8px; margin-top:8px; font-size:11px; color:var(--text-faint);">
               <v-progress-circular indeterminate size="14" width="2" color="primary" /> Subiendo…
             </div>
           </div>
-          <div v-else style="margin-top:8px; padding:10px; background:#0f172a; border-radius:8px; font-size:11px; color:#475569; text-align:center;">
+          <div v-else style="margin-top:8px; padding:10px; background:var(--bg-page); border-radius:8px; font-size:11px; color:var(--text-disabled); text-align:center;">
             Guarda el producto primero para luego subir imágenes
           </div>
         </div>
 
         <!-- Footer -->
-        <div style="display:flex; justify-content:flex-end; gap:8px; padding:12px 22px 18px; border-top:1px solid #334155; flex-shrink:0;">
-          <button @click="dialogForm = false" style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:8px 16px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
+        <div style="display:flex; justify-content:flex-end; gap:8px; padding:12px 22px 18px; border-top:1px solid var(--border); flex-shrink:0;">
+          <button @click="dialogForm = false" style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:8px 16px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
           <button @click="guardar" :disabled="saving" style="background:#6366f1; color:#fff; border:none; border-radius:8px; padding:8px 18px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px;">
             <v-progress-circular v-if="saving" indeterminate size="14" width="2" color="white" />
             {{ editandoProducto ? 'Guardar cambios' : 'Crear producto' }}
@@ -262,15 +262,15 @@
 
     <!-- Modal: Delete confirm -->
     <div v-if="dialogEliminar" class="cat-overlay" @click.self="dialogEliminar = false">
-      <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; width:420px; max-width:95%; padding:24px;">
-        <div style="font-size:15px; font-weight:700; color:#f1f5f9; margin-bottom:8px;">Eliminar producto</div>
-        <div style="font-size:12px; color:#94a3b8; line-height:1.6; margin-bottom:20px;">
+      <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:12px; width:420px; max-width:95%; padding:24px;">
+        <div style="font-size:15px; font-weight:700; color:var(--text-heading); margin-bottom:8px;">Eliminar producto</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">
           ¿Estás seguro de que deseas eliminar
-          <strong style="color:#f1f5f9;">{{ eliminandoProducto ? eliminandoProducto.nombre : '' }}</strong>?
+          <strong style="color:var(--text-heading);">{{ eliminandoProducto ? eliminandoProducto.nombre : '' }}</strong>?
           Se eliminarán también todas sus imágenes.
         </div>
         <div style="display:flex; justify-content:flex-end; gap:8px;">
-          <button @click="dialogEliminar = false" style="background:none; border:1px solid #334155; border-radius:8px; color:#64748b; padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
+          <button @click="dialogEliminar = false" style="background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-faint); padding:8px 14px; font-size:12px; cursor:pointer; font-family:inherit;">Cancelar</button>
           <button @click="eliminar" :disabled="deleting" style="background:#ef4444; color:#fff; border:none; border-radius:8px; padding:8px 14px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px;">
             <v-progress-circular v-if="deleting" indeterminate size="14" width="2" color="white" />
             Eliminar
@@ -566,11 +566,11 @@ export default {
 
 <style scoped>
 .cat-page-btn {
-  background: transparent; border: 1px solid #334155; color: #94a3b8;
+  background: transparent; border: 1px solid var(--border); color: var(--text-muted);
   border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 600;
   cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
-.cat-page-btn:hover:not(:disabled) { border-color: #6366f1; color: #e2e8f0; }
+.cat-page-btn:hover:not(:disabled) { border-color: #6366f1; color: var(--text-primary); }
 .cat-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .cat-spinner-sm {
@@ -592,8 +592,8 @@ export default {
   justify-content: center;
 }
 .cat-modal {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   width: 680px;
   max-width: 95vw;
@@ -630,7 +630,7 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  border: 2px dashed #334155;
+  border: 2px dashed var(--border);
   border-radius: 8px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
@@ -652,8 +652,8 @@ export default {
   justify-content: center;
 }
 .cat-dialog {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   width: 420px;
   max-width: 95vw;
@@ -664,17 +664,17 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border);
 }
 .cat-dialog-header h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--text-heading);
 }
 .cat-dialog-content {
   padding: 20px;
-  color: #cbd5e1;
+  color: var(--text-body);
   font-size: 14px;
 }
 .cat-dialog-actions {
@@ -682,7 +682,7 @@ export default {
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 20px;
-  border-top: 1px solid #334155;
+  border-top: 1px solid var(--border);
 }
 
 .cat-table {
@@ -692,8 +692,8 @@ export default {
 }
 
 .cat-table thead {
-  background: #0f172a;
-  border-bottom: 2px solid #1e3a5f;
+  background: var(--bg-page);
+  border-bottom: 2px solid var(--border-card);
   position: sticky;
   top: 0;
 }
@@ -702,12 +702,12 @@ export default {
   text-align: left;
   padding: 12px 14px;
   font-weight: 700;
-  color: #cbd5e1;
+  color: var(--text-body);
   white-space: nowrap;
 }
 
 .cat-table tbody tr {
-  border-bottom: 1px solid #1e3a5f;
+  border-bottom: 1px solid var(--border-card);
   transition: background 0.15s;
 }
 

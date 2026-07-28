@@ -68,8 +68,8 @@ export default {
   z-index: 9999;
 }
 .modal-box {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 24px;
   width: 100%;
@@ -79,12 +79,12 @@ export default {
 .modal-title {
   font-size: 15px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--text-heading);
   margin-bottom: 10px;
 }
 .modal-text {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.5;
   margin-bottom: 24px;
 }
@@ -106,10 +106,10 @@ export default {
 .modal-btn:hover { opacity: 0.85; }
 .modal-btn--cancel {
   background: transparent;
-  border: 1px solid #334155;
-  color: #64748b;
+  border: 1px solid var(--border);
+  color: var(--text-faint);
 }
-.modal-btn--cancel:hover { border-color: #475569; color: #94a3b8; opacity: 1; }
+.modal-btn--cancel:hover { border-color: var(--text-disabled); color: var(--text-muted); opacity: 1; }
 .modal-btn--ok {
   background: #6366f1;
   color: #fff;

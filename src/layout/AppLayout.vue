@@ -51,11 +51,11 @@
         <div v-if="!collapsed" class="ide-user">
           <div class="ide-avatar ide-avatar--small" style="background: #6366f133; color: #818cf8; position:relative;">
             {{ userInitials }}
-            <span style="position:absolute; bottom:-1px; right:-1px; width:8px; height:8px; border-radius:50%; background:#22c55e; border:1.5px solid #0d1526;"></span>
+            <span style="position:absolute; bottom:-1px; right:-1px; width:8px; height:8px; border-radius:50%; background:#22c55e; border:1.5px solid var(--bg-panel);"></span>
           </div>
           <div class="ide-user-info">
             <div class="ide-user-name">{{ userName }}</div>
-            <div style="font-size:9px; color:#475569; font-weight:600;">{{ userRolLabel }}</div>
+            <div style="font-size:9px; color:var(--text-disabled); font-weight:600;">{{ userRolLabel }}</div>
             <div class="ide-user-online" style="font-size:9px;">● En línea</div>
           </div>
         </div>
@@ -88,10 +88,14 @@
         </div>
         <div class="ide-topbar__right">
           <div class="ide-topbar__time">
-            <span style="color:#64748b;">{{ dateStr }}</span>
-            <span style="margin-left:8px;color:#94a3b8;font-weight:700;">{{ timeStr }}</span>
+            <span style="color:var(--text-faint);">{{ dateStr }}</span>
+            <span style="margin-left:8px;color:var(--text-muted);font-weight:700;">{{ timeStr }}</span>
           </div>
           <div class="ide-topbar__actions">
+            <button class="ide-icon-btn" :title="tema === 'light' ? 'Cambiar a tema oscuro' : 'Cambiar a tema claro'" @click="toggleTema">
+              <svg v-if="tema === 'light'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
             <button class="ide-icon-btn" title="Notificaciones">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
               <span class="ide-icon-btn__dot"></span>
@@ -104,7 +108,7 @@
             <div class="ide-avatar ide-avatar--small" style="background:#6366f133;color:#818cf8;">{{ userInitials }}</div>
             <div>
               <div class="ide-user-name">{{ userName }}</div>
-              <div style="font-size:9px;color:#475569;">{{ userRolLabel }}</div>
+              <div style="font-size:9px;color:var(--text-disabled);">{{ userRolLabel }}</div>
             </div>
           </div>
         </div>
@@ -139,6 +143,7 @@ const SVGS = {
   headset:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>`,
   user:     `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
   target:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+  calendar: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
 };
 
 const ALL_NAV = [
@@ -156,11 +161,13 @@ const ALL_NAV = [
   { id:'soporte',            label:'Soporte',            route:'soporte',            svg: SVGS.ticket,    badge: null,  roles: null },
   { id:'agentes',            label:'Agente IA',          route:'agentes',            svg: SVGS.bot,       badge: 'NEW', roles: null },
   { id:'agentes-humanos',    label:'Equipo Humano',      route:'agentes-humanos',    svg: SVGS.headset,   badge: 'NEW', roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
+  { id:'reservaciones',      label:'Reservaciones',      route:'reservaciones',      svg: SVGS.calendar,  badge: 'NEW', roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE', 'COLABORADOR'] },
+  { id:'mis-citas',          label:'Mis Citas',          route:'mis-citas',          svg: SVGS.calendar,  badge: null,  roles: ['AGENTE_HUMANO'] },
   { id:'configuracion',      label:'Configuración',      route:'configuracion',      svg: SVGS.settings,  badge: null,  roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
 ];
 
-// El agente humano solo ve su panel de trabajo y sus oportunidades asignadas
-const NAV_AGENTE_HUMANO = ['mis-conversaciones', 'oportunidades'];
+// El agente humano solo ve su panel de trabajo, sus citas y sus oportunidades asignadas
+const NAV_AGENTE_HUMANO = ['mis-conversaciones', 'mis-citas', 'oportunidades'];
 
 const TITLES = {
   home:             'Dashboard',
@@ -181,6 +188,8 @@ const TITLES = {
   oportunidades:    'Oportunidades de Venta',
   'agentes-humanos':    'Equipo de Agentes Humanos',
   'mis-conversaciones': 'Mis Conversaciones',
+  reservaciones:        'Reservaciones',
+  'mis-citas':          'Mis Citas',
   'mi-cuenta':      'Mi Cuenta',
 };
 
@@ -190,6 +199,7 @@ export default {
     return {
       collapsed: false,
       time: new Date(),
+      tema: this.$storage.get('theme') || 'dark',
     };
   },
   computed: {
@@ -237,6 +247,11 @@ export default {
     clearInterval(this._timer);
   },
   methods: {
+    toggleTema() {
+      this.tema = this.tema === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', this.tema);
+      this.$storage.set('theme', this.tema);
+    },
     _restoreAuth() {
       if (!this.$store.getters.isAuth) {
         const token = this.$storage.get('token');
@@ -274,15 +289,15 @@ export default {
   display: flex;
   height: 100vh;
   overflow: hidden;
-  background: #0a0f1e;
+  background: var(--bg-panel);
 }
 
 /* ── Sidebar ── */
 .ide-sidebar {
   width: 200px;
   flex-shrink: 0;
-  background: #0d1526;
-  border-right: 1px solid #1e3a5f44;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-card);
   display: flex;
   flex-direction: column;
   transition: width 0.25s cubic-bezier(.4,0,.2,1);
@@ -294,7 +309,7 @@ export default {
 /* Logo */
 .ide-sidebar__header {
   padding: 18px 16px;
-  border-bottom: 1px solid #1e3a5f44;
+  border-bottom: 1px solid var(--border-card);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -311,10 +326,10 @@ export default {
   flex-shrink: 0;
 }
 .ide-logo-name {
-  font-size: 14px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.3px;
+  font-size: 14px; font-weight: 800; color: var(--text-heading); letter-spacing: -0.3px;
 }
 .ide-logo-sub {
-  font-size: 9px; color: #475569; font-weight: 600;
+  font-size: 9px; color: var(--text-disabled); font-weight: 600;
   text-transform: uppercase; letter-spacing: 1px;
 }
 
@@ -335,7 +350,7 @@ export default {
 /* Logout */
 .ide-logout-btn {
   background: none; border: none; cursor: pointer;
-  color: #475569; padding: 5px; border-radius: 6px;
+  color: var(--text-disabled); padding: 5px; border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; transition: color 0.15s;
 }
@@ -353,13 +368,13 @@ export default {
   padding: 10px 12px;
   border-radius: 9px; border: none; cursor: pointer;
   background: transparent;
-  color: #64748b;
+  color: var(--text-faint);
   font-size: 13px; font-weight: 500;
   transition: all 0.15s;
   width: 100%; text-align: left;
   position: relative;
 }
-.ide-nav__item:hover { background: #1e293b44; color: #94a3b8; }
+.ide-nav__item:hover { background: color-mix(in srgb, var(--bg-surface) 27%, transparent); color: var(--text-muted); }
 .ide-nav__item--active {
   background: #6366f122 !important;
   color: #818cf8 !important;
@@ -390,25 +405,25 @@ export default {
 
 /* Footer */
 .ide-sidebar__footer {
-  border-top: 1px solid #1e3a5f44;
+  border-top: 1px solid var(--border-card);
   padding: 12px 8px;
   display: flex; flex-direction: column; gap: 8px;
 }
 .ide-user {
   display: flex; align-items: center; gap: 8px;
   padding: 6px 8px; border-radius: 8px;
-  background: #161d2f;
+  background: var(--bg-panel);
 }
 .ide-user-info { flex: 1; min-width: 0; }
-.ide-user-name { font-size: 11px; font-weight: 700; color: #e2e8f0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ide-user-name { font-size: 11px; font-weight: 700; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ide-user-online { font-size: 9px; color: #22c55e; font-weight: 600; }
 .ide-collapse-btn {
   display: flex; align-items: center; gap: 6px;
   background: none; border: none; cursor: pointer;
-  padding: 4px 8px; color: #475569;
+  padding: 4px 8px; color: var(--text-disabled);
   width: 100%;
 }
-.ide-collapse-btn:hover { color: #94a3b8; }
+.ide-collapse-btn:hover { color: var(--text-muted); }
 .ide-collapse-label { font-size: 10px; font-weight: 600; margin-left: auto; }
 
 /* Avatar */
@@ -430,8 +445,8 @@ export default {
 .ide-topbar {
   height: 52px;
   flex-shrink: 0;
-  background: #0d1526;
-  border-bottom: 1px solid #1e3a5f44;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-card);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 20px;
 }
@@ -439,7 +454,7 @@ export default {
   display: flex; align-items: center; gap: 10px;
 }
 .ide-topbar__title {
-  font-size: 16px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.3px;
+  font-size: 16px; font-weight: 800; color: var(--text-heading); letter-spacing: -0.3px;
 }
 .ide-topbar__badges { display: flex; gap: 6px; }
 .ide-badge {
@@ -457,11 +472,11 @@ export default {
 .ide-topbar__actions { display: flex; gap: 8px; }
 .ide-icon-btn {
   background: none; border: none; cursor: pointer;
-  color: #64748b; padding: 4px; position: relative;
+  color: var(--text-faint); padding: 4px; position: relative;
   border-radius: 6px; transition: color 0.15s;
   display: flex; align-items: center; justify-content: center;
 }
-.ide-icon-btn:hover { color: #94a3b8; }
+.ide-icon-btn:hover { color: var(--text-muted); }
 .ide-icon-btn__dot {
   position: absolute; top: 2px; right: 2px;
   width: 7px; height: 7px; border-radius: 50%;
@@ -469,7 +484,7 @@ export default {
 }
 .ide-topbar__user {
   display: flex; align-items: center; gap: 8px;
-  padding-left: 10px; border-left: 1px solid #1e3a5f44;
+  padding-left: 10px; border-left: 1px solid var(--border-card);
 }
 
 /* Module */

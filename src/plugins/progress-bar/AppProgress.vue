@@ -32,7 +32,7 @@ export default {
   right: 0;
   height: 2px;
   z-index: 9997;
-  background: #1e293b;
+  background: var(--bg-surface);
 }
 .ide-ia-progress-fill {
   height: 100%;

@@ -153,7 +153,7 @@
         </div>
         <div class="cfg-auto-list">
           <div v-for="a in automatizaciones" :key="a.id" class="cfg-auto-card">
-            <div class="cfg-auto-icon" :style="{ background: a.activa ? '#22c55e18' : '#1e293b', color: a.activa ? '#22c55e' : '#475569' }">
+            <div class="cfg-auto-icon" :style="{ background: a.activa ? '#22c55e18' : 'var(--bg-surface)', color: a.activa ? '#22c55e' : 'var(--text-disabled)' }">
               <span v-html="a.svg"></span>
             </div>
             <div style="flex:1;">
@@ -408,7 +408,7 @@ export default {
         info: '—',
         conectado: false,
         color: '#EE1D52',
-        bg: '#1a1a2e',
+        bg: 'var(--bg-panel)',
         svg: SVG_TK,
       },
     ],
@@ -423,7 +423,7 @@ export default {
       { id: 3, nombre: 'Cliente',    color: '#22c55e', count: 134 },
       { id: 4, nombre: 'Prospecto',  color: '#818cf8', count: 56 },
       { id: 5, nombre: 'Reclamación',color: '#f97316', count: 18 },
-      { id: 6, nombre: 'Inactivo',   color: '#64748b', count: 29 },
+      { id: 6, nombre: 'Inactivo',   color: 'var(--text-faint)', count: 29 },
     ],
     automatizaciones: [
       { id: 1, nombre: 'Asignación automática',        descripcion: 'Asigna conversaciones al agente disponible', activa: true,  svg: SVG_AUTO_ASSIGN },
@@ -436,7 +436,7 @@ export default {
       { id: 'hot_lead',     nombre: 'Hot lead detectado',     descripcion: 'Cuando un lead supere el score 70+',         canales: [{ id:'app', label:'App', activo:true }, { id:'email', label:'Email', activo:false }] },
       { id: 'sin_respuesta',nombre: 'Sin respuesta (30 min)', descripcion: 'Conversaciones sin respuesta por más de 30 min', canales: [{ id:'app', label:'App', activo:false }, { id:'email', label:'Email', activo:false }] },
     ],
-    coloresEtiqueta: ['#ef4444','#f97316','#f59e0b','#22c55e','#14b8a6','#3b82f6','#8b5cf6','#ec4899','#64748b','#818cf8'],
+    coloresEtiqueta: ['#ef4444','#f97316','#f59e0b','#22c55e','#14b8a6','#3b82f6','#8b5cf6','#ec4899','var(--text-faint)','#818cf8'],
     // Dialogs
     modalCanal: false,
     canalActivo: null,
@@ -571,27 +571,27 @@ export default {
 
 <style scoped>
 /* ── Layout ── */
-.cfg-layout { display:flex; height:100%; overflow:hidden; background:#0a0f1e; }
+.cfg-layout { display:flex; height:100%; overflow:hidden; background:var(--bg-panel); }
 
 /* ── Sub-nav ── */
 .cfg-subnav {
   width: 200px; flex-shrink:0;
-  background:#0d1526; border-right:1px solid #1e3a5f44;
+  background:var(--bg-panel); border-right:1px solid var(--border-card);
   display:flex; flex-direction:column; overflow:hidden;
   padding: 4px 0;
 }
 .cfg-sn-sep {
   padding:16px 16px 8px; font-size:10px; font-weight:700;
-  color:#475569; letter-spacing:1px; text-transform:uppercase;
+  color:var(--text-disabled); letter-spacing:1px; text-transform:uppercase;
 }
 .cfg-sn-btn {
   display:flex; align-items:center; gap:10px;
   padding:9px 16px; border:none; background:transparent;
-  color:#64748b; font-size:12px; font-weight:500;
+  color:var(--text-faint); font-size:12px; font-weight:500;
   cursor:pointer; text-align:left; transition:all 0.15s;
   font-family:inherit; width:100%;
 }
-.cfg-sn-btn:hover { background:#1e293b44; color:#94a3b8; }
+.cfg-sn-btn:hover { background:color-mix(in srgb, var(--bg-surface) 27%, transparent); color:var(--text-muted); }
 .cfg-sn-btn--active { background:#6366f118; color:#818cf8; font-weight:700; border-left:3px solid #6366f1; }
 
 /* ── Body ── */
@@ -599,25 +599,25 @@ export default {
 
 /* ── Section header ── */
 .cfg-sec-hd { margin-bottom:24px; }
-.cfg-sec-title { font-size:22px; font-weight:900; color:#f1f5f9; letter-spacing:-0.5px; margin:0 0 4px; }
-.cfg-sec-sub { font-size:12px; color:#64748b; margin:0; }
+.cfg-sec-title { font-size:22px; font-weight:900; color:var(--text-heading); letter-spacing:-0.5px; margin:0 0 4px; }
+.cfg-sec-sub { font-size:12px; color:var(--text-faint); margin:0; }
 
 /* ── Canal cards ── */
 .cfg-canales { display:flex; flex-direction:column; gap:12px; max-width:720px; }
 .cfg-canal-card {
   display:flex; align-items:center; gap:16px;
-  background:#111827; border:1px solid #1e3a5f44; border-radius:14px;
+  background:var(--bg-panel); border:1px solid var(--border-card); border-radius:14px;
   padding:16px 20px; transition:border-color 0.15s;
 }
-.cfg-canal-card:hover { border-color:#334155; }
+.cfg-canal-card:hover { border-color:var(--border); }
 .cfg-canal-icon {
   width:48px; height:48px; border-radius:14px;
   display:flex; align-items:center; justify-content:center;
   flex-shrink:0;
 }
 .cfg-canal-icon--sm { width:40px; height:40px; border-radius:10px; }
-.cfg-canal-nombre { font-size:15px; font-weight:800; color:#f1f5f9; margin-bottom:3px; }
-.cfg-canal-meta { font-size:12px; color:#64748b; }
+.cfg-canal-nombre { font-size:15px; font-weight:800; color:var(--text-heading); margin-bottom:3px; }
+.cfg-canal-meta { font-size:12px; color:var(--text-faint); }
 .cfg-canal-info { flex:1; min-width:0; }
 .cfg-canal-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .cfg-badge-ok {
@@ -628,11 +628,11 @@ export default {
 }
 .cfg-btn-outline {
   padding:6px 16px; border-radius:8px;
-  border:1px solid #334155; background:transparent;
-  color:#94a3b8; font-size:12px; font-weight:600;
+  border:1px solid var(--border); background:transparent;
+  color:var(--text-muted); font-size:12px; font-weight:600;
   cursor:pointer; font-family:inherit; transition:all 0.15s;
 }
-.cfg-btn-outline:hover { border-color:#475569; color:#f1f5f9; }
+.cfg-btn-outline:hover { border-color:var(--text-disabled); color:var(--text-heading); }
 .cfg-btn-connect {
   padding:8px 18px; border-radius:8px;
   border:none; background:#6366f1;
@@ -643,17 +643,17 @@ export default {
 
 /* ── Canal tip in modal ── */
 .cfg-canal-tip {
-  background:#1e293b; border:1px solid #334155; border-radius:8px;
-  padding:12px 14px; font-size:12px; color:#94a3b8; line-height:1.5;
+  background:var(--bg-surface); border:1px solid var(--border); border-radius:8px;
+  padding:12px 14px; font-size:12px; color:var(--text-muted); line-height:1.5;
 }
 
 /* ── User list ── */
-.cfg-loading { color:#475569; font-size:13px; padding:20px 0; }
-.cfg-empty   { color:#475569; font-size:13px; padding:40px; text-align:center; }
+.cfg-loading { color:var(--text-disabled); font-size:13px; padding:20px 0; }
+.cfg-empty   { color:var(--text-disabled); font-size:13px; padding:40px; text-align:center; }
 .cfg-user-list { display:flex; flex-direction:column; gap:8px; max-width:680px; }
 .cfg-user-card {
   display:flex; align-items:center; gap:12px;
-  background:#111827; border:1px solid #1e3a5f44; border-radius:10px;
+  background:var(--bg-panel); border:1px solid var(--border-card); border-radius:10px;
   padding:12px 16px;
 }
 .cfg-user-av {
@@ -662,63 +662,63 @@ export default {
   font-size:12px; font-weight:700; color:#818cf8;
 }
 .cfg-user-info { flex:1; min-width:0; }
-.cfg-user-name { font-size:13px; font-weight:700; color:#e2e8f0; }
-.cfg-user-meta { font-size:11px; color:#64748b; }
+.cfg-user-name { font-size:13px; font-weight:700; color:var(--text-primary); }
+.cfg-user-meta { font-size:11px; color:var(--text-faint); }
 .cfg-user-rol {
   font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; flex-shrink:0;
 }
 .cfg-rol--admin { background:#6366f122; color:#818cf8; }
-.cfg-rol--colab { background:#1e293b; color:#64748b; }
+.cfg-rol--colab { background:var(--bg-surface); color:var(--text-faint); }
 .cfg-user-acts { display:flex; gap:4px; }
 .cfg-act-btn {
-  background:none; border:none; color:#475569; cursor:pointer;
+  background:none; border:none; color:var(--text-disabled); cursor:pointer;
   padding:5px; border-radius:6px; transition:color 0.15s;
   display:flex; align-items:center; justify-content:center;
 }
-.cfg-act-btn:hover { color:#94a3b8; }
+.cfg-act-btn:hover { color:var(--text-muted); }
 .cfg-act-btn--del:hover { color:#ef4444; }
 
 /* ── Plantillas ── */
 .cfg-plantillas { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
 .cfg-plantilla-card {
-  background:#111827; border:1px solid #1e3a5f44; border-radius:12px;
+  background:var(--bg-panel); border:1px solid var(--border-card); border-radius:12px;
   padding:14px 16px; display:flex; flex-direction:column; gap:8px;
 }
 .cfg-plantilla-header { display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.cfg-plantilla-name { font-size:13px; font-weight:700; color:#e2e8f0; }
+.cfg-plantilla-name { font-size:13px; font-weight:700; color:var(--text-primary); }
 .cfg-badge-canal { font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; }
-.cfg-plantilla-text { font-size:12px; color:#64748b; line-height:1.5; }
+.cfg-plantilla-text { font-size:12px; color:var(--text-faint); line-height:1.5; }
 .cfg-plantilla-footer { display:flex; align-items:center; justify-content:space-between; }
-.cfg-tag { font-size:10px; font-weight:600; background:#1e293b; color:#475569; padding:2px 8px; border-radius:4px; }
+.cfg-tag { font-size:10px; font-weight:600; background:var(--bg-surface); color:var(--text-disabled); padding:2px 8px; border-radius:4px; }
 
 /* ── Etiquetas ── */
 .cfg-etiquetas-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; }
 .cfg-etiqueta-card {
   display:flex; align-items:center; gap:12px;
-  background:#111827; border:1px solid #1e3a5f44; border-radius:10px;
+  background:var(--bg-panel); border:1px solid var(--border-card); border-radius:10px;
   padding:12px 14px;
 }
 .cfg-etiqueta-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
-.cfg-etiqueta-nombre { font-size:13px; font-weight:700; color:#e2e8f0; }
-.cfg-etiqueta-count { font-size:11px; color:#64748b; margin-top:2px; }
+.cfg-etiqueta-nombre { font-size:13px; font-weight:700; color:var(--text-primary); }
+.cfg-etiqueta-count { font-size:11px; color:var(--text-faint); margin-top:2px; }
 
 /* ── Automatizaciones ── */
 .cfg-auto-list { display:flex; flex-direction:column; gap:10px; max-width:640px; }
 .cfg-auto-card {
   display:flex; align-items:center; gap:14px;
-  background:#111827; border:1px solid #1e3a5f44; border-radius:12px;
+  background:var(--bg-panel); border:1px solid var(--border-card); border-radius:12px;
   padding:14px 18px;
 }
 .cfg-auto-icon {
   width:38px; height:38px; border-radius:10px; flex-shrink:0;
   display:flex; align-items:center; justify-content:center;
 }
-.cfg-auto-nombre { font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:3px; }
-.cfg-auto-desc { font-size:11px; color:#64748b; }
+.cfg-auto-nombre { font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:3px; }
+.cfg-auto-desc { font-size:11px; color:var(--text-faint); }
 .cfg-toggle-wrap { flex-shrink:0; cursor:pointer; }
 .cfg-toggle {
   width:40px; height:22px; border-radius:999px;
-  background:#334155; position:relative; transition:background 0.2s;
+  background:var(--border); position:relative; transition:background 0.2s;
 }
 .cfg-toggle--on { background:#6366f1; }
 .cfg-toggle-knob {
@@ -732,31 +732,31 @@ export default {
 .cfg-noti-list { display:flex; flex-direction:column; gap:0; max-width:640px; }
 .cfg-noti-row {
   display:flex; align-items:center; gap:16px;
-  padding:14px 0; border-bottom:1px solid #1e3a5f22;
+  padding:14px 0; border-bottom:1px solid var(--border-card);
 }
-.cfg-noti-nombre { font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:3px; }
-.cfg-noti-desc { font-size:11px; color:#64748b; }
+.cfg-noti-nombre { font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:3px; }
+.cfg-noti-desc { font-size:11px; color:var(--text-faint); }
 .cfg-noti-canales { display:flex; gap:14px; flex-shrink:0; }
 .cfg-noti-ch {
   display:flex; align-items:center; gap:5px;
-  font-size:11px; color:#64748b; cursor:pointer;
+  font-size:11px; color:var(--text-faint); cursor:pointer;
 }
 .cfg-noti-ch input { accent-color:#6366f1; }
 
 /* ── Form ── */
 .cfg-form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .cfg-field { display:flex; flex-direction:column; gap:5px; }
-.cfg-field label { font-size:11px; font-weight:700; color:#94a3b8; }
+.cfg-field label { font-size:11px; font-weight:700; color:var(--text-muted); }
 .cfg-input {
-  background:#0f172a; border:1px solid #1e3a5f; border-radius:8px;
-  color:#e2e8f0; font-size:13px; padding:9px 11px; outline:none;
+  background:var(--bg-page); border:1px solid var(--border-card); border-radius:8px;
+  color:var(--text-primary); font-size:13px; padding:9px 11px; outline:none;
   font-family:inherit; transition:border-color 0.15s; width:100%;
 }
 .cfg-input:focus { border-color:#6366f1; }
-.cfg-input::placeholder { color:#334155; }
+.cfg-input::placeholder { color:var(--border); }
 .cfg-select {
-  background:#0f172a; border:1px solid #1e3a5f; border-radius:8px;
-  color:#e2e8f0; font-size:13px; padding:9px 11px; outline:none;
+  background:var(--bg-page); border:1px solid var(--border-card); border-radius:8px;
+  color:var(--text-primary); font-size:13px; padding:9px 11px; outline:none;
   font-family:inherit; width:100%;
 }
 
@@ -772,13 +772,13 @@ export default {
 .cfg-btn--sm { font-size:12px; padding:7px 14px; }
 .cfg-btn-ghost {
   display:inline-flex; align-items:center; justify-content:center;
-  border-radius:8px; border:1px solid #334155; background:#1e293b;
-  color:#94a3b8; font-size:13px; font-weight:600; padding:9px 18px;
+  border-radius:8px; border:1px solid var(--border); background:var(--bg-surface);
+  color:var(--text-muted); font-size:13px; font-weight:600; padding:9px 18px;
   cursor:pointer; font-family:inherit; transition:background 0.15s;
 }
 .cfg-btn-ghost:hover { background:#273548; }
 
 /* ── Dialog ── */
-.cfg-dialog-card { background:#1e293b !important; border:1px solid #334155; }
-.cfg-dialog-title { font-size:15px !important; font-weight:800 !important; color:#f1f5f9 !important; padding:20px 24px 12px !important; }
+.cfg-dialog-card { background:var(--bg-surface) !important; border:1px solid var(--border); }
+.cfg-dialog-title { font-size:15px !important; font-weight:800 !important; color:var(--text-heading) !important; padding:20px 24px 12px !important; }
 </style>

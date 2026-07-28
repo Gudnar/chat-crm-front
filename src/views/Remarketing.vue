@@ -40,8 +40,8 @@
         </div>
         <div v-else-if="campanas.length === 0" class="rem-empty">
           <div style="font-size:32px;margin-bottom:12px;">📣</div>
-          <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:6px;">Sin campañas aún</div>
-          <div style="font-size:12px;color:#64748b;">Crea tu primera campaña de remarketing para reconectar con tus leads</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Sin campañas aún</div>
+          <div style="font-size:12px;color:var(--text-faint);">Crea tu primera campaña de remarketing para reconectar con tus leads</div>
           <button class="rem-btn-new" style="margin-top:16px;" @click="abrirModal()">+ Crear campaña</button>
         </div>
         <div v-else class="rem-table-wrap">
@@ -60,8 +60,8 @@
             <tbody>
               <tr v-for="c in campanas" :key="c.id">
                 <td>
-                  <div style="font-size:13px;font-weight:700;color:#e2e8f0;">{{ c.nombre }}</div>
-                  <div v-if="c.descripcion" style="font-size:11px;color:#64748b;margin-top:1px;">{{ c.descripcion }}</div>
+                  <div style="font-size:13px;font-weight:700;color:var(--text-primary);">{{ c.nombre }}</div>
+                  <div v-if="c.descripcion" style="font-size:11px;color:var(--text-faint);margin-top:1px;">{{ c.descripcion }}</div>
                 </td>
                 <td>
                   <span class="rem-badge" :class="c.tipoMensaje === 'ia' ? 'rem-badge--ia' : 'rem-badge--fijo'">
@@ -71,12 +71,12 @@
                 <td>
                   <div style="display:flex;align-items:center;gap:6px;">
                     <span class="rem-score-range" :style="scoreRangeStyle(c.scoreMin, c.scoreMax)">{{ c.scoreMin }}–{{ c.scoreMax }}</span>
-                    <span style="font-size:10px;color:#64748b;">pts</span>
+                    <span style="font-size:10px;color:var(--text-faint);">pts</span>
                   </div>
                 </td>
                 <td>
-                  <div style="font-size:12px;color:#e2e8f0;">{{ formatDateTime(c.programadoEn) }}</div>
-                  <div v-if="c.ejecutadoEn" style="font-size:10px;color:#64748b;">Ejecutada: {{ formatDateTime(c.ejecutadoEn) }}</div>
+                  <div style="font-size:12px;color:var(--text-primary);">{{ formatDateTime(c.programadoEn) }}</div>
+                  <div v-if="c.ejecutadoEn" style="font-size:10px;color:var(--text-faint);">Ejecutada: {{ formatDateTime(c.ejecutadoEn) }}</div>
                 </td>
                 <td>
                   <span class="rem-estado" :class="'rem-estado--'+c.estadoCampana">
@@ -85,11 +85,11 @@
                   </span>
                 </td>
                 <td>
-                  <div v-if="c.estadoCampana === 'completado'" style="font-size:12px;color:#e2e8f0;">
+                  <div v-if="c.estadoCampana === 'completado'" style="font-size:12px;color:var(--text-primary);">
                     <span style="color:#22c55e;font-weight:700;">{{ c.totalEnviados }}</span>
                     <span v-if="c.totalErrores > 0" style="color:#ef4444;"> / {{ c.totalErrores }} err</span>
                   </div>
-                  <span v-else style="font-size:11px;color:#475569;">—</span>
+                  <span v-else style="font-size:11px;color:var(--text-disabled);">—</span>
                 </td>
                 <td>
                   <div style="display:flex;gap:4px;">
@@ -155,14 +155,14 @@
 
         <!-- Mensaje -->
         <div class="rem-card" style="margin-bottom:16px;">
-          <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px;">MENSAJE</div>
-          <div style="font-size:13px;color:#e2e8f0;line-height:1.6;white-space:pre-wrap;">{{ campanaDetalle.mensaje }}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-faint);margin-bottom:8px;">MENSAJE</div>
+          <div style="font-size:13px;color:var(--text-primary);line-height:1.6;white-space:pre-wrap;">{{ campanaDetalle.mensaje }}</div>
         </div>
 
         <!-- Tabla de envíos -->
         <div class="rem-card">
-          <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:14px;">Registro de envíos</div>
-          <div v-if="!(campanaDetalle.envios || []).length" style="text-align:center;color:#64748b;font-size:13px;padding:16px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:14px;">Registro de envíos</div>
+          <div v-if="!(campanaDetalle.envios || []).length" style="text-align:center;color:var(--text-faint);font-size:13px;padding:16px;">
             Sin envíos registrados aún
           </div>
           <table v-else class="rem-table">
@@ -180,19 +180,19 @@
                 <td>
                   <div style="display:flex;align-items:center;gap:8px;">
                     <div class="rem-av">{{ (e.contacto || '?').slice(0,2).toUpperCase() }}</div>
-                    <span style="font-size:12px;color:#e2e8f0;">{{ e.contacto }}</span>
+                    <span style="font-size:12px;color:var(--text-primary);">{{ e.contacto }}</span>
                   </div>
                 </td>
                 <td>
                   <div style="display:flex;align-items:center;gap:6px;">
-                    <div style="width:50px;height:5px;border-radius:3px;background:#1e293b;overflow:hidden;">
+                    <div style="width:50px;height:5px;border-radius:3px;background:var(--bg-surface);overflow:hidden;">
                       <div :style="{ width:e.scoreAlEnvio+'%', height:'100%', background:scoreColor(e.scoreAlEnvio) }"></div>
                     </div>
                     <span style="font-size:12px;font-weight:700;" :style="{ color: scoreColor(e.scoreAlEnvio) }">{{ e.scoreAlEnvio }}</span>
                   </div>
                 </td>
                 <td>
-                  <div style="font-size:11px;color:#94a3b8;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" :title="e.mensajeEnviado">
+                  <div style="font-size:11px;color:var(--text-muted);max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" :title="e.mensajeEnviado">
                     {{ e.mensajeEnviado || '—' }}
                   </div>
                 </td>
@@ -200,7 +200,7 @@
                   <span class="rem-envio-estado" :class="'rem-envio-estado--'+e.estadoEnvio">{{ envioEstadoLabel(e.estadoEnvio) }}</span>
                   <div v-if="e.error" style="font-size:10px;color:#ef4444;margin-top:2px;" :title="e.error">Error</div>
                 </td>
-                <td><span style="font-size:11px;color:#64748b;">{{ e.enviadoEn ? formatDateTime(e.enviadoEn) : '—' }}</span></td>
+                <td><span style="font-size:11px;color:var(--text-faint);">{{ e.enviadoEn ? formatDateTime(e.enviadoEn) : '—' }}</span></td>
               </tr>
             </tbody>
           </table>
@@ -255,7 +255,7 @@
                   ? 'Ej: Queremos recordarles nuestra oferta de descuento del 20% válida hasta fin de mes...'
                   : 'Ej: Hola {contacto}, te recordamos que tenemos una oferta especial esperándote...'"
               ></textarea>
-              <div v-if="form.tipoMensaje === 'fijo'" style="font-size:10px;color:#475569;margin-top:3px;">Usa {contacto} para personalizar con el número de teléfono</div>
+              <div v-if="form.tipoMensaje === 'fijo'" style="font-size:10px;color:var(--text-disabled);margin-top:3px;">Usa {contacto} para personalizar con el número de teléfono</div>
             </div>
 
             <!-- Fecha/hora -->
@@ -269,12 +269,12 @@
               <label>Segmento por score</label>
               <div style="display:flex;align-items:center;gap:12px;">
                 <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="font-size:11px;color:#64748b;">Mín:</span>
+                  <span style="font-size:11px;color:var(--text-faint);">Mín:</span>
                   <input v-model.number="form.scoreMin" type="number" min="0" max="100" class="ide-input" style="width:64px;padding:6px 8px;font-size:13px;text-align:center;"/>
                 </div>
-                <span style="color:#475569;font-size:12px;">–</span>
+                <span style="color:var(--text-disabled);font-size:12px;">–</span>
                 <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="font-size:11px;color:#64748b;">Máx:</span>
+                  <span style="font-size:11px;color:var(--text-faint);">Máx:</span>
                   <input v-model.number="form.scoreMax" type="number" min="0" max="100" class="ide-input" style="width:64px;padding:6px 8px;font-size:13px;text-align:center;"/>
                 </div>
                 <div class="rem-seg-preview" :style="segmentoBadgeStyle">
@@ -436,47 +436,47 @@ export default {
 </script>
 
 <style scoped>
-.rem-layout { display:flex; height:100%; overflow:hidden; background:#0a0f1e; }
+.rem-layout { display:flex; height:100%; overflow:hidden; background:var(--bg-panel); }
 
 /* Sub-nav */
-.rem-subnav { width:200px; flex-shrink:0; background:#0d1526; border-right:1px solid #1e3a5f44; display:flex; flex-direction:column; overflow:hidden; }
-.rem-sn-hd { display:flex; align-items:center; gap:10px; padding:16px 14px 14px; border-bottom:1px solid #1e3a5f33; }
+.rem-subnav { width:200px; flex-shrink:0; background:var(--bg-panel); border-right:1px solid var(--border-card); display:flex; flex-direction:column; overflow:hidden; }
+.rem-sn-hd { display:flex; align-items:center; gap:10px; padding:16px 14px 14px; border-bottom:1px solid var(--border-card); }
 .rem-sn-ico { width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,#22c55e,#16a34a); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.rem-sn-title { font-size:13px; font-weight:800; color:#f1f5f9; }
+.rem-sn-title { font-size:13px; font-weight:800; color:var(--text-heading); }
 .rem-sn-sub { font-size:10px; color:#22c55e; margin-top:1px; }
-.rem-sn-btn { display:flex; align-items:center; gap:10px; padding:9px 14px; border:none; background:transparent; color:#64748b; font-size:12px; font-weight:500; cursor:pointer; text-align:left; transition:all 0.15s; font-family:inherit; width:100%; }
-.rem-sn-btn:hover { background:#1e293b44; color:#94a3b8; }
+.rem-sn-btn { display:flex; align-items:center; gap:10px; padding:9px 14px; border:none; background:transparent; color:var(--text-faint); font-size:12px; font-weight:500; cursor:pointer; text-align:left; transition:all 0.15s; font-family:inherit; width:100%; }
+.rem-sn-btn:hover { background:color-mix(in srgb, var(--bg-surface) 27%, transparent); color:var(--text-muted); }
 .rem-sn-btn--active { background:#22c55e11; color:#22c55e; font-weight:700; border-left:3px solid #22c55e; }
 
 /* Content */
 .rem-content { flex:1; display:flex; flex-direction:column; overflow:hidden; padding:24px; overflow-y:auto; }
 .rem-page-hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
-.rem-page-title { font-size:22px; font-weight:900; color:#f1f5f9; letter-spacing:-0.5px; margin:0 0 4px; }
-.rem-page-sub { font-size:12px; color:#64748b; margin:0; }
+.rem-page-title { font-size:22px; font-weight:900; color:var(--text-heading); letter-spacing:-0.5px; margin:0 0 4px; }
+.rem-page-sub { font-size:12px; color:var(--text-faint); margin:0; }
 
 /* Card */
-.rem-card { background:#111827; border:1px solid #1e3a5f44; border-radius:12px; padding:16px 18px; }
+.rem-card { background:var(--bg-panel); border:1px solid var(--border-card); border-radius:12px; padding:16px 18px; }
 
 /* KPI row */
 .rem-kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
-.rem-kpi { background:#111827; border:1px solid #1e3a5f44; border-radius:10px; padding:14px 16px; text-align:center; }
-.rem-kpi-val { font-size:26px; font-weight:900; color:#f1f5f9; letter-spacing:-1px; }
-.rem-kpi-lbl { font-size:11px; color:#64748b; margin-top:2px; }
+.rem-kpi { background:var(--bg-panel); border:1px solid var(--border-card); border-radius:10px; padding:14px 16px; text-align:center; }
+.rem-kpi-val { font-size:26px; font-weight:900; color:var(--text-heading); letter-spacing:-1px; }
+.rem-kpi-lbl { font-size:11px; color:var(--text-faint); margin-top:2px; }
 
 /* Botones */
 .rem-btn-new { display:flex; align-items:center; gap:7px; padding:8px 16px; border-radius:9px; background:#22c55e; border:none; color:#fff; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.15s; }
 .rem-btn-new:hover { background:#16a34a; }
-.rem-btn-back { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; border:1px solid #334155; background:none; color:#64748b; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
-.rem-btn-back:hover { color:#94a3b8; border-color:#475569; }
-.rem-btn-ghost { padding:8px 16px; border-radius:8px; border:1px solid #334155; background:none; color:#64748b; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
-.rem-btn-ghost:hover { color:#94a3b8; }
+.rem-btn-back { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:none; color:var(--text-faint); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+.rem-btn-back:hover { color:var(--text-muted); border-color:var(--text-disabled); }
+.rem-btn-ghost { padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:none; color:var(--text-faint); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+.rem-btn-ghost:hover { color:var(--text-muted); }
 .rem-btn-ok { display:flex; align-items:center; gap:6px; padding:8px 20px; border-radius:8px; border:none; background:#22c55e; color:#fff; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.15s; min-width:120px; justify-content:center; }
 .rem-btn-ok:hover:not(:disabled) { background:#16a34a; }
 .rem-btn-ok:disabled { opacity:0.5; cursor:not-allowed; }
 
 /* Icon buttons */
-.rem-ico-btn { width:28px; height:28px; border-radius:6px; border:1px solid #1e3a5f44; background:#0f172a; color:#64748b; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; }
-.rem-ico-btn:hover { color:#94a3b8; border-color:#334155; }
+.rem-ico-btn { width:28px; height:28px; border-radius:6px; border:1px solid var(--border-card); background:var(--bg-page); color:var(--text-faint); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; }
+.rem-ico-btn:hover { color:var(--text-muted); border-color:var(--border); }
 .rem-ico-btn:disabled { opacity:0.4; cursor:not-allowed; }
 .rem-ico-btn--run:hover { color:#22c55e; border-color:#22c55e33; }
 .rem-ico-btn--cancel:hover { color:#f59e0b; border-color:#f59e0b33; }
@@ -485,7 +485,7 @@ export default {
 /* Badges */
 .rem-badge { font-size:10px; font-weight:700; padding:3px 8px; border-radius:999px; }
 .rem-badge--ia { background:#6366f122; color:#818cf8; }
-.rem-badge--fijo { background:#0f172a; color:#64748b; border:1px solid #334155; }
+.rem-badge--fijo { background:var(--bg-page); color:var(--text-faint); border:1px solid var(--border); }
 
 /* Estado */
 .rem-estado { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; }
@@ -511,33 +511,33 @@ export default {
 /* Tabla */
 .rem-table-wrap { overflow-x:auto; }
 .rem-table { width:100%; border-collapse:collapse; }
-.rem-table thead tr { background:#161d2f; }
-.rem-table th { padding:8px 12px; text-align:left; font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid #334155; white-space:nowrap; }
-.rem-table td { padding:10px 12px; border-bottom:1px solid #1e3a5f22; vertical-align:middle; }
-.rem-table tbody tr:hover { background:#1e293b22; }
+.rem-table thead tr { background:var(--bg-panel); }
+.rem-table th { padding:8px 12px; text-align:left; font-size:10px; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border); white-space:nowrap; }
+.rem-table td { padding:10px 12px; border-bottom:1px solid var(--border-card); vertical-align:middle; }
+.rem-table tbody tr:hover { background:color-mix(in srgb, var(--bg-surface) 13%, transparent); }
 
 /* Avatar */
 .rem-av { width:30px; height:30px; border-radius:8px; background:#6366f122; color:#818cf8; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
 
 /* Empty state */
-.rem-empty { text-align:center; padding:60px 20px; color:#64748b; }
+.rem-empty { text-align:center; padding:60px 20px; color:var(--text-faint); }
 
 /* Modal */
 .rem-modal-bd { position:fixed; inset:0; background:#000000aa; display:flex; align-items:center; justify-content:center; z-index:1000; }
-.rem-modal { background:#0d1526; border:1px solid #1e3a5f66; border-radius:14px; width:520px; max-width:95vw; max-height:90vh; display:flex; flex-direction:column; overflow:hidden; }
-.rem-modal-hd { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #1e3a5f44; font-size:14px; font-weight:800; color:#f1f5f9; flex-shrink:0; }
-.rem-modal-close { background:none; border:none; color:#64748b; cursor:pointer; display:flex; padding:2px; }
-.rem-modal-close:hover { color:#94a3b8; }
+.rem-modal { background:var(--bg-panel); border:1px solid color-mix(in srgb, var(--border-card) 40%, transparent); border-radius:14px; width:520px; max-width:95vw; max-height:90vh; display:flex; flex-direction:column; overflow:hidden; }
+.rem-modal-hd { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border-card); font-size:14px; font-weight:800; color:var(--text-heading); flex-shrink:0; }
+.rem-modal-close { background:none; border:none; color:var(--text-faint); cursor:pointer; display:flex; padding:2px; }
+.rem-modal-close:hover { color:var(--text-muted); }
 .rem-modal-body { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:14px; }
-.rem-modal-ft { padding:14px 20px; border-top:1px solid #1e3a5f44; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; }
+.rem-modal-ft { padding:14px 20px; border-top:1px solid var(--border-card); display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; }
 
 /* Form fields */
-.rem-field label { display:block; font-size:11px; font-weight:700; color:#94a3b8; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.4px; }
+.rem-field label { display:block; font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.4px; }
 
 /* Type toggle */
 .rem-type-toggle { display:flex; gap:6px; }
-.rem-type-btn { flex:1; padding:8px 10px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#64748b; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
-.rem-type-btn:hover { border-color:#475569; color:#94a3b8; }
+.rem-type-btn { flex:1; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--bg-page); color:var(--text-faint); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+.rem-type-btn:hover { border-color:var(--text-disabled); color:var(--text-muted); }
 .rem-type-btn--active { border-color:#22c55e44; background:#22c55e11; color:#22c55e; }
 
 .rem-ia-hint { font-size:11px; color:#22c55e; background:#22c55e11; border:1px solid #22c55e22; border-radius:6px; padding:6px 10px; margin-top:6px; line-height:1.5; }

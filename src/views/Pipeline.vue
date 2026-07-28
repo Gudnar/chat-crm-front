@@ -22,15 +22,15 @@
     <!-- ── Filtros rápidos ── -->
     <div v-if="showFiltros" class="pl-filtros-panel">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <span style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Canal:</span>
+        <span style="font-size:11px; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.5px;">Canal:</span>
         <button v-for="c in canalesFiltro" :key="c.id" class="pl-chip-filter"
           :class="{ 'pl-chip-filter--active': filtroCan === c.id }"
           @click="filtroCan = filtroCan === c.id ? '' : c.id">{{ c.label }}</button>
-        <span style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-left:10px;">Score:</span>
+        <span style="font-size:11px; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.5px; margin-left:10px;">Score:</span>
         <button class="pl-chip-filter" :class="{ 'pl-chip-filter--active': filtroScore === 'hot' }" @click="filtroScore = filtroScore === 'hot' ? '' : 'hot'" style="color:#ef4444; border-color:#ef444433;">🔥 Hot</button>
         <button class="pl-chip-filter" :class="{ 'pl-chip-filter--active': filtroScore === 'warm' }" @click="filtroScore = filtroScore === 'warm' ? '' : 'warm'" style="color:#f59e0b; border-color:#f59e0b33;">🌡 Warm</button>
         <button class="pl-chip-filter" :class="{ 'pl-chip-filter--active': filtroScore === 'cold' }" @click="filtroScore = filtroScore === 'cold' ? '' : 'cold'" style="color:#3b82f6; border-color:#3b82f633;">❄ Cold</button>
-        <button class="pl-chip-filter" style="margin-left:auto; color:#475569;" @click="filtroCan=''; filtroScore=''">Limpiar</button>
+        <button class="pl-chip-filter" style="margin-left:auto; color:var(--text-disabled);" @click="filtroCan=''; filtroScore=''">Limpiar</button>
       </div>
     </div>
 
@@ -118,7 +118,7 @@
             <!-- Agent + date -->
             <div class="pl-card-footer">
               <div style="display:flex; align-items:center; gap:5px;">
-                <div class="pl-agent-avatar" :style="conv.agente ? { background:'#6366f122', color:'#818cf8' } : { background:'#1e293b', color:'#475569' }">
+                <div class="pl-agent-avatar" :style="conv.agente ? { background:'#6366f122', color:'#818cf8' } : { background:'var(--bg-surface)', color:'var(--text-disabled)' }">
                   {{ conv.agente ? conv.agente.slice(0,2).toUpperCase() : '—' }}
                 </div>
                 <span class="pl-agent-name">{{ conv.agente || 'Sin' }}</span>
@@ -127,7 +127,7 @@
             </div>
 
             <!-- Acciones -->
-            <div style="display:flex; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid #1e3a5f;">
+            <div style="display:flex; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border-card);">
               <button @click.stop="abrirSoporte(conv)" style="flex:1; background:#f59e0b33; color:#f59e0b; border:1px solid #f59e0b44; border-radius:6px; padding:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s;">
                 📋 Soporte
               </button>
@@ -197,8 +197,8 @@
               {{ iniciales(detalleConv.contacto) }}
             </div>
             <div>
-              <div style="font-size:14px; font-weight:700; color:#f1f5f9;">{{ formatNombre(detalleConv.contacto) }}</div>
-              <div style="font-size:11px; color:#64748b; text-transform:capitalize;">{{ detalleConv.canal }}</div>
+              <div style="font-size:14px; font-weight:700; color:var(--text-heading);">{{ formatNombre(detalleConv.contacto) }}</div>
+              <div style="font-size:11px; color:var(--text-faint); text-transform:capitalize;">{{ detalleConv.canal }}</div>
             </div>
           </div>
           <button class="pl-modal-close" @click="detalleConv = null">✕</button>
@@ -206,11 +206,11 @@
         <div class="pl-modal-body">
           <!-- Score bar -->
           <div style="margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:11px; color:#64748b;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:11px; color:var(--text-faint);">
               <span>Lead Score</span>
               <span style="font-weight:700;" :style="{ color: scoreColor(detalleConv.score) }">{{ detalleConv.score }}/100</span>
             </div>
-            <div style="height:6px; border-radius:3px; background:#1e293b; overflow:hidden;">
+            <div style="height:6px; border-radius:3px; background:var(--bg-surface); overflow:hidden;">
               <div :style="{ width: detalleConv.score+'%', height:'100%', background: scoreColor(detalleConv.score), borderRadius:'3px', transition:'width 0.4s' }"></div>
             </div>
           </div>
@@ -222,24 +222,24 @@
                 class="pl-etapa-chip"
                 :style="detalleConv.estadoConversacion === e.id
                   ? { background: e.color+'22', color: e.color, border: '1px solid '+e.color+'55' }
-                  : { background: 'transparent', color: '#64748b', border: '1px solid #1e3a5f44' }"
+                  : { background: 'transparent', color: 'var(--text-faint)', border: '1px solid var(--border-card)' }"
                 @click="moverAEtapa(detalleConv, e.id); detalleConv = { ...detalleConv, estadoConversacion: e.id }">
                 {{ e.label }}
               </button>
             </div>
           </div>
           <!-- Info -->
-          <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px; font-size:12px; color:#94a3b8;">
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px; font-size:12px; color:var(--text-muted);">
             <div style="display:flex; gap:8px; align-items:center;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
               {{ detalleConv.totalMensajes || 0 }} mensajes
             </div>
             <div style="display:flex; gap:8px; align-items:center;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               {{ formatDate(detalleConv.fechaCreacion) }}
             </div>
             <div v-if="detalleConv.resolucion" style="display:flex; gap:8px; align-items:flex-start;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="margin-top:2px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2" style="margin-top:2px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               {{ detalleConv.resolucion }}
             </div>
           </div>
@@ -436,7 +436,7 @@ export default {
     scoreColor(s) { return s >= 70 ? '#22c55e' : s >= 40 ? '#f59e0b' : '#ef4444'; },
     canalColor(c) {
       const m = { whatsapp: '#25D366', instagram: '#E1306C', facebook: '#1877F2', tiktok: '#69C9D0', chat: '#818cf8' };
-      return m[c] || '#64748b';
+      return m[c] || 'var(--text-faint)';
     },
     canalIcono(c) {
       if (c === 'whatsapp') return `<svg width="10" height="10" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
@@ -503,8 +503,8 @@ export default {
   display: flex; align-items: flex-start; justify-content: space-between;
   gap: 16px; flex-shrink: 0;
 }
-.pl-title { font-size: 22px; font-weight: 800; color: #f1f5f9; margin: 0 0 4px; }
-.pl-subtitle { font-size: 12px; color: #64748b; margin: 0; }
+.pl-title { font-size: 22px; font-weight: 800; color: var(--text-heading); margin: 0 0 4px; }
+.pl-subtitle { font-size: 12px; color: var(--text-faint); margin: 0; }
 .pl-header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 /* ── Buttons ── */
@@ -517,19 +517,19 @@ export default {
 .pl-btn-pri:disabled { opacity: 0.5; cursor: not-allowed; }
 .pl-btn-sec {
   display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px;
-  background: #1e293b; border: 1px solid #334155; color: #94a3b8; font-size: 12px;
+  background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px;
   font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
 .pl-btn-sec:hover { border-color: #6366f1; color: #818cf8; }
 
 /* ── Filtros ── */
 .pl-filtros-panel {
-  background: #1e293b; border: 1px solid #1e3a5f44; border-radius: 10px;
+  background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 10px;
   padding: 12px 16px; flex-shrink: 0;
 }
 .pl-chip-filter {
-  background: #0f172a; border: 1px solid #334155; border-radius: 999px;
-  color: #64748b; font-size: 11px; font-weight: 600; padding: 3px 10px;
+  background: var(--bg-page); border: 1px solid var(--border); border-radius: 999px;
+  color: var(--text-faint); font-size: 11px; font-weight: 600; padding: 3px 10px;
   cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
 .pl-chip-filter:hover { border-color: #6366f155; }
@@ -565,9 +565,9 @@ export default {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: #111827;
+  background: var(--bg-panel);
   border-radius: 12px;
-  border: 1px solid #1e3a5f44;
+  border: 1px solid var(--border-card);
   max-height: 100%;
   transition: border-color 0.15s;
   overflow: hidden;
@@ -579,10 +579,10 @@ export default {
 
 .pl-col-hd {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 14px; flex-shrink: 0; border-bottom: 1px solid #1e3a5f33;
+  padding: 12px 14px; flex-shrink: 0; border-bottom: 1px solid var(--border-card);
 }
 .pl-col-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.pl-col-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+.pl-col-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .pl-col-count {
   min-width: 20px; height: 20px; border-radius: 999px;
   font-size: 11px; font-weight: 700;
@@ -601,14 +601,14 @@ export default {
 .pl-cards-list--empty { align-items: center; justify-content: center; }
 
 .pl-drop-placeholder {
-  font-size: 12px; color: #334155; text-align: center;
-  border: 2px dashed #1e3a5f; border-radius: 8px;
+  font-size: 12px; color: var(--border); text-align: center;
+  border: 2px dashed var(--border-card); border-radius: 8px;
   padding: 24px; width: 100%; box-sizing: border-box;
 }
 
 /* ── Contact card ── */
 .pl-card {
-  background: #1e293b; border: 1px solid #1e3a5f44; border-radius: 10px;
+  background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: 10px;
   padding: 12px; cursor: grab; transition: all 0.15s;
 }
 .pl-card:hover { border-color: #6366f155; box-shadow: 0 4px 16px #0005; }
@@ -621,12 +621,12 @@ export default {
   font-size: 12px; font-weight: 700; flex-shrink: 0;
 }
 .pl-card-name {
-  font-size: 13px; font-weight: 700; color: #f1f5f9;
+  font-size: 13px; font-weight: 700; color: var(--text-heading);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;
 }
 .pl-card-canal {
   display: flex; align-items: center; gap: 4px;
-  font-size: 10px; color: #64748b; margin-top: 2px;
+  font-size: 10px; color: var(--text-faint); margin-top: 2px;
 }
 .pl-score { font-size: 15px; font-weight: 900; flex-shrink: 0; }
 
@@ -636,21 +636,21 @@ export default {
 
 .pl-card-footer {
   display: flex; align-items: center; justify-content: space-between;
-  padding-top: 8px; border-top: 1px solid #1e3a5f22;
+  padding-top: 8px; border-top: 1px solid var(--border-card);
 }
 .pl-agent-avatar {
   width: 18px; height: 18px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 8px; font-weight: 700; flex-shrink: 0;
 }
-.pl-agent-name { font-size: 10px; color: #64748b; }
-.pl-card-date { font-size: 10px; color: #475569; }
+.pl-agent-name { font-size: 10px; color: var(--text-faint); }
+.pl-card-date { font-size: 10px; color: var(--text-disabled); }
 
 /* ── Add button ── */
 .pl-add-btn {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 5px;
-  padding: 10px; background: none; border: none; border-top: 1px solid #1e3a5f33;
-  color: #475569; font-size: 12px; font-weight: 600; cursor: pointer;
+  padding: 10px; background: none; border: none; border-top: 1px solid var(--border-card);
+  color: var(--text-disabled); font-size: 12px; font-weight: 600; cursor: pointer;
   font-family: inherit; transition: all 0.15s; flex-shrink: 0;
 }
 .pl-add-btn:hover { background: #6366f10a; color: #818cf8; }
@@ -661,28 +661,28 @@ export default {
   display: flex; align-items: center; justify-content: center; padding: 20px;
 }
 .pl-modal {
-  background: #0d1526; border: 1px solid #1e3a5f55; border-radius: 14px;
+  background: var(--bg-panel); border: 1px solid var(--border-card); border-radius: 14px;
   width: 100%; max-width: 460px; max-height: 90vh; overflow: hidden;
   display: flex; flex-direction: column;
 }
 .pl-modal-hd {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px; border-bottom: 1px solid #1e3a5f44;
-  font-size: 14px; font-weight: 700; color: #e2e8f0; flex-shrink: 0;
+  padding: 16px 20px; border-bottom: 1px solid var(--border-card);
+  font-size: 14px; font-weight: 700; color: var(--text-primary); flex-shrink: 0;
 }
 .pl-modal-close {
-  background: none; border: none; cursor: pointer; color: #475569;
+  background: none; border: none; cursor: pointer; color: var(--text-disabled);
   font-size: 16px; padding: 4px 8px; border-radius: 6px; transition: color 0.15s;
 }
-.pl-modal-close:hover { color: #94a3b8; }
+.pl-modal-close:hover { color: var(--text-muted); }
 .pl-modal-body { padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; }
-.pl-modal-ft { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid #1e3a5f44; flex-shrink: 0; }
+.pl-modal-ft { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border-card); flex-shrink: 0; }
 
 .pl-field { display: flex; flex-direction: column; gap: 5px; }
-.pl-field label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.pl-field label { font-size: 11px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.5px; }
 .pl-input, .pl-input-sel {
-  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-  color: #e2e8f0; font-size: 13px; padding: 9px 12px; outline: none;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-size: 13px; padding: 9px 12px; outline: none;
   font-family: inherit; transition: border-color 0.15s; width: 100%; box-sizing: border-box;
 }
 .pl-input:focus, .pl-input-sel:focus { border-color: #6366f1; }

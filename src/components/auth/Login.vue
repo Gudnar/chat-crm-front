@@ -150,7 +150,7 @@ export default {
 .ide-login {
   display: flex;
   min-height: 100vh;
-  background: #0f172a;
+  background: var(--bg-page);
 }
 
 .ide-login__brand {
@@ -202,7 +202,7 @@ export default {
 .ide-login__title {
   font-size: 2.5rem;
   font-weight: 900;
-  color: #f1f5f9;
+  color: var(--text-heading);
   margin-bottom: 12px;
   letter-spacing: -1px;
 }
@@ -254,15 +254,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0d1526;
+  background: var(--bg-panel);
   padding: 40px 24px;
 }
 
 .ide-login__card {
   width: 100%;
   max-width: 360px;
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 36px 32px;
 }
@@ -286,14 +286,14 @@ export default {
 .ide-login__card-title {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #f1f5f9;
+  color: var(--text-heading);
   margin-bottom: 6px;
   letter-spacing: -0.3px;
 }
 
 .ide-login__card-sub {
   font-size: 12px;
-  color: #64748b;
+  color: var(--text-faint);
   margin: 0;
 }
 
@@ -303,16 +303,16 @@ export default {
   display: block;
   font-size: 12px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 6px;
 }
 
 .ide-login__input {
   width: 100%;
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: var(--bg-page);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  color: #f1f5f9;
+  color: var(--text-heading);
   font-size: 13px;
   padding: 10px 12px;
   outline: none;
@@ -320,7 +320,7 @@ export default {
   transition: border-color 0.15s;
 }
 .ide-login__input:focus { border-color: #6366f1; }
-.ide-login__input::placeholder { color: #475569; }
+.ide-login__input::placeholder { color: var(--text-disabled); }
 
 .ide-login__eye {
   position: absolute;
@@ -360,7 +360,7 @@ export default {
   text-align: center;
   margin-top: 20px;
   font-size: 11px;
-  color: #334155;
+  color: var(--border);
 }
 
 @media (max-width: 767px) {

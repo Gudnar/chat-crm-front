@@ -117,6 +117,18 @@ const routes = [
         component: () => import('@/views/Soporte.vue'),
       },
       {
+        path: 'reservaciones',
+        name: 'reservaciones',
+        component: () => import('@/views/Reservaciones.vue'),
+        meta: { roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE', 'COLABORADOR'] },
+      },
+      {
+        path: 'mis-citas',
+        name: 'mis-citas',
+        component: () => import('@/views/MisCitas.vue'),
+        meta: { roles: ['AGENTE_HUMANO'] },
+      },
+      {
         path: 'mi-cuenta',
         name: 'mi-cuenta',
         component: () => import('@/views/MiCuenta.vue'),

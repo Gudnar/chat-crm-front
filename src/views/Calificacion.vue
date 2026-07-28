@@ -36,20 +36,20 @@
 
         <div style="max-width:680px;">
           <div class="ide-ia-card" style="margin-bottom:16px;">
-            <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:14px;">Criterios activos</div>
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:14px;">Criterios activos</div>
             <div style="display:flex; flex-direction:column; gap:10px;">
               <div
                 v-for="c in criterios" :key="c.id"
-                style="display:flex; align-items:flex-start; gap:14px; padding:12px 14px; background:#0f172a; border-radius:8px; border:1px solid;"
-                :style="{ borderColor: c.activo ? c.color+'33' : '#1e3a5f22' }"
+                style="display:flex; align-items:flex-start; gap:14px; padding:12px 14px; background:var(--bg-page); border-radius:8px; border:1px solid;"
+                :style="{ borderColor: c.activo ? c.color+'33' : 'var(--border-card)' }"
               >
                 <div class="cal-ico" :style="{ background: c.color+'22', color: c.color }">{{ c.emoji }}</div>
                 <div style="flex:1;">
                   <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
-                    <span style="font-size:13px; font-weight:700; color:#e2e8f0;">{{ c.label }}</span>
+                    <span style="font-size:13px; font-weight:700; color:var(--text-primary);">{{ c.label }}</span>
                     <span style="font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px;" :style="{ background: c.color+'22', color: c.color }">+{{ c.puntos }} pts</span>
                   </div>
-                  <div style="font-size:11px; color:#64748b; line-height:1.5;">{{ c.desc }}</div>
+                  <div style="font-size:11px; color:var(--text-faint); line-height:1.5;">{{ c.desc }}</div>
                 </div>
                 <div class="ide-toggle" :class="{ 'ide-toggle--on': c.activo }" @click="c.activo = !c.activo"><div></div></div>
               </div>
@@ -76,25 +76,25 @@
               <div v-for="tier in tiers" :key="tier.id" class="cal-tier-row" :style="{ borderColor: tier.color+'33' }">
                 <div style="width:10px; height:10px; border-radius:50%; flex-shrink:0;" :style="{ background: tier.color }"></div>
                 <div style="flex:1;">
-                  <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:2px;">{{ tier.emoji }} {{ tier.label }}</div>
-                  <div style="font-size:11px; color:#64748b;">{{ tier.desc }}</div>
+                  <div style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:2px;">{{ tier.emoji }} {{ tier.label }}</div>
+                  <div style="font-size:11px; color:var(--text-faint);">{{ tier.desc }}</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
                   <input type="number" v-model.number="tier.min" class="ide-input" style="width:60px; padding:4px 8px; font-size:12px; text-align:center;" :min="0" :max="100" />
-                  <span style="color:#475569; font-size:12px;">–</span>
+                  <span style="color:var(--text-disabled); font-size:12px;">–</span>
                   <input type="number" v-model.number="tier.max" class="ide-input" style="width:60px; padding:4px 8px; font-size:12px; text-align:center;" :min="0" :max="100" />
-                  <span style="font-size:11px; color:#64748b;">pts</span>
+                  <span style="font-size:11px; color:var(--text-faint);">pts</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="ide-ia-card" style="margin-bottom:16px;">
-            <div style="font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:12px;">Vista previa del scoring</div>
+            <div style="font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:12px;">Vista previa del scoring</div>
             <div style="display:flex; height:24px; border-radius:8px; overflow:hidden;">
               <div v-for="tier in tiers" :key="tier.id" :style="{ flex: tier.max-tier.min, background: tier.color }" :title="tier.label"></div>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:10px; color:#64748b;">
+            <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:10px; color:var(--text-faint);">
               <span>0</span><span>50</span><span>100</span>
             </div>
           </div>
@@ -127,23 +127,23 @@
             <div v-for="tier in leadTiers" :key="tier.label" class="ide-ia-card" :style="{ border: '1px solid '+tier.color+'44', textAlign:'center', padding:'24px' }">
               <div style="font-size:28px; margin-bottom:10px;">{{ tier.emoji }}</div>
               <div style="font-size:32px; font-weight:900;" :style="{ color: tier.color }">{{ tier.value }}</div>
-              <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin:4px 0;">{{ tier.label }}</div>
-              <div style="font-size:11px; color:#64748b;">Score {{ tier.range }}</div>
+              <div style="font-size:13px; font-weight:700; color:var(--text-primary); margin:4px 0;">{{ tier.label }}</div>
+              <div style="font-size:11px; color:var(--text-faint);">Score {{ tier.range }}</div>
             </div>
           </div>
 
           <div class="ide-ia-card" style="margin-top:16px;">
-            <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:14px;">Conversaciones calificadas</div>
-            <div v-if="conversaciones.length === 0" style="text-align:center; color:#64748b; font-size:13px; padding:16px;">
+            <div style="font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:14px;">Conversaciones calificadas</div>
+            <div v-if="conversaciones.length === 0" style="text-align:center; color:var(--text-faint); font-size:13px; padding:16px;">
               No hay conversaciones con mensajes aún
             </div>
             <div v-else style="display:flex; flex-direction:column; gap:0;">
-              <div v-for="conv in conversaciones" :key="conv.id" style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #1e3a5f22;">
+              <div v-for="conv in conversaciones" :key="conv.id" style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border-card);">
                 <div class="cal-contact-av">{{ (conv.contacto || '?').slice(0,2).toUpperCase() }}</div>
                 <div style="flex:1; min-width:0;">
-                  <div style="font-size:13px; font-weight:600; color:#e2e8f0;">{{ conv.contacto }}</div>
-                  <div style="font-size:11px; color:#64748b;">{{ conv.canal }} · {{ formatDate(conv.fechaCreacion) }}</div>
-                  <div v-if="conv.motivoScore" style="font-size:10px; color:#475569; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" :title="conv.motivoScore">{{ conv.motivoScore }}</div>
+                  <div style="font-size:13px; font-weight:600; color:var(--text-primary);">{{ conv.contacto }}</div>
+                  <div style="font-size:11px; color:var(--text-faint);">{{ conv.canal }} · {{ formatDate(conv.fechaCreacion) }}</div>
+                  <div v-if="conv.motivoScore" style="font-size:10px; color:var(--text-disabled); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" :title="conv.motivoScore">{{ conv.motivoScore }}</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
                   <!-- Score editable inline -->
@@ -190,7 +190,7 @@
         <div style="max-width:680px;">
           <div class="ide-ia-card" style="margin-bottom:16px; background:#1a0f0a; border-color:#c9644244;">
             <div style="font-size:12px; font-weight:700; color:#e8956d; margin-bottom:8px;">💡 ¿Qué es el prompt de calificación?</div>
-            <p style="font-size:12px; color:#94a3b8; line-height:1.6;">Es el conjunto de instrucciones que recibe Claude para evaluar y puntuar cada conversación. Claude analizará el texto y asignará una puntuación del 0 al 100 basándose en estos criterios.</p>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6;">Es el conjunto de instrucciones que recibe Claude para evaluar y puntuar cada conversación. Claude analizará el texto y asignará una puntuación del 0 al 100 basándose en estos criterios.</p>
           </div>
 
           <div class="ide-field" style="margin-bottom:16px;">
@@ -376,16 +376,16 @@ export default {
 
 <style scoped>
 .cal-ico { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.cal-tier-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #0f172a; border-radius: 8px; border: 1px solid; }
+.cal-tier-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg-page); border-radius: 8px; border: 1px solid; }
 .cal-lead-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .cal-contact-av { width: 34px; height: 34px; border-radius: 9px; background: #6366f122; color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
 .cal-tier-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
 .cal-btn-ghost {
-  padding: 8px 14px; border-radius: 8px; border: 1px solid #334155;
-  background: none; color: #64748b; font-size: 12px; font-weight: 600;
+  padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: none; color: var(--text-faint); font-size: 12px; font-weight: 600;
   cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
-.cal-btn-ghost:hover { border-color: #6366f133; color: #94a3b8; }
+.cal-btn-ghost:hover { border-color: #6366f133; color: var(--text-muted); }
 
 .cal-btn-ia {
   width: 28px; height: 28px; border-radius: 6px; border: 1px solid #6366f133;

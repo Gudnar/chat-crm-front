@@ -17,7 +17,7 @@
       </div>
       <div class="cl-header__right">
         <div class="cl-search-wrap">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" class="cl-search-ico"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2" class="cl-search-ico"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input v-model="busqueda" class="cl-search" placeholder="Buscar cliente..." />
         </div>
         <button class="cl-btn-primary" @click="abrirCrear">
@@ -37,7 +37,7 @@
       <!-- Empty -->
       <div v-else-if="!clientesFiltrados.length" class="cl-empty">
         <div class="cl-empty-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-disabled)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
         <div class="cl-empty-title">{{ busqueda ? 'Sin resultados' : 'Sin clientes registrados' }}</div>
         <div class="cl-empty-sub">{{ busqueda ? 'Prueba con otro término de búsqueda' : 'Crea el primer cliente para comenzar' }}</div>
@@ -147,9 +147,9 @@
               <div class="cl-spinner"></div>
             </div>
             <div v-else-if="!usuarios.length" class="cl-u-empty">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              <div style="color:#94a3b8;font-size:13px;font-weight:600;margin-top:10px;">Sin usuarios registrados</div>
-              <div style="color:#475569;font-size:11px;margin-top:4px;">Crea el primer usuario para este cliente</div>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-disabled)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <div style="color:var(--text-muted);font-size:13px;font-weight:600;margin-top:10px;">Sin usuarios registrados</div>
+              <div style="color:var(--text-disabled);font-size:11px;margin-top:4px;">Crea el primer usuario para este cliente</div>
             </div>
             <div v-else class="cl-u-list">
               <div v-for="u in usuarios" :key="u.id" class="cl-u-row">
@@ -324,7 +324,7 @@
 
             <!-- Servicios -->
             <div class="cl-field">
-              <label>Servicios <span style="color:#475569;font-weight:400;">(Enter para agregar)</span></label>
+              <label>Servicios <span style="color:var(--text-disabled);font-weight:400;">(Enter para agregar)</span></label>
               <input
                 v-model="servicioInput"
                 class="cl-input"
@@ -659,7 +659,7 @@ export default {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: #0a0f1e;
+  background: var(--bg-panel);
 }
 
 /* ── Header ── */
@@ -668,7 +668,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  border-bottom: 1px solid #1e3a5f44;
+  border-bottom: 1px solid var(--border-card);
   flex-shrink: 0;
   gap: 12px;
   flex-wrap: wrap;
@@ -683,18 +683,18 @@ export default {
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.cl-header-title { font-size: 18px; font-weight: 800; color: #f1f5f9; margin: 0; }
-.cl-header-sub   { font-size: 12px; color: #475569; margin: 0; }
+.cl-header-title { font-size: 18px; font-weight: 800; color: var(--text-heading); margin: 0; }
+.cl-header-sub   { font-size: 12px; color: var(--text-disabled); margin: 0; }
 
 .cl-search-wrap { position: relative; display: flex; align-items: center; }
 .cl-search-ico  { position: absolute; left: 10px; pointer-events: none; }
 .cl-search {
-  background: #111827; border: 1px solid #1e3a5f44; border-radius: 8px;
-  color: #e2e8f0; font-size: 12px; padding: 7px 12px 7px 30px;
+  background: var(--bg-panel); border: 1px solid var(--border-card); border-radius: 8px;
+  color: var(--text-primary); font-size: 12px; padding: 7px 12px 7px 30px;
   outline: none; font-family: inherit; width: 220px; transition: border-color 0.15s;
 }
 .cl-search:focus { border-color: #6366f1; }
-.cl-search::placeholder { color: #334155; }
+.cl-search::placeholder { color: var(--border); }
 
 /* ── Buttons ── */
 .cl-btn-primary {
@@ -709,12 +709,12 @@ export default {
 .cl-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
 .cl-btn-ghost {
   display: inline-flex; align-items: center; gap: 6px;
-  background: #1e293b; color: #94a3b8;
-  border: 1px solid #334155; border-radius: 8px;
+  background: var(--bg-surface); color: var(--text-muted);
+  border: 1px solid var(--border); border-radius: 8px;
   font-size: 13px; font-weight: 600; padding: 8px 16px;
   cursor: pointer; font-family: inherit; transition: all 0.15s;
 }
-.cl-btn-ghost:hover { background: #263348; }
+.cl-btn-ghost:hover { background: var(--bg-panel); }
 
 /* ── Body / scroll ── */
 .cl-body { flex: 1; overflow-y: auto; }
@@ -725,7 +725,7 @@ export default {
 }
 .cl-spinner {
   width: 32px; height: 32px; border-radius: 50%;
-  border: 3px solid #1e3a5f;
+  border: 3px solid var(--border-card);
   border-top-color: #6366f1;
   animation: spin 0.8s linear infinite;
 }
@@ -737,11 +737,11 @@ export default {
 }
 .cl-empty-icon {
   width: 64px; height: 64px; border-radius: 16px;
-  background: #1e293b; display: flex; align-items: center; justify-content: center;
+  background: var(--bg-surface); display: flex; align-items: center; justify-content: center;
   margin-bottom: 16px;
 }
-.cl-empty-title { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
-.cl-empty-sub   { font-size: 12px; color: #475569; }
+.cl-empty-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.cl-empty-sub   { font-size: 12px; color: var(--text-disabled); }
 
 /* ── Grid ── */
 .cl-grid {
@@ -753,8 +753,8 @@ export default {
 
 /* ── Card ── */
 .cl-card {
-  background: #111827;
-  border: 1px solid #1e3a5f44;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-card);
   border-radius: 14px;
   padding: 16px;
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -768,11 +768,11 @@ export default {
 .cl-avatar {
   width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 17px; font-weight: 800; color: #e2e8f0;
+  font-size: 17px; font-weight: 800; color: var(--text-primary);
 }
 .cl-card-info { flex: 1; min-width: 0; }
-.cl-card-nombre { font-size: 14px; font-weight: 700; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cl-card-slug   { font-size: 11px; color: #475569; font-family: monospace; }
+.cl-card-nombre { font-size: 14px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-card-slug   { font-size: 11px; color: var(--text-disabled); font-family: monospace; }
 
 .cl-plan { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; flex-shrink: 0; }
 .cl-plan--basico      { background: #6366f122; color: #818cf8; }
@@ -781,39 +781,39 @@ export default {
 
 /* ── Card meta ── */
 .cl-card-meta {
-  border-top: 1px solid #1e3a5f33;
+  border-top: 1px solid var(--border-card);
   padding-top: 10px;
   margin-bottom: 10px;
   display: flex; flex-direction: column; gap: 4px;
 }
 .cl-meta-row {
   display: flex; align-items: center; gap: 6px;
-  font-size: 11px; color: #64748b;
+  font-size: 11px; color: var(--text-faint);
 }
 .cl-tags-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
 .cl-tag {
   font-size: 10px; font-weight: 600;
-  background: #0f172a; color: #64748b;
-  border: 1px solid #1e3a5f44;
+  background: var(--bg-page); color: var(--text-faint);
+  border: 1px solid var(--border-card);
   padding: 2px 7px; border-radius: 999px;
 }
-.cl-tag--more { color: #475569; }
+.cl-tag--more { color: var(--text-disabled); }
 
 /* ── Resumen ── */
 .cl-resumen {
   display: flex; gap: 12px; align-items: center;
-  border-top: 1px solid #1e3a5f33;
+  border-top: 1px solid var(--border-card);
   padding-top: 8px; margin-bottom: 8px;
 }
 .cl-res-item {
   display: flex; align-items: center; gap: 4px;
-  font-size: 11px; font-weight: 600; color: #475569;
+  font-size: 11px; font-weight: 600; color: var(--text-disabled);
 }
 
 /* ── Card footer ── */
 .cl-card-ft {
   display: flex; align-items: center; justify-content: space-between;
-  border-top: 1px solid #1e3a5f33; padding-top: 10px;
+  border-top: 1px solid var(--border-card); padding-top: 10px;
 }
 .cl-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
 .cl-status--on  { background: #22c55e18; color: #22c55e; border: 1px solid #22c55e33; }
@@ -822,12 +822,12 @@ export default {
 .cl-card-acts { display: flex; gap: 6px; }
 .cl-act-btn {
   width: 30px; height: 30px; border-radius: 7px;
-  background: #1e293b; border: 1px solid #1e3a5f44;
-  color: #64748b; cursor: pointer;
+  background: var(--bg-surface); border: 1px solid var(--border-card);
+  color: var(--text-faint); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.15s;
 }
-.cl-act-btn:hover         { background: #263348; color: #94a3b8; }
+.cl-act-btn:hover         { background: var(--bg-panel); color: var(--text-muted); }
 .cl-act-btn--gear         { background: #6366f118; border-color: #6366f133; color: #818cf8; }
 .cl-act-btn--gear:hover   { background: #6366f133; }
 .cl-act-btn--del:hover    { background: #ef444412; border-color: #ef444433; color: #ef4444; }
@@ -836,12 +836,12 @@ export default {
 .cl-dialog-hd {
   display: flex; align-items: flex-start; justify-content: space-between;
   padding: 20px 24px 16px;
-  border-bottom: 1px solid #1e3a5f33;
+  border-bottom: 1px solid var(--border-card);
 }
-.cl-dialog-title { font-size: 16px; font-weight: 800; color: #f1f5f9; margin-bottom: 2px; }
-.cl-dialog-sub   { font-size: 12px; color: #475569; }
+.cl-dialog-title { font-size: 16px; font-weight: 800; color: var(--text-heading); margin-bottom: 2px; }
+.cl-dialog-sub   { font-size: 12px; color: var(--text-disabled); }
 .cl-dialog-close {
-  background: none; border: none; color: #475569; cursor: pointer;
+  background: none; border: none; color: var(--text-disabled); cursor: pointer;
   padding: 4px; border-radius: 6px; transition: color 0.15s;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
@@ -855,34 +855,34 @@ export default {
 .cl-dialog-ft {
   display: flex; justify-content: flex-end; gap: 8px;
   padding: 14px 24px;
-  border-top: 1px solid #1e3a5f33;
+  border-top: 1px solid var(--border-card);
 }
 
 /* ── Form ── */
 .cl-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .cl-field { display: flex; flex-direction: column; gap: 5px; }
-.cl-field label { font-size: 11px; font-weight: 700; color: #94a3b8; }
-.cl-field-hint  { font-size: 10px; color: #475569; }
+.cl-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.cl-field-hint  { font-size: 10px; color: var(--text-disabled); }
 
 .cl-input {
-  background: #0f172a; border: 1px solid #1e3a5f; border-radius: 8px;
-  color: #e2e8f0; font-size: 13px; padding: 9px 11px; outline: none;
+  background: var(--bg-page); border: 1px solid var(--border-card); border-radius: 8px;
+  color: var(--text-primary); font-size: 13px; padding: 9px 11px; outline: none;
   font-family: inherit; transition: border-color 0.15s; width: 100%;
 }
 .cl-input:focus { border-color: #6366f1; }
-.cl-input::placeholder { color: #334155; }
+.cl-input::placeholder { color: var(--border); }
 
 .cl-select {
-  background: #0f172a; border: 1px solid #1e3a5f; border-radius: 8px;
-  color: #e2e8f0; font-size: 13px; padding: 9px 11px; outline: none;
+  background: var(--bg-page); border: 1px solid var(--border-card); border-radius: 8px;
+  color: var(--text-primary); font-size: 13px; padding: 9px 11px; outline: none;
   font-family: inherit; width: 100%; appearance: none;
 }
 
 .cl-dias-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 .cl-dia {
   padding: 5px 12px; border-radius: 6px;
-  background: #0f172a; border: 1px solid #1e3a5f44;
-  font-size: 11px; font-weight: 600; color: #64748b;
+  background: var(--bg-page); border: 1px solid var(--border-card);
+  font-size: 11px; font-weight: 600; color: var(--text-faint);
   cursor: pointer; user-select: none; transition: all 0.12s;
 }
 .cl-dia--on { background: #6366f122; border-color: #6366f144; color: #818cf8; }
@@ -900,7 +900,7 @@ export default {
 .cl-toggle-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .cl-toggle {
   width: 40px; height: 22px; border-radius: 999px;
-  background: #334155; position: relative; transition: background 0.2s; flex-shrink: 0;
+  background: var(--border); position: relative; transition: background 0.2s; flex-shrink: 0;
 }
 .cl-toggle--on { background: #6366f1; }
 .cl-toggle-knob {
@@ -909,7 +909,7 @@ export default {
   background: #fff; transition: transform 0.2s;
 }
 .cl-toggle--on .cl-toggle-knob { transform: translateX(18px); }
-.cl-toggle-lbl { font-size: 13px; color: #cbd5e1; }
+.cl-toggle-lbl { font-size: 13px; color: var(--text-body); }
 
 /* ── Modal backdrop ── */
 .cl-backdrop {
@@ -923,8 +923,8 @@ export default {
   padding: 20px;
 }
 .cl-dialog {
-  background: #111827;
-  border: 1px solid #1e3a5f55;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-card);
   border-radius: 16px;
   overflow: hidden;
   width: 100%;
@@ -960,23 +960,23 @@ export default {
 .cl-u-list { display: flex; flex-direction: column; gap: 8px; }
 .cl-u-row {
   display: flex; align-items: center; gap: 12px;
-  background: #0f172a; border: 1px solid #1e3a5f33;
+  background: var(--bg-page); border: 1px solid var(--border-card);
   border-radius: 10px; padding: 10px 12px;
   transition: border-color 0.15s;
 }
-.cl-u-row:hover { border-color: #1e3a5f88; }
+.cl-u-row:hover { border-color: color-mix(in srgb, var(--border-card) 53%, transparent); }
 .cl-u-avatar {
   width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 800; color: #e2e8f0;
+  font-size: 14px; font-weight: 800; color: var(--text-primary);
 }
 .cl-u-info { flex: 1; min-width: 0; }
-.cl-u-nombre { font-size: 13px; font-weight: 700; color: #e2e8f0; }
-.cl-u-meta   { font-size: 11px; color: #475569; font-family: monospace; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-u-nombre { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.cl-u-meta   { font-size: 11px; color: var(--text-disabled); font-family: monospace; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cl-u-roles  { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
 .cl-u-badge {
   font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
-  background: #1e293b; color: #64748b; border: 1px solid #334155;
+  background: var(--bg-surface); color: var(--text-faint); border: 1px solid var(--border);
 }
 .cl-u-badge--admin { background: #6366f118; color: #818cf8; border-color: #6366f133; }
 .cl-u-badge--colab { background: #0ea5e918; color: #38bdf8; border-color: #0ea5e933; }
