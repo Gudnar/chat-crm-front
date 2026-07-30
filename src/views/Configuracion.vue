@@ -553,12 +553,12 @@ export default {
     },
     async cargarAgentes() {
       try {
-        this.agentes = (await this.$service.list('agentes')) || [];
+        this.agentes = (await this.$service.list('agentes', { clienteId: this.clienteId })) || [];
       } catch (_e) { /* silently ignore */ }
     },
     async cargarConfigWa() {
       try {
-        const cfg = await this.$service.get('whatsapp/config');
+        const cfg = await this.$service.list('whatsapp/config', { clienteId: this.clienteId });
         if (!cfg) return;
         this.waForm.phoneNumberId = cfg.phoneNumberId || '';
         this.waForm.wabaId        = cfg.wabaId        || '';
@@ -574,7 +574,7 @@ export default {
     },
     async actualizarEstadoWa() {
       try {
-        this.waStatus = await this.$service.get('whatsapp/status') || { valida: false };
+        this.waStatus = await this.$service.list('whatsapp/status', { clienteId: this.clienteId }) || { valida: false };
       } catch (_e) { /* silently ignore */ }
     },
 
@@ -634,7 +634,7 @@ export default {
       this.waTestando = true;
       this.waTestResult = null;
       try {
-        this.waTestResult = await this.$service.post('whatsapp/test-connection', {
+        this.waTestResult = await this.$service.post(`whatsapp/test-connection?clienteId=${this.clienteId}`, {
           accessToken: token || undefined, // undefined will use saved token in backend
           phoneNumberId: this.waForm.phoneNumberId,
         });
@@ -645,7 +645,7 @@ export default {
     async guardarWa() {
       this.guardando = true;
       try {
-        await this.$service.post('whatsapp/config', {
+        await this.$service.post(`whatsapp/config?clienteId=${this.clienteId}`, {
           accessToken:   this.waForm.accessToken   || undefined,
           phoneNumberId: this.waForm.phoneNumberId,
           wabaId:        this.waForm.wabaId,

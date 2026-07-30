@@ -85,6 +85,7 @@ export default {
     formH: { nombre: '', label: '', descripcion: '' },
   }),
   computed: {
+    clienteId() { return this.$store.getters.clienteId || this.$storage.get('user')?.clienteId || null; },
     stats() {
       return [
         { label: 'Activas',           value: this.herramientas.filter(h => h.activa).length,                        color: '#22c55e' },
@@ -104,14 +105,14 @@ export default {
     async cargar() {
       try {
         this.loading = true;
-        this.herramientas = await this.$service.list(`herramientas/agente/${this.agenteId}`) || [];
+        this.herramientas = await this.$service.list(`herramientas/agente/${this.agenteId}`, { clienteId: this.clienteId }) || [];
       } finally {
         this.loading = false;
       }
     },
     async toggle(h) {
       try {
-        await this.$service.put(`herramientas/${h.id}`, { ...h, activa: !h.activa });
+        await this.$service.put(`herramientas/${h.id}?clienteId=${this.clienteId || ''}`, { ...h, activa: !h.activa });
         h.activa = !h.activa;
       } catch (e) {
         this.$message.error('Error al actualizar');
@@ -121,7 +122,7 @@ export default {
       if (!this.formH.nombre || !this.formH.label) { this.$message.error('Nombre y etiqueta son obligatorios'); return; }
       this.saving = true;
       try {
-        await this.$service.post('herramientas', { ...this.formH, agenteId: this.agenteId });
+        await this.$service.post(`herramientas?clienteId=${this.clienteId || ''}`, { ...this.formH, agenteId: this.agenteId });
         this.$message.success('Herramienta creada');
         this.dialogAdd = false;
         this.formH = { nombre: '', label: '', descripcion: '' };

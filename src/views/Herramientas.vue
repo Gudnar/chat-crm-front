@@ -70,6 +70,7 @@ export default {
   }),
   computed: {
     agenteActual() { return this.agentes.find(a => a.id === this.agenteSeleccionado) || null; },
+    clienteId() { return this.$store.getters.clienteId || this.$storage.get('user')?.clienteId || null; },
   },
   async mounted() {
     if (!this.agenteId) await this.cargarAgentes();
@@ -78,7 +79,7 @@ export default {
     async cargarAgentes() {
       try {
         this.loadingAgentes = true;
-        this.agentes = await this.$service.list('agentes') || [];
+        this.agentes = await this.$service.list('agentes', { clienteId: this.clienteId }) || [];
         if (this.agentes.length > 0) this.agenteSeleccionado = this.agentes[0].id;
       } finally {
         this.loadingAgentes = false;

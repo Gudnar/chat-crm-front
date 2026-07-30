@@ -330,6 +330,9 @@ export default {
       ],
     };
   },
+  computed: {
+    clienteId() { return this.$store.getters.clienteId || this.$storage.get('user')?.clienteId || null; },
+  },
   async mounted() {
     await this.cargar();
   },
@@ -337,7 +340,7 @@ export default {
     async cargar() {
       try {
         this.loading = true;
-        this.agente = await this.$service.get('agentes', this.$route.params.id);
+        this.agente = await this.$service.get(`agentes/${this.$route.params.id}?clienteId=${this.clienteId || ''}`);
         if (this.agente) {
           this.formConfig = {
             nombre: this.agente.nombre || '',
@@ -359,7 +362,7 @@ export default {
       if (!this.formConfig.nombre) { this.$message.error('El nombre es obligatorio'); return; }
       this.saving = true;
       try {
-        await this.$service.put(`agentes/${this.agente.id}`, this.formConfig);
+        await this.$service.put(`agentes/${this.agente.id}?clienteId=${this.clienteId || ''}`, this.formConfig);
         Object.assign(this.agente, this.formConfig);
         this.$message.success('Agente actualizado');
       } catch (e) {

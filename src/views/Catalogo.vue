@@ -94,6 +94,7 @@
             <th>Precio</th>
             <th>Oferta</th>
             <th>Stock</th>
+            <th>Disponibilidad</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -115,6 +116,10 @@
             </td>
             <td :style="{ color: p.stock > 0 ? '#22c55e' : '#ef4444', fontWeight: '600' }">
               {{ p.stock != null ? (p.stock > 0 ? p.stock + ' uds.' : 'Agotado') : '—' }}
+            </td>
+            <td>
+              <span :style="disponibilidadBadgeStyle(p)">{{ disponibilidadLabel(p) }}</span>
+              <div v-if="esProximamente(p)" style="font-size:10px; color:var(--text-faint); margin-top:2px;">{{ formatearFecha(p.fechaDisponibilidad) }}</div>
             </td>
             <td>
               <span v-if="p.activo" style="background:#22c55e33; color:#22c55e; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600;">Activo</span>
@@ -209,6 +214,11 @@
             <div class="ide-field">
               <label>Stock <span style="color:var(--text-disabled); font-size:10px;">(opcional)</span></label>
               <input v-model.number="form.stock" type="number" min="0" class="ide-input" placeholder="Vacío = sin seguimiento" />
+            </div>
+            <div class="ide-field">
+              <label>Fecha disponibilidad <span style="color:var(--text-disabled); font-size:10px;">(opcional)</span></label>
+              <input v-model="form.fechaDisponibilidad" type="date" class="ide-input" />
+              <span style="font-size:10px; color:var(--text-disabled);">Vacío = disponible desde siempre. Fecha futura = el agente avisa que aún no llega.</span>
             </div>
             <div class="ide-field" style="grid-column:span 2;">
               <label>Descripción</label>
@@ -332,7 +342,7 @@ export default {
       form: {
         nombre: '', marca: '', modelo: '', categoria: '',
         descripcion: '', precio: null, precioOferta: null,
-        moneda: 'PEN', stock: null, activo: true,
+        moneda: 'PEN', stock: null, fechaDisponibilidad: '', activo: true,
       },
       dialogImportar: false,
       importando: false,
@@ -383,6 +393,23 @@ export default {
       const base = (process.env.VUE_APP_BASE_SERVER || 'http://localhost:3001/api/').replace(/\/api\/?$/, '');
       return `${base}/uploads/${filename}`;
     },
+    esProximamente(p) {
+      if (!p.fechaDisponibilidad) return false;
+      const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+      return new Date(p.fechaDisponibilidad) > hoy;
+    },
+    disponibilidadLabel(p) {
+      if (this.esProximamente(p)) return 'Próximamente';
+      return p.stock != null ? (p.stock > 0 ? 'Disponible' : 'Agotado') : 'Disponible';
+    },
+    disponibilidadBadgeStyle(p) {
+      const color = this.esProximamente(p) ? '#f59e0b' : ((p.stock == null || p.stock > 0) ? '#22c55e' : '#ef4444');
+      return { background: `${color}22`, color, padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600' };
+    },
+    formatearFecha(fecha) {
+      if (!fecha) return '';
+      return new Date(fecha).toLocaleDateString('es-BO', { day: 'numeric', month: 'short', year: 'numeric' });
+    },
     abrirForm(producto) {
       this.editandoProducto = producto || null;
       this.form = producto
@@ -390,9 +417,10 @@ export default {
             nombre: producto.nombre || '', marca: producto.marca || '', modelo: producto.modelo || '',
             categoria: producto.categoria || '', descripcion: producto.descripcion || '',
             precio: producto.precio, precioOferta: producto.precioOferta || null,
-            moneda: producto.moneda || 'PEN', stock: producto.stock ?? null, activo: producto.activo,
+            moneda: producto.moneda || 'PEN', stock: producto.stock ?? null,
+            fechaDisponibilidad: (producto.fechaDisponibilidad || '').slice(0, 10), activo: producto.activo,
           }
-        : { nombre: '', marca: '', modelo: '', categoria: '', descripcion: '', precio: null, precioOferta: null, moneda: 'PEN', stock: null, activo: true };
+        : { nombre: '', marca: '', modelo: '', categoria: '', descripcion: '', precio: null, precioOferta: null, moneda: 'PEN', stock: null, fechaDisponibilidad: '', activo: true };
       this.dialogForm = true;
     },
     async guardar() {
@@ -400,8 +428,10 @@ export default {
       if (this.form.precio == null || this.form.precio === '') { this.$message.error('El precio es obligatorio'); return; }
       this.saving = true;
       try {
+        // fechaDisponibilidad vacía debe ir como undefined, no '' (@IsDateString rechaza cadena vacía)
+        const payload = { ...this.form, fechaDisponibilidad: this.form.fechaDisponibilidad || undefined };
         if (this.editandoProducto) {
-          const updated = await this.$service.put(`productos/${this.editandoProducto.id}`, this.form);
+          const updated = await this.$service.put(`productos/${this.editandoProducto.id}`, payload);
           const idx = this.productos.findIndex(p => p.id === this.editandoProducto.id);
           if (idx !== -1) {
             const merged = Object.assign({}, this.productos[idx], updated);
@@ -410,7 +440,7 @@ export default {
           }
           this.$message.success('Producto actualizado');
         } else {
-          const created = await this.$service.post('productos', this.form);
+          const created = await this.$service.post('productos', payload);
           this.productos.unshift(created);
           this.editandoProducto = this.productos[0];
           this.$message.success('Producto creado — ahora puedes subir imágenes');

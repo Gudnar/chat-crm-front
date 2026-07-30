@@ -121,9 +121,12 @@ export default {
             nombres: datos.nombres,
             rol: datos.rol,
             clienteId: datos.clienteId ?? null,
+            tema: datos.tema || 'dark',
           };
           this.$storage.set('token', datos.access_token);
           this.$storage.set('user', userInfo);
+          this.$storage.set('theme', userInfo.tema);
+          document.documentElement.setAttribute('data-theme', userInfo.tema);
           this.$store.commit('setAuth', true);
           this.$store.commit('setUser', userInfo);
           this.$store.commit('setClienteId', userInfo.clienteId);

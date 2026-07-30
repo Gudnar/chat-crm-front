@@ -241,16 +241,35 @@ export default {
   },
   mounted() {
     this._restoreAuth();
+    // El tema guardado en BD (por usuario) manda sobre el caché local del navegador,
+    // así una misma cuenta ve su tema elegido aunque cambie de dispositivo/navegador.
+    const temaDeUsuario = this.currentUser?.tema;
+    if (temaDeUsuario && temaDeUsuario !== this.tema) {
+      this.tema = temaDeUsuario;
+      document.documentElement.setAttribute('data-theme', this.tema);
+      this.$storage.set('theme', this.tema);
+    }
     this._timer = setInterval(() => { this.time = new Date(); }, 60000);
   },
   beforeDestroy() {
     clearInterval(this._timer);
   },
   methods: {
-    toggleTema() {
+    async toggleTema() {
       this.tema = this.tema === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', this.tema);
       this.$storage.set('theme', this.tema);
+
+      // Persistir por usuario en BD, para que viaje entre dispositivos/navegadores.
+      const user = this.$storage.get('user');
+      if (user) {
+        user.tema = this.tema;
+        this.$storage.set('user', user);
+        this.$store.commit('setUser', user);
+      }
+      try {
+        await this.$service.patch('auth/tema', { tema: this.tema });
+      } catch (e) { /* si falla, el tema ya quedó aplicado localmente; se reintentará al cambiar de nuevo */ }
     },
     _restoreAuth() {
       if (!this.$store.getters.isAuth) {
