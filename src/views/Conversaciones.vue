@@ -688,8 +688,8 @@ export default {
 
       // Sort by date descending (most recent first)
       list.sort((a, b) => {
-        const dateA = new Date(a._fecha_modificacion || a.fechaCreacion || 0);
-        const dateB = new Date(b._fecha_modificacion || b.fechaCreacion || 0);
+        const dateA = new Date(a.fechaModificacion || a.fechaCreacion || 0);
+        const dateB = new Date(b.fechaModificacion || b.fechaCreacion || 0);
         return dateB - dateA;
       });
 
@@ -748,8 +748,8 @@ export default {
 
         // Sort by date descending (most recent first)
         lista.sort((a, b) => {
-          const dateA = new Date(a._fecha_modificacion || a.fechaCreacion || 0);
-          const dateB = new Date(b._fecha_modificacion || b.fechaCreacion || 0);
+          const dateA = new Date(a.fechaModificacion || a.fechaCreacion || 0);
+          const dateB = new Date(b.fechaModificacion || b.fechaCreacion || 0);
           return dateB - dateA;
         });
 
