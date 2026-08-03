@@ -1,11 +1,11 @@
 <template>
-  <!-- Standalone route: 3-column inbox layout -->
+  <!-- Standalone route: 3-column inbox layout (colapsa a 1-2 columnas en tablet/teléfono) -->
   <div v-if="!agenteId" class="cv-root">
 
     <!-- ══════════════════════════════════════
          COLUMN 1 — Conversation List (320px)
     ══════════════════════════════════════ -->
-    <div class="cv-col-left">
+    <div class="cv-col-left" :class="{ 'cv-col-left--oculta-movil': seleccionada }">
 
       <!-- Header -->
       <div class="cv-left-header">
@@ -20,6 +20,11 @@
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <polyline points="23 4 23 10 17 10"/>
                 <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+              </svg>
+            </button>
+            <button class="cv-filtros-toggle-btn" @click="filtrosExpandidos = !filtrosExpandidos" :title="filtrosExpandidos ? 'Ocultar filtros' : 'Mostrar filtros'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
               </svg>
             </button>
             <button class="cv-nueva-btn" @click="$router.push('/admin/nueva-conversacion').catch(()=>{})">
@@ -60,8 +65,8 @@
         >{{ est.label }}</button>
       </div>
 
-      <!-- Date & Score filters -->
-      <div style="padding:10px 12px; border-bottom:1px solid var(--border-card); display:flex; flex-direction:column; gap:8px; flex-shrink:0;">
+      <!-- Date & Score filters — colapsables en teléfono via cv-filtros-toggle-btn -->
+      <div class="cv-filters-block" :class="{ 'cv-filters-block--expandido': filtrosExpandidos }" style="padding:10px 12px; border-bottom:1px solid var(--border-card); display:flex; flex-direction:column; gap:8px; flex-shrink:0;">
         <!-- Filter by days -->
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="font-size:10px; font-weight:700; color:var(--text-faint); flex-shrink:0;">📅 DÍAS:</span>
@@ -154,12 +159,18 @@
     <!-- ══════════════════════════════════════
          COLUMN 2 — Chat / Messages (flex:1)
     ══════════════════════════════════════ -->
-    <div class="cv-col-mid">
+    <div class="cv-col-mid" :class="{ 'cv-col-mid--activa-movil': seleccionada }">
       <template v-if="seleccionada">
 
         <!-- ── Chat Header ── -->
         <div class="cv-chat-header">
           <div class="cv-chat-header-left">
+            <!-- Volver a la lista (solo teléfono) -->
+            <button class="cv-back-btn" @click="volverALista" title="Volver a conversaciones">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
             <!-- Avatar with platform badge -->
             <div class="cv-chat-avatar-wrap">
               <div class="cv-avatar-md" :style="{ background: canalColor(seleccionada.canal)+'33', color: canalColor(seleccionada.canal) }">
@@ -189,7 +200,7 @@
             <span class="cv-score-badge" :style="{ color: scoreColor(seleccionada.score) }">
               ⭐ {{ seleccionada.score }}
             </span>
-            <button class="cv-detalle-btn">Detalle</button>
+            <button class="cv-detalle-btn cv-detalle-btn--toggle" @click="panelDetalleAbierto = true">Detalle</button>
             <button
               class="cv-detalle-btn"
               style="color:#22c55e; border-color:#22c55e44;"
@@ -251,7 +262,17 @@
                   {{ nombreRemitente(seleccionada).slice(0, 2).toUpperCase() }}
                 </div>
                 <div class="cv-msg-content">
-                  <div class="cv-bubble cv-bubble--user">{{ limpiarContenido(msg.content) }}</div>
+                  <div v-if="msg.adjunto" class="cv-adjunto">
+                    <img v-if="msg.adjunto.tipo === 'image'" :src="msg.adjunto.url" class="cv-adjunto-img" @click="abrirAdjunto(msg.adjunto.url)" />
+                    <audio v-else-if="msg.adjunto.tipo === 'audio'" :src="msg.adjunto.url" controls class="cv-adjunto-audio"></audio>
+                    <a v-else :href="msg.adjunto.url" target="_blank" rel="noopener" class="cv-adjunto-doc">
+                      📄 {{ msg.adjunto.nombre || 'Documento' }}
+                    </a>
+                  </div>
+                  <a v-if="msg.ubicacion" :href="linkMapa(msg.ubicacion)" target="_blank" rel="noopener" class="cv-adjunto-doc">
+                    📍 {{ msg.ubicacion.nombre || 'Ver ubicación compartida' }}
+                  </a>
+                  <div v-if="msg.content && !esPlaceholderAdjunto(msg)" class="cv-bubble cv-bubble--user">{{ limpiarContenido(msg.content) }}</div>
                   <div class="cv-msg-meta cv-msg-meta--left">
                     <span>{{ nombreRemitente(seleccionada) }}</span>
                     <span v-if="msg.timestamp" class="cv-msg-time">· {{ formatTime(msg.timestamp) }}</span>
@@ -262,7 +283,23 @@
               <!-- Agent message: bubble LEFT, avatar RIGHT -->
               <template v-else>
                 <div class="cv-msg-content cv-msg-content--agent">
-                  <div class="cv-bubble cv-bubble--ai">{{ msg.content }}</div>
+                  <div v-if="msg.adjunto" class="cv-adjunto">
+                    <img v-if="msg.adjunto.tipo === 'image'" :src="msg.adjunto.url" class="cv-adjunto-img" @click="abrirAdjunto(msg.adjunto.url)" />
+                    <audio v-else-if="msg.adjunto.tipo === 'audio'" :src="msg.adjunto.url" controls class="cv-adjunto-audio"></audio>
+                    <a v-else :href="msg.adjunto.url" target="_blank" rel="noopener" class="cv-adjunto-doc">
+                      📄 {{ msg.adjunto.nombre || 'Documento' }}
+                    </a>
+                  </div>
+                  <div v-if="msg.content && !esPlaceholderAdjunto(msg)" class="cv-bubble cv-bubble--ai">{{ msg.content }}</div>
+                  <div v-if="msg.interactivo" class="cv-opciones-chips">
+                    <span v-for="boton in msg.interactivo.botones" :key="boton.id" class="cv-opciones-chip">{{ boton.titulo }}</span>
+                  </div>
+                  <div v-if="msg.enlace" class="cv-opciones-chips">
+                    <a :href="msg.enlace.url" target="_blank" rel="noopener" class="cv-opciones-chip cv-enlace-chip">🔗 {{ msg.enlace.texto }}</a>
+                  </div>
+                  <div v-if="msg.pidioUbicacion" class="cv-opciones-chips">
+                    <span class="cv-opciones-chip">📍 Se solicitó la ubicación</span>
+                  </div>
                   <div class="cv-msg-meta cv-msg-meta--right">
                     <span>Agente IA</span>
                     <span v-if="msg.timestamp" class="cv-msg-time">· {{ formatTime(msg.timestamp) }}</span>
@@ -287,44 +324,60 @@
         <!-- ── Reply input area ── -->
         <div class="cv-input-area">
           <div v-if="errorEnvio" class="cv-error-bar">{{ errorEnvio }}</div>
+
+          <!-- Previsualización del archivo elegido, antes de enviar -->
+          <div v-if="archivoSeleccionado" class="cv-adjunto-preview">
+            <img v-if="previsualizacionUrl" :src="previsualizacionUrl" class="cv-adjunto-preview-img" />
+            <span v-else class="cv-adjunto-preview-doc">📄 {{ archivoSeleccionado.name }}</span>
+            <button class="cv-adjunto-preview-quitar" @click="cancelarArchivo" title="Quitar">✕</button>
+          </div>
+
+          <input ref="inputArchivo" type="file" style="display:none" @change="onArchivoElegido" />
+          <input ref="inputImagen" type="file" accept="image/*" style="display:none" @change="onArchivoElegido" />
+
           <div class="cv-input-box" :class="{ 'cv-input-box--focus': inputFocus }">
-            <button class="cv-icon-action-btn" title="Adjuntar archivo">
+            <button class="cv-icon-action-btn" title="Adjuntar archivo" :disabled="subiendoArchivo" @click="$refs.inputArchivo.click()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
               </svg>
             </button>
-            <button class="cv-icon-action-btn" title="Imagen">
+            <button class="cv-icon-action-btn" title="Imagen" :disabled="subiendoArchivo" @click="$refs.inputImagen.click()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                 <circle cx="8.5" cy="8.5" r="1.5"/>
                 <polyline points="21 15 16 10 5 21"/>
               </svg>
             </button>
-            <button class="cv-icon-action-btn" title="Emoji">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-                <line x1="9" y1="9" x2="9.01" y2="9" stroke-linecap="round" stroke-width="2.5"/>
-                <line x1="15" y1="9" x2="15.01" y2="9" stroke-linecap="round" stroke-width="2.5"/>
-              </svg>
-            </button>
+            <div class="cv-emoji-wrap">
+              <button class="cv-icon-action-btn" title="Emoji" @click="mostrarEmojiPicker = !mostrarEmojiPicker">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                  <line x1="9" y1="9" x2="9.01" y2="9" stroke-linecap="round" stroke-width="2.5"/>
+                  <line x1="15" y1="9" x2="15.01" y2="9" stroke-linecap="round" stroke-width="2.5"/>
+                </svg>
+              </button>
+              <div v-if="mostrarEmojiPicker" class="cv-emoji-popover">
+                <Picker :data="emojiIndex" set="google" title="Emojis" :native="true" @select="onEmojiSeleccionado" />
+              </div>
+            </div>
             <textarea
               v-model="respuesta"
               @keydown.enter.exact.prevent="enviarRespuesta"
               @focus="inputFocus = true"
               @blur="inputFocus = false"
               class="cv-reply-input"
-              placeholder="Escribe un mensaje..."
+              :placeholder="archivoSeleccionado ? 'Agregar un comentario (opcional)...' : 'Escribe un mensaje...'"
               rows="1"
               :disabled="enviando"
             ></textarea>
-            <button @click="enviarRespuesta" class="cv-send-btn" :disabled="!respuesta.trim() || enviando">
-              <svg v-if="!enviando" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <button @click="enviarRespuesta" class="cv-send-btn" :disabled="(!respuesta.trim() && !archivoSeleccionado) || enviando || subiendoArchivo">
+              <svg v-if="!enviando && !subiendoArchivo" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="22" y1="2" x2="11" y2="13"/>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"/>
               </svg>
               <div v-else class="cv-spinner cv-spinner--14 cv-spinner--white"></div>
-              <span v-if="!enviando" class="cv-send-label">Enviar</span>
+              <span v-if="!enviando && !subiendoArchivo" class="cv-send-label">Enviar</span>
             </button>
           </div>
           <div v-if="seleccionada.canal === 'whatsapp'" class="cv-wa-hint">
@@ -346,10 +399,18 @@
     </div><!-- /cv-col-mid -->
 
 
+    <!-- Backdrop del panel de detalle en tablet/teléfono -->
+    <div v-if="seleccionada && panelDetalleAbierto" class="cv-detalle-backdrop" @click="panelDetalleAbierto = false"></div>
+
     <!-- ══════════════════════════════════════
-         COLUMN 3 — Right detail panel (280px)
+         COLUMN 3 — Right detail panel (280px, drawer en tablet/teléfono)
     ══════════════════════════════════════ -->
-    <div v-if="seleccionada" class="cv-col-right">
+    <div v-if="seleccionada" class="cv-col-right" :class="{ 'cv-col-right--abierto-movil': panelDetalleAbierto }">
+      <button class="cv-detalle-close-btn" @click="panelDetalleAbierto = false" title="Cerrar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
 
       <!-- ORIGEN DE LA CONVERSACIÓN -->
       <div v-if="seleccionada.notas && seleccionada.notas.startsWith('Post:')" class="cv-panel-section">
@@ -574,12 +635,20 @@
 </template>
 
 <script>
+import { Picker, EmojiIndex } from 'emoji-mart-vue-fast';
+import emojiData from 'emoji-mart-vue-fast/data/all.json';
+import 'emoji-mart-vue-fast/css/emoji-mart.css';
+
 const POLL_INTERVAL = 8000;
+const emojiIndex = new EmojiIndex(emojiData);
 
 export default {
   name: 'Conversaciones',
+  components: { Picker },
   props: { agenteId: { type: String, default: null } },
   data: () => ({
+    emojiIndex,
+    mostrarEmojiPicker: false,
     conversaciones: [],
     loading: true,
     cargandoMensajes: false,
@@ -609,6 +678,11 @@ export default {
     nuevaEtiqueta: '',
     editandoNombre: false,
     nuevoNombre: '',
+    filtrosExpandidos: false,
+    panelDetalleAbierto: false,
+    archivoSeleccionado: null,
+    previsualizacionUrl: null,
+    subiendoArchivo: false,
     filtros: [
       { id: 'todas',     label: 'Todos'      },
       { id: 'whatsapp',  label: 'WhatsApp'   },
@@ -701,9 +775,11 @@ export default {
     if (!this.agenteId) this.iniciarPolling();
     this.cargarAgentes();
     this.cargarPosts();
+    document.addEventListener('click', this.cerrarEmojiPickerSiEsAfuera, true);
   },
   beforeDestroy() {
     this.detenerPolling();
+    document.removeEventListener('click', this.cerrarEmojiPickerSiEsAfuera, true);
   },
   methods: {
     async crearOportunidad() {
@@ -801,9 +877,15 @@ export default {
       } catch (_e) { return null; }
     },
 
+    volverALista() {
+      this.seleccionada = null;
+      this.seleccionadaId = null;
+      this.panelDetalleAbierto = false;
+    },
     async seleccionar(conv) {
       this.seleccionadaId = conv.id;
       this.seleccionada = conv;
+      this.panelDetalleAbierto = false;
       this.postRelacionado = this.resolverPostDeConversacion(conv);
       this.respuesta = '';
       this.errorEnvio = null;
@@ -838,14 +920,57 @@ export default {
       if (this.pollTimer) { clearInterval(this.pollTimer); this.pollTimer = null; }
     },
 
+    onEmojiSeleccionado(emoji) {
+      this.respuesta += emoji.native;
+      this.mostrarEmojiPicker = false;
+    },
+
+    cerrarEmojiPickerSiEsAfuera(event) {
+      if (!this.mostrarEmojiPicker) return;
+      const wrap = this.$el.querySelector && this.$el.querySelector('.cv-emoji-wrap');
+      if (wrap && !wrap.contains(event.target)) this.mostrarEmojiPicker = false;
+    },
+
+    onArchivoElegido(event) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = ''; // permite volver a elegir el mismo archivo después
+      if (!file) return;
+      this.archivoSeleccionado = file;
+      this.previsualizacionUrl = file.type.startsWith('image/') ? URL.createObjectURL(file) : null;
+    },
+
+    cancelarArchivo() {
+      if (this.previsualizacionUrl) URL.revokeObjectURL(this.previsualizacionUrl);
+      this.archivoSeleccionado = null;
+      this.previsualizacionUrl = null;
+    },
+
     async enviarRespuesta() {
       const texto = this.respuesta.trim();
-      if (!texto || this.enviando || !this.seleccionada) return;
+      if ((!texto && !this.archivoSeleccionado) || this.enviando || this.subiendoArchivo || !this.seleccionada) return;
       this.enviando = true;
       this.errorEnvio = null;
       try {
         const canal = this.seleccionada.canal;
-        if (canal === 'whatsapp') {
+        let adjunto = null;
+
+        if (this.archivoSeleccionado) {
+          this.subiendoArchivo = true;
+          const formData = new FormData();
+          formData.append('file', this.archivoSeleccionado);
+          adjunto = await this.$service.post('whatsapp/upload', formData);
+          this.subiendoArchivo = false;
+
+          if (canal === 'whatsapp') {
+            await this.$service.post('whatsapp/send-adjunto', {
+              celular: this.seleccionada.contacto,
+              url: adjunto.url,
+              tipo: adjunto.tipo,
+              nombre: adjunto.nombre,
+              caption: texto || undefined,
+            });
+          }
+        } else if (canal === 'whatsapp') {
           await this.$service.post('whatsapp/send', { celular: this.seleccionada.contacto, mensaje: texto });
         } else if (canal === 'facebook' || canal === 'instagram') {
           await this.$service.post('red-social/send-dm', {
@@ -854,13 +979,19 @@ export default {
             plataforma: canal,
           });
         }
-        await this.$service.post(`conversaciones/${this.seleccionada.id}/mensajes`, { role: 'assistant', content: texto });
+        await this.$service.post(`conversaciones/${this.seleccionada.id}/mensajes`, {
+          role: 'assistant',
+          content: texto,
+          ...(adjunto ? { adjunto } : {}),
+        });
         this.respuesta = '';
+        this.cancelarArchivo();
         await this.seleccionar(this.seleccionada);
       } catch (e) {
         this.errorEnvio = e?.response?.data?.message || e?.message || 'Error al enviar el mensaje';
       } finally {
         this.enviando = false;
+        this.subiendoArchivo = false;
       }
     },
 
@@ -1077,6 +1208,21 @@ export default {
       // Quita el prefijo "[Comentario de NAME]: " del texto del mensaje
       const match = content.match(/^\[Comentario de .+?\]: (.+)$/s);
       return match ? match[1].trim() : content;
+    },
+
+    // El backend guarda un texto placeholder ("[Imagen adjunta]", etc.) cuando el
+    // adjunto no trae caption — evita mostrar ese texto duplicado junto al archivo.
+    esPlaceholderAdjunto(msg) {
+      if (!msg.adjunto || !msg.content) return false;
+      return /^\[(Imagen adjunta|Documento adjunto|Nota de voz \/ audio adjunto)/.test(msg.content);
+    },
+
+    abrirAdjunto(url) {
+      window.open(url, '_blank', 'noopener');
+    },
+
+    linkMapa(ubicacion) {
+      return `https://www.google.com/maps?q=${ubicacion.latitud},${ubicacion.longitud}`;
     },
 
     nombreRemitente(conv) {
@@ -1582,6 +1728,46 @@ export default {
   border-radius: 16px 4px 16px 16px;
 }
 
+/* Adjuntos (imagen/documento/audio recibidos o enviados) */
+.cv-adjunto { margin-bottom: 4px; }
+.cv-adjunto-img {
+  max-width: 260px;
+  max-height: 260px;
+  border-radius: 12px;
+  border: 1px solid var(--border-card);
+  cursor: pointer;
+  display: block;
+}
+.cv-adjunto-audio { max-width: 260px; height: 36px; }
+.cv-adjunto-doc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-surface);
+  color: var(--text-heading);
+  font-size: 12px;
+  text-decoration: none;
+  max-width: 260px;
+}
+.cv-adjunto-doc:hover { border-color: #6366f1; }
+
+/* Chips de opciones (preguntar_opciones) — muestran los botones tal como se mandaron */
+.cv-opciones-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; justify-content: flex-end; }
+.cv-opciones-chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid #6366f155;
+  color: #818cf8;
+  background: #6366f118;
+}
+.cv-enlace-chip { text-decoration: none; cursor: pointer; }
+.cv-enlace-chip:hover { background: #6366f130; }
+
 /* Small avatars for messages */
 .cv-avatar-sm {
   width: 28px;
@@ -1945,6 +2131,47 @@ export default {
   flex-shrink: 0;
 }
 .cv-icon-action-btn:hover { color: var(--text-muted); }
+.cv-icon-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Selector de emojis */
+.cv-emoji-wrap { position: relative; }
+.cv-emoji-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 60;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border);
+}
+
+/* Previsualización de adjunto antes de enviar */
+.cv-adjunto-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border-card);
+  background: var(--bg-surface);
+  width: fit-content;
+  max-width: 100%;
+}
+.cv-adjunto-preview-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+.cv-adjunto-preview-doc { font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.cv-adjunto-preview-quitar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-faint);
+  font-size: 13px;
+  padding: 2px 4px;
+  flex-shrink: 0;
+}
+.cv-adjunto-preview-quitar:hover { color: #ef4444; }
+
 .cv-reply-input {
   flex: 1;
   background: transparent;
@@ -2033,4 +2260,119 @@ export default {
 @keyframes cv-spin    { to { transform: rotate(360deg); } }
 @keyframes cv-pulse   { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.5; transform:scale(0.8); } }
 @keyframes cv-bounce  { 0%,80%,100%{ transform:translateY(0); } 40%{ transform:translateY(-6px); } }
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE — teléfono y tablet 7"
+   Desktop (≥900px): sin cambios, layout de 3 columnas original.
+═══════════════════════════════════════════════════════════ */
+
+/* Elementos nuevos, ocultos por defecto (desktop) — se activan en los media queries de abajo */
+.cv-back-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 6px;
+  margin-right: 2px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cv-back-btn:hover { color: #818cf8; background: #6366f118; }
+
+.cv-filtros-toggle-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-disabled);
+  padding: 4px;
+  border-radius: 6px;
+  align-items: center;
+  transition: color 0.15s;
+}
+.cv-filtros-toggle-btn:hover { color: #818cf8; }
+
+.cv-detalle-close-btn {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--bg-page);
+  border: 1px solid var(--border-card);
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 6px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.cv-detalle-backdrop {
+  display: none;
+}
+
+/* ── Tablet 7" y teléfono: hasta 900px — un panel a la vez.
+   Con el sidebar general (200px) presente, ni una tablet de 7" (~600-624px de
+   ancho CSS en portrait) tiene lugar real para lista + chat a la vez sin que el
+   chat quede ilegible — por eso el patrón de "un panel visible" aplica a ambos,
+   no solo al teléfono. La diferencia entre tablet y teléfono queda en el
+   segundo media query de abajo (filtros, ancho de burbujas, drawer). ── */
+@media (max-width: 900px) {
+  .cv-col-left { width: 100%; }
+  .cv-col-left--oculta-movil { display: none; }
+
+  .cv-col-mid { display: none; }
+  .cv-col-mid--activa-movil { display: flex; width: 100%; }
+
+  .cv-back-btn { display: flex; }
+  .cv-filtros-toggle-btn { display: flex; }
+
+  /* Panel de detalle pasa a drawer superpuesto en vez de 3ra columna fija */
+  .cv-col-right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 320px;
+    max-width: 85vw;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 50;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.35);
+  }
+  .cv-col-right--abierto-movil { transform: translateX(0); }
+  .cv-detalle-close-btn { display: flex; }
+  .cv-detalle-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 49;
+  }
+}
+
+/* ── Teléfono: hasta 480px — ajustes adicionales sobre el patrón de arriba ── */
+@media (max-width: 480px) {
+  /* Filtros de días/score colapsados por defecto para no robarle alto a la lista */
+  .cv-filters-block { display: none; }
+  .cv-filters-block--expandido { display: flex; }
+
+  /* Burbujas de mensaje más anchas — en pantalla angosta el 64% queda apretado */
+  .cv-msg-content { max-width: 88%; }
+
+  /* Panel de detalle a todo el ancho en vez de drawer angosto */
+  .cv-col-right { width: 100%; max-width: 100%; }
+
+  /* Área táctil mínima recomendada (~40px) para botones de ícono */
+  .cv-refresh-btn, .cv-filtros-toggle-btn, .cv-back-btn, .cv-icon-action-btn, .cv-detalle-close-btn {
+    min-width: 36px;
+    min-height: 36px;
+    justify-content: center;
+  }
+  .cv-send-btn { min-height: 40px; }
+}
 </style>
