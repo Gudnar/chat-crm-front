@@ -62,6 +62,8 @@
                 <td>
                   <div style="font-size:13px;font-weight:700;color:var(--text-primary);">{{ c.nombre }}</div>
                   <div v-if="c.descripcion" style="font-size:11px;color:var(--text-faint);margin-top:1px;">{{ c.descripcion }}</div>
+                  <div v-if="c.plantillaId" style="font-size:10px;color:#25d366;margin-top:2px;">🔖 Con plantilla de respaldo (24h+)</div>
+                  <div v-else style="font-size:10px;color:#f59e0b;margin-top:2px;">⚠️ Sin plantilla — solo contactos activos en 24h</div>
                 </td>
                 <td>
                   <span class="rem-badge" :class="c.tipoMensaje === 'ia' ? 'rem-badge--ia' : 'rem-badge--fijo'">
@@ -283,6 +285,21 @@
               </div>
             </div>
 
+            <!-- Plantilla de respaldo (fuera de 24h) -->
+            <div class="rem-field">
+              <label>Plantilla de respaldo (opcional)</label>
+              <select v-model="form.plantillaId" class="ide-select">
+                <option :value="null">Sin plantilla — solo enviar a contactos dentro de 24h</option>
+                <option v-for="p in plantillasAprobadas" :key="p.id" :value="p.id">{{ p.nombre }}</option>
+              </select>
+              <div class="rem-ia-hint" v-if="!plantillasAprobadas.length" style="color:#f59e0b;background:#f59e0b11;border-color:#f59e0b22;">
+                No tienes plantillas aprobadas todavía. Sin una, los contactos que no te escribieron en las últimas 24h quedarán marcados como error.
+              </div>
+              <div v-else style="font-size:10px;color:var(--text-disabled);margin-top:3px;">
+                Si un contacto no escribió en las últimas 24h, WhatsApp exige usar esta plantilla en vez del mensaje libre de arriba.
+              </div>
+            </div>
+
           </div>
           <div class="rem-modal-ft">
             <button class="rem-btn-ghost" @click="dialog = false">Cancelar</button>
@@ -319,7 +336,8 @@ export default {
     ejecutandoId: null,
     campanas: [],
     campanaDetalle: null,
-    form: { nombre: '', descripcion: '', mensaje: '', tipoMensaje: 'fijo', programadoEn: isoLocal(), scoreMin: 0, scoreMax: 100 },
+    plantillasAprobadas: [],
+    form: { nombre: '', descripcion: '', mensaje: '', tipoMensaje: 'fijo', programadoEn: isoLocal(), scoreMin: 0, scoreMax: 100, plantillaId: null },
     secciones: [
       { id: 'campanas', label: 'Campañas',  svg: SVGS.list  },
       { id: 'detalle',  label: 'Detalle',   svg: SVGS.chart },
@@ -351,7 +369,7 @@ export default {
     },
   },
   async mounted() {
-    await this.cargar();
+    await Promise.all([this.cargar(), this.cargarPlantillas()]);
   },
   methods: {
     async cargar() {
@@ -360,13 +378,18 @@ export default {
       finally { this.loading = false; }
     },
 
+    async cargarPlantillas() {
+      const todas = await this.$service.list('plantillas-whatsapp') || [];
+      this.plantillasAprobadas = todas.filter(p => p.estadoPlantilla === 'aprobada');
+    },
+
     seleccionarSeccion(id) {
       if (id === 'detalle' && !this.campanaDetalle) return;
       this.seccion = id;
     },
 
     abrirModal() {
-      this.form = { nombre: '', descripcion: '', mensaje: '', tipoMensaje: 'fijo', programadoEn: isoLocal(), scoreMin: 0, scoreMax: 100 };
+      this.form = { nombre: '', descripcion: '', mensaje: '', tipoMensaje: 'fijo', programadoEn: isoLocal(), scoreMin: 0, scoreMax: 100, plantillaId: null };
       this.dialog = true;
     },
 

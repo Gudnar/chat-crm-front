@@ -144,6 +144,26 @@
             </div>
           </div>
 
+          <div class="ide-ia-card" style="margin-bottom:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div style="font-size:12px; font-weight:700; color:var(--text-primary);">Recordatorio automático</div>
+                <div style="font-size:10px; color:var(--text-disabled); margin-top:2px;">Si una conversación queda pendiente sin foto ni ubicación, se le reenvía un aviso pasadas N horas.</div>
+              </div>
+              <v-switch v-model="formConfig.recordatorioActivo" color="primary" hide-details dense style="flex-shrink:0; margin:0;"></v-switch>
+            </div>
+            <div v-if="formConfig.recordatorioActivo" style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+              <div class="ide-field">
+                <label>Horas de espera antes de recordar</label>
+                <input v-model.number="formConfig.recordatorioHoras" type="number" min="1" max="72" class="ide-input" />
+              </div>
+              <div class="ide-field">
+                <label>Mensaje del recordatorio (opcional — si lo dejás vacío usa uno genérico)</label>
+                <textarea v-model="formConfig.recordatorioMensaje" class="ide-textarea" rows="3" placeholder="Hola 👋 Quería recordarle que nos falta su foto y ubicación..."></textarea>
+              </div>
+            </div>
+          </div>
+
           <div style="display:flex; justify-content:flex-end;">
             <v-btn depressed color="primary" :loading="saving" @click="guardarConfig" style="font-size:12px; border-radius:8px;">Guardar rol</v-btn>
           </div>
@@ -290,7 +310,7 @@ export default {
       loading: true,
       saving: false,
       seccion: 'config',
-      formConfig: { nombre: '', descripcion: '', modelo: '', tono: '', modoOperacion: '', systemPrompt: '', maxTokens: 256, idioma: 'español', activo: true },
+      formConfig: { nombre: '', descripcion: '', modelo: '', tono: '', modoOperacion: '', systemPrompt: '', maxTokens: 256, idioma: 'español', activo: true, recordatorioActivo: false, recordatorioHoras: 3, recordatorioMensaje: '' },
       mensajeEscalado: 'Por favor espera un momento, te comunicaré con un agente especializado que podrá ayudarte mejor.',
       tonos: ['profesional', 'amigable', 'formal', 'técnico', 'empático'],
       secciones: [
@@ -352,6 +372,9 @@ export default {
             maxTokens: this.agente.maxTokens || 256,
             idioma: this.agente.idioma || 'español',
             activo: this.agente.activo !== false,
+            recordatorioActivo: this.agente.recordatorioActivo || false,
+            recordatorioHoras: this.agente.recordatorioHoras || 3,
+            recordatorioMensaje: this.agente.recordatorioMensaje || '',
           };
         }
       } finally {

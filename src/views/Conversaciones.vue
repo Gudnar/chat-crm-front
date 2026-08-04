@@ -235,6 +235,18 @@
               </svg>
               Resuelto
             </div>
+            <button
+              class="cv-detalle-btn"
+              style="color:#ef4444; border-color:#ef444444;"
+              title="Eliminar conversación"
+              :disabled="eliminandoConversacion"
+              @click="eliminarConversacion(seleccionada)"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/>
+              </svg>
+              {{ eliminandoConversacion ? 'Eliminando…' : 'Eliminar' }}
+            </button>
           </div>
         </div>
 
@@ -654,6 +666,7 @@ export default {
     cargandoMensajes: false,
     creandoOportunidad: false,
     creandoCaso: false,
+    eliminandoConversacion: false,
     filtroActivo: 'todas',
     filtroEstado: 'todos',
     filtroDias: '',
@@ -1003,6 +1016,26 @@ export default {
         const idx = this.conversaciones.findIndex(c => c.id === this.seleccionada.id);
         if (idx !== -1) this.conversaciones.splice(idx, 1, { ...this.conversaciones[idx], estadoConversacion: nuevoEstado });
       } catch (_e) { /* error mostrado por service interceptor */ }
+    },
+
+    eliminarConversacion(conv) {
+      if (!conv) return;
+      this.$confirm(`¿Eliminar la conversación con ${this.nombreRemitente(conv)}? Esta acción no se puede deshacer.`, async () => {
+        this.eliminandoConversacion = true;
+        try {
+          await this.$service.delete(`conversaciones/${conv.id}`);
+          this.conversaciones = this.conversaciones.filter(c => c.id !== conv.id);
+          if (this.seleccionadaId === conv.id) {
+            this.seleccionada = null;
+            this.seleccionadaId = null;
+          }
+          this.$message.success('Conversación eliminada');
+        } catch (e) {
+          this.$message.error('No se pudo eliminar la conversación');
+        } finally {
+          this.eliminandoConversacion = false;
+        }
+      });
     },
 
     async guardarNota() {

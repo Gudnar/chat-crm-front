@@ -80,6 +80,12 @@ const routes = [
         meta: { roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
       },
       {
+        path: 'plantillas',
+        name: 'plantillas',
+        component: () => import('@/views/Plantillas.vue'),
+        meta: { roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
+      },
+      {
         path: 'reportes',
         name: 'reportes',
         component: () => import('@/views/Reportes.vue'),
