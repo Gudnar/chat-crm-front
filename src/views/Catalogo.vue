@@ -416,7 +416,11 @@ export default {
         ? {
             nombre: producto.nombre || '', marca: producto.marca || '', modelo: producto.modelo || '',
             categoria: producto.categoria || '', descripcion: producto.descripcion || '',
-            precio: producto.precio, precioOferta: producto.precioOferta || null,
+            // precio/precioOferta llegan como string desde el backend (columna decimal) — si no se
+            // convierten acá, un guardado sin tocar el campo los reenvía como string y el backend
+            // los rechazaba (ya corregido también ahí, pero mejor no depender solo de eso).
+            precio: producto.precio != null ? Number(producto.precio) : null,
+            precioOferta: producto.precioOferta != null ? Number(producto.precioOferta) : null,
             moneda: producto.moneda || 'PEN', stock: producto.stock ?? null,
             fechaDisponibilidad: (producto.fechaDisponibilidad || '').slice(0, 10), activo: producto.activo,
           }

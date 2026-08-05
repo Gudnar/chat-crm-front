@@ -86,6 +86,12 @@ const routes = [
         meta: { roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
       },
       {
+        path: 'flows',
+        name: 'flows',
+        component: () => import('@/views/Flows.vue'),
+        meta: { roles: ['SUPER_ADMIN', 'ADMIN_CLIENTE'] },
+      },
+      {
         path: 'reportes',
         name: 'reportes',
         component: () => import('@/views/Reportes.vue'),

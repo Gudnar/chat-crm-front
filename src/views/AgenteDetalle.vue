@@ -164,6 +164,34 @@
             </div>
           </div>
 
+          <div class="ide-ia-card" style="margin-bottom:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div style="font-size:12px; font-weight:700; color:var(--text-primary);">Recordatorio de cita agendada</div>
+                <div style="font-size:10px; color:var(--text-disabled); margin-top:2px;">Avisa al cliente N horas antes de una llamada ya confirmada con la herramienta de agendar cita.</div>
+              </div>
+              <v-switch v-model="formConfig.recordatorioCitaActivo" color="primary" hide-details dense style="flex-shrink:0; margin:0;"></v-switch>
+            </div>
+            <div v-if="formConfig.recordatorioCitaActivo" style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+              <div class="ide-field">
+                <label>Horas de anticipación</label>
+                <input v-model.number="formConfig.recordatorioCitaHoras" type="number" min="1" max="72" class="ide-input" />
+              </div>
+              <div class="ide-field">
+                <label>Mensaje del recordatorio (opcional — si lo dejás vacío usa uno genérico)</label>
+                <textarea v-model="formConfig.recordatorioCitaMensaje" class="ide-textarea" rows="3" placeholder="Te recordamos tu llamada con nuestro asesor comercial..."></textarea>
+              </div>
+              <div class="ide-field">
+                <label>Plantilla de respaldo (si el aviso cae fuera de la ventana de 24h)</label>
+                <select v-model="formConfig.recordatorioCitaPlantillaId" class="ide-select">
+                  <option :value="null">Sin plantilla — se omite el aviso si ya pasaron 24h sin que el cliente escriba</option>
+                  <option v-for="p in plantillasAprobadas" :key="p.id" :value="p.id">{{ p.nombre }}</option>
+                </select>
+                <div v-if="!plantillasAprobadas.length" style="font-size:10px; color:#f59e0b; margin-top:4px;">No tenés plantillas aprobadas todavía — sin una, el aviso se omite si el cliente no escribió en las últimas 24h.</div>
+              </div>
+            </div>
+          </div>
+
           <div style="display:flex; justify-content:flex-end;">
             <v-btn depressed color="primary" :loading="saving" @click="guardarConfig" style="font-size:12px; border-radius:8px;">Guardar rol</v-btn>
           </div>
@@ -310,7 +338,12 @@ export default {
       loading: true,
       saving: false,
       seccion: 'config',
-      formConfig: { nombre: '', descripcion: '', modelo: '', tono: '', modoOperacion: '', systemPrompt: '', maxTokens: 256, idioma: 'español', activo: true, recordatorioActivo: false, recordatorioHoras: 3, recordatorioMensaje: '' },
+      formConfig: {
+        nombre: '', descripcion: '', modelo: '', tono: '', modoOperacion: '', systemPrompt: '', maxTokens: 256, idioma: 'español', activo: true,
+        recordatorioActivo: false, recordatorioHoras: 3, recordatorioMensaje: '',
+        recordatorioCitaActivo: false, recordatorioCitaHoras: 2, recordatorioCitaMensaje: '', recordatorioCitaPlantillaId: null,
+      },
+      plantillasAprobadas: [],
       mensajeEscalado: 'Por favor espera un momento, te comunicaré con un agente especializado que podrá ayudarte mejor.',
       tonos: ['profesional', 'amigable', 'formal', 'técnico', 'empático'],
       secciones: [
@@ -354,7 +387,7 @@ export default {
     clienteId() { return this.$store.getters.clienteId || this.$storage.get('user')?.clienteId || null; },
   },
   async mounted() {
-    await this.cargar();
+    await Promise.all([this.cargar(), this.cargarPlantillas()]);
   },
   methods: {
     async cargar() {
@@ -375,11 +408,22 @@ export default {
             recordatorioActivo: this.agente.recordatorioActivo || false,
             recordatorioHoras: this.agente.recordatorioHoras || 3,
             recordatorioMensaje: this.agente.recordatorioMensaje || '',
+            recordatorioCitaActivo: this.agente.recordatorioCitaActivo || false,
+            recordatorioCitaHoras: this.agente.recordatorioCitaHoras || 2,
+            recordatorioCitaMensaje: this.agente.recordatorioCitaMensaje || '',
+            recordatorioCitaPlantillaId: this.agente.recordatorioCitaPlantillaId || null,
           };
         }
       } finally {
         this.loading = false;
       }
+    },
+
+    async cargarPlantillas() {
+      try {
+        const todas = await this.$service.list('plantillas-whatsapp', { clienteId: this.clienteId || undefined }) || [];
+        this.plantillasAprobadas = todas.filter(p => p.estadoPlantilla === 'aprobada');
+      } catch { /* la sección de recordatorio de cita queda sin opciones si falla, no bloquea el resto */ }
     },
     async guardarConfig() {
       if (!this.formConfig.nombre) { this.$message.error('El nombre es obligatorio'); return; }
